@@ -258,12 +258,7 @@
         <table class="header-table">
             <tr>
                 <td class="school-logo-cell">
-                    <div class="logo-box">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5" style="vertical-align: middle; display: inline-block; margin-top: 6px;">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 6v12M15 9H11.5a2.5 2.5 0 0 0 0 5H13a2.5 2.5 0 0 1 0 5H9"></path>
-                        </svg>
-                    </div>
+                    <img src="{{ public_path('logo.png') }}" style="width: 36px; height: 36px; display: block;">
                 </td>
                 <td class="school-info-cell">
                     <h1 class="school-name">SD NEGERI 1 KELAPA DUA</h1>

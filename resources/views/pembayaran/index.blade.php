@@ -132,7 +132,7 @@
                                 @endif
 
                                 @if ($p->status_verifikasi === 'terverifikasi')
-                                    <a href="{{ route('kwitansi.download', $p) }}" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50/40 border border-blue-100/30 text-blue-500 hover:text-slate-800 text-[9px] font-bold rounded-xl transition-all btn-premium">
+                                    <a href="{{ route('kwitansi.download', $p) }}" data-pjax="false" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50/40 border border-blue-100/30 text-blue-500 hover:text-slate-800 text-[9px] font-bold rounded-xl transition-all btn-premium">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                         </svg>

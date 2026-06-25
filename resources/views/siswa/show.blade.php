@@ -4,7 +4,7 @@
 @section('page_subtitle', 'Tinjauan lengkap data pribadi, wali, dan riwayat pembayaran SPP siswa')
 
 @section('content')
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8" x-data="{ showUploadModal: false, uploadActionUrl: '', uploadStudentName: '', uploadPeriod: '', uploadAmount: '' }">
     <!-- Left Column: Personal and Wali Info -->
     <div class="lg:col-span-1 space-y-6">
         <!-- Profile Card -->
@@ -157,20 +157,36 @@
                                             @if ($tagihan->status === 'lunas')
                                                 <!-- Download receipt if exists -->
                                                 @php
-                                                    $pembayaranLunas = $tagihan->pembayaran()->where('status_verifikasi', 'disetujui')->latest()->first();
+                                                    $pembayaranLunas = $tagihan->pembayaran()->where('status_verifikasi', 'terverifikasi')->latest()->first();
                                                 @endphp
                                                 @if ($pembayaranLunas)
-                                                    <a href="{{ route('kwitansi.download', $pembayaranLunas) }}" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50/40 border border-blue-100/30 hover:bg-blue-50 hover:border-blue-100/50 text-blue-500 hover:text-slate-800 text-[9px] font-bold rounded-lg transition-colors btn-premium">
+                                                    <a href="{{ route('kwitansi.download', $pembayaranLunas) }}" data-pjax="false" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50/40 border border-blue-100/30 hover:bg-blue-50 hover:border-blue-100/50 text-blue-500 hover:text-slate-800 text-[9px] font-bold rounded-lg transition-colors btn-premium">
                                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                                         </svg>
                                                         <span>Kwitansi</span>
                                                     </a>
                                                 @endif
+                                            @elseif (auth()->user()->isWaliMurid())
+                                                @if ($tagihan->status === 'menunggu_verifikasi')
+                                                    <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider px-2.5 py-1 bg-blue-50/30 border border-blue-100/60 rounded-xl">Diproses</span>
+                                                @else
+                                                    <button type="button" 
+                                                        @click="
+                                                            uploadActionUrl = '{{ route('pembayaran.upload', $tagihan) }}';
+                                                            uploadStudentName = '{{ $siswa->nama_lengkap }}';
+                                                            uploadPeriod = '{{ $bulanName }} {{ $tagihan->tahun }}';
+                                                            uploadAmount = 'Rp {{ number_format($tagihan->sisa_tagihan, 0, ',', '.') }}';
+                                                            showUploadModal = true;
+                                                        "
+                                                        class="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-light text-white text-[9px] font-bold rounded-xl hover:bg-brand-hover transition-all shadow-md shadow-brand-light/10 btn-premium">
+                                                        Upload Bukti
+                                                    </button>
+                                                @endif
                                             @elseif (auth()->user()->isAdmin() || auth()->user()->isBendahara())
                                                 <a href="{{ route('pembayaran.create', $tagihan) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-light hover:bg-brand-hover text-white text-[9px] font-bold rounded-xl transition-all shadow-md shadow-brand-light/10 btn-premium">
                                                     Bayar
-                                                </a>
+                                                 </a>
                                             @endif
                                         </div>
                                     </td>
@@ -184,6 +200,53 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Upload Bukti Modal (Alpine.js) -->
+    <div x-show="showUploadModal" 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs text-left"
+         style="display: none;"
+         x-transition.opacity>
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-blue-100/60" @click.away="showUploadModal = false">
+            <div class="flex items-center justify-between border-b border-blue-100/50 pb-3.5 mb-5">
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider font-sans">Upload Bukti Transfer</h3>
+                <button @click="showUploadModal = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form :action="uploadActionUrl" method="POST" enctype="multipart/form-data" class="space-y-4">
+                @csrf
+
+                <div class="p-3.5 bg-blue-50/30 border border-blue-100/60 rounded-2xl space-y-2 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Nama Siswa</span>
+                        <span class="text-slate-800 font-bold" x-text="uploadStudentName"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Periode</span>
+                        <span class="text-slate-800 font-bold" x-text="uploadPeriod"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Nominal Transfer</span>
+                        <span class="text-brand-light font-bold font-mono text-[13px]" x-text="uploadAmount"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="bukti_transfer" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Pilih File Foto Bukti Transfer</label>
+                    <input type="file" name="bukti_transfer" id="bukti_transfer" required accept="image/*"
+                        class="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-light hover:file:bg-brand-100 transition-colors">
+                    <p class="text-[9px] text-slate-400 mt-2 font-bold uppercase tracking-wider">Format berkas: JPG, JPEG, PNG. Ukuran maksimal: 5 MB.</p>
+                </div>
+
+                <div class="pt-3 flex justify-end gap-3">
+                    <button type="button" @click="showUploadModal = false" class="px-4 py-2 bg-blue-50/30 hover:bg-blue-100/50 border border-blue-100/60 text-blue-500 text-xs font-bold rounded-xl transition-colors btn-premium">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-brand-light/10 btn-premium">Kirim Bukti</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

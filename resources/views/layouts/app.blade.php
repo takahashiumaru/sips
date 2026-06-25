@@ -109,6 +109,45 @@
 </head>
 @php
     $isMinimized = (request()->cookie('sidebar_minimized') ?? $_COOKIE['sidebar_minimized'] ?? 'false') === 'true';
+
+    $svgs = [
+        'home' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11V11a1 1 0 00-1-1H5m11 4h2a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3a2 2 0 012-2h2m4.5-3a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path></svg>',
+        'dashboard' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path></svg>',
+        'users' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>',
+        'user-gear' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
+        'building' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
+        'tag' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>',
+        'bill' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>',
+        'payment' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>',
+        'report' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
+        'rekap' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>',
+        'history' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+        'user' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>'
+    ];
+
+    $searchMenus = [];
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->isAdmin() || $user->isBendahara() || $user->isKepalaSekolah()) {
+            $searchMenus[] = ['name' => 'Dashboard Utama', 'url' => route('dashboard'), 'svg' => $svgs['dashboard'], 'category' => 'Utama'];
+            $searchMenus[] = ['name' => 'Tarif SPP', 'url' => route('tarif.index'), 'svg' => $svgs['tag'], 'category' => 'Akademik'];
+            $searchMenus[] = ['name' => 'Data Siswa', 'url' => route('siswa.index'), 'svg' => $svgs['users'], 'category' => 'Akademik'];
+            $searchMenus[] = ['name' => 'Tagihan SPP', 'url' => route('tagihan.index'), 'svg' => $svgs['bill'], 'category' => 'Keuangan'];
+            $searchMenus[] = ['name' => 'Pembayaran SPP', 'url' => route('pembayaran.index'), 'svg' => $svgs['payment'], 'category' => 'Keuangan'];
+            $searchMenus[] = ['name' => 'Laporan Tunggakan', 'url' => route('laporan.tunggakan'), 'svg' => $svgs['report'], 'category' => 'Laporan'];
+            $searchMenus[] = ['name' => 'Rekap Bulanan', 'url' => route('laporan.rekap'), 'svg' => $svgs['rekap'], 'category' => 'Laporan'];
+        }
+        if ($user->isAdmin()) {
+            $searchMenus[] = ['name' => 'User Management', 'url' => route('users.index'), 'svg' => $svgs['user-gear'], 'category' => 'Sistem'];
+            $searchMenus[] = ['name' => 'Data Kelas', 'url' => route('kelas.index'), 'svg' => $svgs['building'], 'category' => 'Akademik'];
+        }
+        if ($user->isWaliMurid()) {
+            $searchMenus[] = ['name' => 'Dashboard Wali', 'url' => route('portal.index'), 'svg' => $svgs['home'], 'category' => 'Portal'];
+            $searchMenus[] = ['name' => 'Tagihan Anak', 'url' => route('portal.tagihan'), 'svg' => $svgs['bill'], 'category' => 'Portal'];
+            $searchMenus[] = ['name' => 'Riwayat Bayar', 'url' => route('portal.riwayat'), 'svg' => $svgs['history'], 'category' => 'Portal'];
+        }
+        $searchMenus[] = ['name' => 'Profil Saya', 'url' => route('profil'), 'svg' => $svgs['user'], 'category' => 'Akun'];
+    }
 @endphp
 <body class="bg-[#F6F8FC] font-sans antialiased text-[#0F172A] selection:bg-brand-light selection:text-white {{ $isMinimized ? 'sidebar-is-minimized' : '' }}"
       x-data="{ sidebarOpen: false, profileDropdownOpen: false, notificationsOpen: false, sidebarMinimized: {{ $isMinimized ? 'true' : 'false' }}, toggleSidebar() { this.sidebarMinimized = !this.sidebarMinimized; window.applySipSidebarState?.(this.sidebarMinimized, true); } }"
@@ -360,8 +399,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
-                <input type="text" placeholder="Cari..." data-i18n-placeholder="app.search"
-                    class="block w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light transition-all font-semibold form-input-premium">
+                <input type="text" placeholder="Cari menu... (Ctrl+K / ⌘K)" readonly
+                    @click="$dispatch('open-search')"
+                    class="cursor-pointer block w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light transition-all font-semibold form-input-premium">
             </div>
         </div>
 
@@ -665,7 +705,7 @@
                             const linkPath = linkUrl.pathname;
                             
                             let isActive = false;
-                            if (linkPath === '/dashboard' || linkPath === '/' || linkPath.endsWith('/dashboard')) {
+                            if (linkPath === '/dashboard' || linkPath === '/portal' || linkPath === '/' || linkPath.endsWith('/dashboard') || linkPath.endsWith('/portal')) {
                                 isActive = cleanPath === linkPath;
                             } else {
                                 isActive = cleanPath === linkPath || cleanPath.startsWith(linkPath + '/');
@@ -885,5 +925,147 @@
     })();
     </script>
 
+    <!-- Command Palette (Search Pop-up) -->
+    <div x-data="commandPaletteComponent()"
+         @open-search.window="openPalette()"
+         @keydown.window.prevent.cmd.k="openPalette()"
+         @keydown.window.prevent.ctrl.k="openPalette()"
+         x-show="open"
+         class="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4"
+         style="display: none;"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+    >
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" @click="open = false"></div>
+
+        <!-- Modal content -->
+        <div class="bg-white/95 dark:bg-slate-900/95 border border-slate-200/50 dark:border-slate-800/50 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all relative z-10"
+             @keydown.escape.window="open = false"
+             @keydown.down.prevent="selectNext()"
+             @keydown.up.prevent="selectPrev()"
+             @keydown.enter.prevent="navigateSelected()"
+        >
+            <!-- Search Input -->
+            <div class="relative flex items-center border-b border-slate-100 dark:border-slate-800/60">
+                <svg class="absolute left-4 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text"
+                       x-ref="searchInput"
+                       x-model="search"
+                       placeholder="Ketik untuk mencari menu..."
+                       class="w-full bg-transparent border-0 pl-11 pr-4 py-4 text-xs font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-0"
+                >
+            </div>
+
+            <!-- Results -->
+            <div class="max-h-[300px] overflow-y-auto p-2" x-ref="resultsContainer">
+                <template x-for="(item, index) in filteredMenus" :key="item.url">
+                    <div class="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all cursor-pointer group"
+                         :class="selectedIndex === index ? 'bg-blue-500 text-white font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/30'"
+                         :data-selected="selectedIndex === index ? '' : null"
+                         @click="selectedIndex = index; navigateSelected()"
+                         @mouseenter="selectedIndex = index"
+                    >
+                        <div class="flex items-center gap-3">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                                 :class="selectedIndex === index ? 'bg-white/10 text-white' : 'bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200'"
+                                 x-html="item.svg">
+                            </div>
+                            <span class="text-xs" x-text="item.name"></span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
+                                  :class="selectedIndex === index ? 'bg-white/15 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
+                                <span x-text="item.category"></span>
+                            </span>
+                            <template x-if="selectedIndex === index">
+                                <span class="text-[9px] opacity-75 font-semibold font-mono">↵</span>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Empty State -->
+                <div x-show="filteredMenus.length === 0" class="p-8 text-center text-slate-400 font-semibold text-xs flex flex-col items-center justify-center gap-2">
+                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Menu tidak ditemukan</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-4 py-3 bg-slate-50 dark:bg-slate-950/20 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                <span>↑↓ untuk navigasi · ↵ untuk memilih</span>
+                <span>esc untuk menutup</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function commandPaletteComponent() {
+            return {
+                open: false,
+                search: '',
+                selectedIndex: 0,
+                menus: @json($searchMenus),
+                openPalette() {
+                    this.open = true;
+                    this.search = '';
+                    this.selectedIndex = 0;
+                    setTimeout(() => {
+                        if (this.$refs.searchInput) {
+                            this.$refs.searchInput.focus();
+                        }
+                    }, 50);
+                },
+                get filteredMenus() {
+                    if (!this.search) return this.menus;
+                    const query = this.search.toLowerCase();
+                    return this.menus.filter(m => m.name.toLowerCase().includes(query) || m.category.toLowerCase().includes(query));
+                },
+                selectNext() {
+                    if (this.selectedIndex < this.filteredMenus.length - 1) {
+                        this.selectedIndex++;
+                        this.scrollToSelected();
+                    }
+                },
+                selectPrev() {
+                    if (this.selectedIndex > 0) {
+                        this.selectedIndex--;
+                        this.scrollToSelected();
+                    }
+                },
+                navigateSelected() {
+                    const item = this.filteredMenus[this.selectedIndex];
+                    if (item) {
+                        this.open = false;
+                        const a = document.createElement('a');
+                        a.href = item.url;
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }
+                },
+                scrollToSelected() {
+                    this.$nextTick(() => {
+                        const container = this.$refs.resultsContainer;
+                        if (!container) return;
+                        const selectedEl = container.querySelector('[data-selected]');
+                        if (selectedEl) {
+                            selectedEl.scrollIntoView({ block: 'nearest' });
+                        }
+                    });
+                }
+            }
+        }
+    </script>
 </body>
 </html>

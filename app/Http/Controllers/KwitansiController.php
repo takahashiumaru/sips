@@ -14,7 +14,14 @@ class KwitansiController extends Controller
         $pembayaran->load(['tagihan.siswa.kelas', 'dicatatOleh', 'kwitansi']);
 
         if (!$pembayaran->kwitansi) {
-            return back()->with('error', 'Kwitansi belum tersedia.');
+            // Auto-create kwitansi if it doesn't exist (e.g. for seeded or legacy data)
+            $kwitansi = Kwitansi::create([
+                'nomor_kwitansi' => Kwitansi::generateNomor(),
+                'pembayaran_id' => $pembayaran->id,
+                'dicetak_oleh' => auth()->id() ?? $pembayaran->dicatat_oleh,
+                'dicetak_at' => now(),
+            ]);
+            $pembayaran->setRelation('kwitansi', $kwitansi);
         }
 
         $qrContent = route('kwitansi.verify', $pembayaran->kwitansi->nomor_kwitansi);
