@@ -431,11 +431,18 @@
     <!-- Top Navbar next to sidebar -->
     <header class="bg-white/90 backdrop-blur-xl border-b border-slate-200/70 h-16 fixed top-0 right-0 z-20 flex items-center justify-between px-6 shadow-xs left-0 md:left-[var(--sidebar-w)]">
         
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
             <!-- Sidebar toggle (Mobile only) -->
             <button @click="sidebarOpen = !sidebarOpen" class="p-2 hover:bg-slate-50 text-slate-500 hover:text-slate-800 rounded-xl transition-colors md:hidden focus:outline-none focus:ring-2 focus:ring-slate-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+
+            <!-- Search trigger (Mobile only) -->
+            <button @click="$dispatch('open-search')" class="p-2 hover:bg-slate-50 text-slate-500 hover:text-slate-800 rounded-xl transition-colors md:hidden focus:outline-none focus:ring-2 focus:ring-slate-100" title="Cari menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </button>
             
@@ -482,6 +489,25 @@
             @php
                 $notifs = auth()->user()->notifikasi()->where('is_read', false)->latest()->take(5)->get();
                 $unreadCount = auth()->user()->notifikasi()->where('is_read', false)->count();
+
+                $pendingPayments = collect();
+                $unpaidBills = collect();
+
+                if (auth()->user()->isAdmin() || auth()->user()->isBendahara()) {
+                    $pendingPayments = \App\Models\Pembayaran::with('tagihan.siswa')
+                        ->where('status_verifikasi', 'pending')
+                        ->latest()
+                        ->get();
+                    $unreadCount += $pendingPayments->count();
+                } elseif (auth()->user()->isWaliMurid()) {
+                    $siswaIds = auth()->user()->siswa->pluck('id');
+                    $unpaidBills = \App\Models\TagihanSpp::with('siswa')
+                        ->whereIn('siswa_id', $siswaIds)
+                        ->where('status', 'belum_bayar')
+                        ->latest()
+                        ->get();
+                    $unreadCount += $unpaidBills->count();
+                }
             @endphp
             <div class="relative" @click.away="notificationsOpen = false">
                 <button @click="notificationsOpen = !notificationsOpen" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all relative focus:outline-none focus:ring-2 focus:ring-slate-100">
@@ -512,6 +538,59 @@
                         @endif
                     </div>
                     <div class="max-h-64 overflow-y-auto">
+                        <!-- Actionable Tasks Section (Admin/Bendahara) -->
+                        @if($pendingPayments->count() > 0)
+                            <div class="px-4 py-1.5 bg-amber-50/50 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-[9px] font-extrabold text-amber-600 uppercase tracking-wider">Butuh Verifikasi</span>
+                                <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.25 rounded font-bold">{{ $pendingPayments->count() }}</span>
+                            </div>
+                            <div class="border-b border-slate-100">
+                                @foreach($pendingPayments->take(3) as $p)
+                                    <a href="{{ route('pembayaran.index') }}?status=pending&search={{ urlencode($p->tagihan->siswa->nama_lengkap ?? '') }}" 
+                                       class="px-4 py-2.5 hover:bg-slate-50 transition-colors flex items-start gap-2.5 border-b border-slate-50 last:border-b-0">
+                                        <div class="w-6.5 h-6.5 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex flex-col gap-0.5">
+                                            <span class="text-[11px] font-bold text-slate-800 leading-snug">Verifikasi: {{ $p->tagihan->siswa->nama_lengkap ?? '-' }}</span>
+                                            <span class="text-[10px] text-slate-500 leading-none">SPP {{ $p->tagihan->nama_bulan }} · Rp {{ number_format($p->jumlah_bayar, 0, ',', '.') }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <!-- Actionable Tasks Section (Wali Murid) -->
+                        @if($unpaidBills->count() > 0)
+                            <div class="px-4 py-1.5 bg-rose-50/50 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-[9px] font-extrabold text-rose-600 uppercase tracking-wider">Tagihan Belum Lunas</span>
+                                <span class="text-[9px] bg-rose-100 text-rose-700 px-1.5 py-0.25 rounded font-bold">{{ $unpaidBills->count() }}</span>
+                            </div>
+                            <div class="border-b border-slate-100">
+                                @foreach($unpaidBills->take(3) as $b)
+                                    <a href="{{ route('portal.tagihan') }}" 
+                                       class="px-4 py-2.5 hover:bg-slate-50 transition-colors flex items-start gap-2.5 border-b border-slate-50 last:border-b-0">
+                                        <div class="w-6.5 h-6.5 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex flex-col gap-0.5">
+                                            <span class="text-[11px] font-bold text-slate-800 leading-snug">Tagihan: {{ $b->siswa->nama_lengkap ?? '-' }}</span>
+                                            <span class="text-[10px] text-slate-500 leading-none">SPP {{ $b->nama_bulan }} · Rp {{ number_format($b->sisa_tagihan, 0, ',', '.') }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <!-- General Notifications Header -->
+                        <div class="px-4 py-1.5 bg-slate-50/50 border-b border-slate-100">
+                            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Notifikasi Sistem</span>
+                        </div>
+
                         @forelse($notifs as $n)
                             <div class="px-4 py-3 hover:bg-slate-50 border-b border-slate-50 last:border-b-0 transition-colors flex flex-col gap-0.5">
                                 <span class="text-xs font-bold text-slate-800 leading-snug">{{ $n->judul }}</span>
@@ -989,20 +1068,30 @@
          @keydown.window.prevent.cmd.k="openPalette()"
          @keydown.window.prevent.ctrl.k="openPalette()"
          x-show="open"
-         class="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4"
+         class="fixed inset-0 z-50 flex items-start justify-center pt-[5vh] sm:pt-[15vh] px-2 sm:px-4"
          style="display: none;"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
     >
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" @click="open = false"></div>
+        <!-- Backdrop (Only fades, no scaling to prevent subpixel rendering edges) -->
+        <div class="fixed -inset-10 bg-slate-950/40 backdrop-blur-md"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="open = false"
+        ></div>
 
-        <!-- Modal content -->
+        <!-- Modal content (Fades and scales) -->
         <div class="bg-white/95 dark:bg-slate-900/95 border border-slate-200/50 dark:border-slate-800/50 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all relative z-10"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
              @keydown.escape.window="open = false"
              @keydown.down.prevent="selectNext()"
              @keydown.up.prevent="selectPrev()"
@@ -1022,7 +1111,7 @@
             </div>
 
             <!-- Results -->
-            <div class="max-h-[300px] overflow-y-auto p-2" x-ref="resultsContainer">
+            <div class="max-h-[240px] sm:max-h-[350px] overflow-y-auto p-2" x-ref="resultsContainer">
                 <template x-for="(item, index) in filteredMenus" :key="item.url">
                     <div class="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all cursor-pointer group"
                          :class="selectedIndex === index ? 'bg-blue-500 text-white font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/30'"
@@ -1059,7 +1148,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="px-4 py-3 bg-slate-50 dark:bg-slate-950/20 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+            <div class="hidden sm:flex px-4 py-3 bg-slate-50 dark:bg-slate-950/20 border-t border-slate-100 dark:border-slate-800/60 items-center justify-between text-[9px] font-bold text-slate-400 uppercase tracking-wider">
                 <span>↑↓ untuk navigasi · ↵ untuk memilih</span>
                 <span>esc untuk menutup</span>
             </div>
@@ -1073,6 +1162,15 @@
                 search: '',
                 selectedIndex: 0,
                 menus: @json($searchMenus),
+                init() {
+                    this.$watch('open', value => {
+                        if (value) {
+                            document.body.classList.add('overflow-hidden');
+                        } else {
+                            document.body.classList.remove('overflow-hidden');
+                        }
+                    });
+                },
                 openPalette() {
                     this.open = true;
                     this.search = '';
