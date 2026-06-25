@@ -26,6 +26,8 @@ jobs:
 
             echo "[1/7] Fetch & reset ke update terbaru"
             git fetch origin
+            sudo chown -R ubuntu:www-data storage bootstrap/cache || true
+            sudo chmod -R ug+rwX storage bootstrap/cache || true
             git reset --hard origin/main
 
             echo "[2/7] Rapikan permission storage & cache"
