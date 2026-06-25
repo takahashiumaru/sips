@@ -531,7 +531,7 @@
                     $unreadCount += $unpaidBills->count();
                 }
             @endphp
-            <div class="relative" @click.away="notificationsOpen = false">
+            <div class="sm:relative" @click.away="notificationsOpen = false">
                 <button @click="notificationsOpen = !notificationsOpen" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all relative focus:outline-none focus:ring-2 focus:ring-slate-100">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
@@ -551,7 +551,7 @@
                     x-transition:leave="transition ease-in duration-100"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    class="absolute right-0 mt-2.5 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 text-slate-800"
+                    class="absolute left-4 right-4 sm:left-auto sm:right-0 mt-2.5 sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 text-slate-800"
                     style="display: none;">
                     <div class="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider" data-i18n="app.notifications">Notifikasi Baru</span>
@@ -575,9 +575,9 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
                                             </svg>
                                         </div>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-[11px] font-bold text-slate-800 leading-snug">Verifikasi: {{ $p->tagihan->siswa->nama_lengkap ?? '-' }}</span>
-                                            <span class="text-[10px] text-slate-500 leading-none">SPP {{ $p->tagihan->nama_bulan }} · Rp {{ number_format($p->jumlah_bayar, 0, ',', '.') }}</span>
+                                        <div class="flex-1 min-w-0 flex flex-col gap-0.5">
+                                            <span class="text-[11px] font-bold text-slate-800 leading-snug truncate">Verifikasi: {{ $p->tagihan->siswa->nama_lengkap ?? '-' }}</span>
+                                            <span class="text-[10px] text-slate-500 leading-none truncate">SPP {{ $p->tagihan->nama_bulan }} · Rp {{ number_format($p->jumlah_bayar, 0, ',', '.') }}</span>
                                         </div>
                                     </a>
                                 @endforeach
@@ -599,9 +599,9 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                         </div>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-[11px] font-bold text-slate-800 leading-snug">Tagihan: {{ $b->siswa->nama_lengkap ?? '-' }}</span>
-                                            <span class="text-[10px] text-slate-500 leading-none">SPP {{ $b->nama_bulan }} · Rp {{ number_format($b->sisa_tagihan, 0, ',', '.') }}</span>
+                                        <div class="flex-1 min-w-0 flex flex-col gap-0.5">
+                                            <span class="text-[11px] font-bold text-slate-800 leading-snug truncate">Tagihan: {{ $b->siswa->nama_lengkap ?? '-' }}</span>
+                                            <span class="text-[10px] text-slate-500 leading-none truncate">SPP {{ $b->nama_bulan }} · Rp {{ number_format($b->sisa_tagihan, 0, ',', '.') }}</span>
                                         </div>
                                     </a>
                                 @endforeach
@@ -921,12 +921,15 @@
                         // Update active state in sidebar
                         updateActiveSidebarLinks(url);
 
-                        // Close mobile sidebar backdrop if open
+                        // Close sidebars and dropdowns on successful page load
                         if (window.Alpine) {
                             const bodyEl = document.querySelector('body');
                             if (bodyEl) {
                                 try {
-                                    window.Alpine.$data(bodyEl).sidebarOpen = false;
+                                    const data = window.Alpine.$data(bodyEl);
+                                    data.sidebarOpen = false;
+                                    data.notificationsOpen = false;
+                                    data.profileDropdownOpen = false;
                                 } catch (e) {}
                             }
                         }
