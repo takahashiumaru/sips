@@ -1,0 +1,56 @@
+name: Deploy SIPS ke VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy ke VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            if [ ! -d "/home/ubuntu/sips" ]; then
+              echo "Folder /home/ubuntu/sips tidak ditemukan. Melakukan clone pertama kali..."
+              git clone git@github.com:takahashiumaru/sips.git /home/ubuntu/sips
+            fi
+
+            cd /home/ubuntu/sips
+
+            echo "[1/7] Fetch & reset ke update terbaru"
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "[2/7] Rapikan permission storage & cache"
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R ug+rwX storage bootstrap/cache
+            sudo find storage bootstrap/cache -type d -exec chmod g+s {} \;
+
+            echo "[3/7] Install composer dependencies"
+            composer install --no-interaction --no-dev --optimize-autoloader
+
+            echo "[4/7] Refresh storage link & migrate"
+            rm -f public/storage
+            php artisan storage:link
+            php artisan migrate --force
+
+            echo "[5/7] Clear & rebuild cache"
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan optimize
+
+            echo "[6/7] Restart PHP-FPM"
+            sudo systemctl restart php8.3-fpm
+
+            echo "[7/7] Reload Nginx"
+            sudo systemctl reload nginx
+
+            echo "Deploy SIPS selesai"
