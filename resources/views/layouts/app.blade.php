@@ -426,6 +426,26 @@
                 </a>
             @endif
         </nav>
+        
+        <!-- Mobile Theme/Lang Controls -->
+        <div class="md:hidden p-4 border-t border-slate-200/50 mt-auto flex items-center justify-between gap-3 bg-white/40 backdrop-blur-xs">
+            <div class="theme-switch scale-90 origin-left" aria-label="Theme">
+                <button type="button" data-theme-option="light" class="theme-option active" title="Light mode" aria-label="Light mode">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36-6.36-.7.7M6.34 17.66l-.7.7m0-12.72.7.7m12.72 12.72.7-.7M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
+                    </svg>
+                </button>
+                <button type="button" data-theme-option="dark" class="theme-option" title="Dark mode" aria-label="Dark mode">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.8A8.5 8.5 0 1111.2 3a6.5 6.5 0 009.8 9.8z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="segmented-control shrink-0 scale-90 origin-right">
+                <button type="button" data-lang-option="en" class="segmented-btn">EN</button>
+                <button type="button" data-lang-option="id" class="segmented-btn active">ID</button>
+            </div>
+        </div>
     </aside>
 
     <!-- Top Navbar next to sidebar -->
@@ -466,23 +486,25 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <div class="theme-switch hidden sm:inline-flex" aria-label="Theme">
-                <button type="button" data-theme-option="light" class="theme-option active" title="Light mode" aria-label="Light mode">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36-6.36-.7.7M6.34 17.66l-.7.7m0-12.72.7.7m12.72 12.72.7-.7M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
-                    </svg>
-                </button>
-                <button type="button" data-theme-option="dark" class="theme-option" title="Dark mode" aria-label="Dark mode">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.8A8.5 8.5 0 1111.2 3a6.5 6.5 0 009.8 9.8z"></path>
-                    </svg>
-                </button>
-            </div>
+            <div class="hidden md:inline-flex items-center gap-4">
+                <div class="theme-switch" aria-label="Theme">
+                    <button type="button" data-theme-option="light" class="theme-option active" title="Light mode" aria-label="Light mode">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36-6.36-.7.7M6.34 17.66l-.7.7m0-12.72.7.7m12.72 12.72.7-.7M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
+                        </svg>
+                    </button>
+                    <button type="button" data-theme-option="dark" class="theme-option" title="Dark mode" aria-label="Dark mode">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.8A8.5 8.5 0 1111.2 3a6.5 6.5 0 009.8 9.8z"></path>
+                        </svg>
+                    </button>
+                </div>
 
-            <!-- Language Mock Segment (Inspired by screenshot) -->
-            <div class="segmented-control shrink-0 hidden sm:inline-flex">
-                <button type="button" data-lang-option="en" class="segmented-btn">EN</button>
-                <button type="button" data-lang-option="id" class="segmented-btn active">ID</button>
+                <!-- Language Mock Segment (Inspired by screenshot) -->
+                <div class="segmented-control shrink-0">
+                    <button type="button" data-lang-option="en" class="segmented-btn">EN</button>
+                    <button type="button" data-lang-option="id" class="segmented-btn active">ID</button>
+                </div>
             </div>
 
             <!-- Notifications Bell -->
@@ -677,7 +699,7 @@
 
     <!-- Main Content Area -->
     <main class="pt-16 min-h-screen flex flex-col pl-0 md:pl-[var(--sidebar-w)]">
-        <div class="flex-1 p-6 md:p-10 max-w-7xl w-full mx-auto">
+        <div class="flex-1 p-4 sm:p-6 md:p-10 max-w-7xl w-full mx-auto">
             <!-- Toast notification messages using SweetAlert2 -->
             @if (session('success'))
                 <script>
