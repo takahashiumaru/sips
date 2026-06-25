@@ -78,7 +78,7 @@
                 <h2 class="text-xs font-bold text-slate-800 uppercase" data-i18n="dashboard.paymentTrend">Tren Penerimaan Pembayaran</h2>
                 <p class="mt-1 text-[11px] font-semibold text-slate-400" data-i18n="dashboard.paymentTrendHelp">Akumulasi pembayaran lunas tahun ini</p>
             </div>
-            <div class="flex items-center gap-4 self-start sm:self-auto">
+            <div class="flex items-center gap-4 self-start sm:self-auto flex-wrap">
                 <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                     <span class="legend-color legend-current h-2.5 w-2.5 rounded-sm"></span>
                     <span>Bulan Ini</span>
@@ -90,6 +90,10 @@
                 <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-300 dark:text-slate-600">
                     <span class="legend-color legend-future h-2.5 w-2.5 rounded-sm"></span>
                     <span>Mendatang</span>
+                </div>
+                <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-blue-500 dark:text-blue-400">
+                    <span class="h-0.5 w-4 rounded-full bg-blue-500 dark:bg-blue-400"></span>
+                    <span>Tren</span>
                 </div>
             </div>
         </div>
@@ -226,17 +230,20 @@
 
         const isDark = document.documentElement.dataset.theme === 'dark';
 
+        // Trendline data: only up to current month, null for future months (line won't render there)
+        const trendLineData = chartData.map((val, i) => i <= monthNow ? val : null);
+
         // Per-bar colors: current month = vibrant blue, past = soft slate, future = very faint
         const barColors = chartData.map((val, i) => {
-            if (i === monthNow) return '#2563EB';      // Current month — accent blue
-            if (i < monthNow)   return isDark ? '#334155' : '#CBD5E1'; // Past months
-            return isDark ? '#1E293B' : '#E2E8F0';                     // Future months
+            if (i === monthNow) return '#2563EB';
+            if (i < monthNow)   return isDark ? '#334155' : '#CBD5E1';
+            return isDark ? '#1E293B' : '#E2E8F0';
         });
 
         const barHoverColors = chartData.map((val, i) => {
-            if (i === monthNow) return '#1D4ED8';       // Current month hover — deeper blue
-            if (i < monthNow)   return isDark ? '#475569' : '#94A3B8'; // Past months hover
-            return isDark ? '#334155' : '#CBD5E1';                     // Future months hover
+            if (i === monthNow) return '#1D4ED8';
+            if (i < monthNow)   return isDark ? '#475569' : '#94A3B8';
+            return isDark ? '#334155' : '#CBD5E1';
         });
 
         // Floating value label plugin — shows value above current month bar
@@ -252,7 +259,6 @@
                 const { ctx: c } = chart;
                 c.save();
 
-                // Value pill
                 const text = currencyFormatter.format(value);
                 c.font = "bold 10px 'Plus Jakarta Sans', sans-serif";
                 const textWidth = c.measureText(text).width;
@@ -261,29 +267,143 @@
                 const pillX = bar.x - pillW / 2;
                 const pillY = bar.y - pillH - 8;
 
-                // Pill background
                 c.beginPath();
                 c.roundRect(pillX, pillY, pillW, pillH, 6);
-                c.fillStyle = '#0F172A';
+                c.fillStyle = isDark ? '#1E293B' : '#0F172A';
                 c.fill();
 
-                // Pill text
                 c.fillStyle = '#FFFFFF';
                 c.textAlign = 'center';
                 c.textBaseline = 'middle';
                 c.fillText(text, bar.x, pillY + pillH / 2);
 
-                // Small arrow
                 c.beginPath();
                 c.moveTo(bar.x - 4, pillY + pillH);
                 c.lineTo(bar.x, pillY + pillH + 4);
                 c.lineTo(bar.x + 4, pillY + pillH);
                 c.closePath();
-                c.fillStyle = '#0F172A';
+                c.fillStyle = isDark ? '#1E293B' : '#0F172A';
                 c.fill();
 
                 c.restore();
             }
+        };
+
+        // Premium trendline effects plugin — shadow, custom points, animated pulse
+        let pulsePhase = 0;
+        const trendEffectsPlugin = {
+            id: 'trendEffects',
+            beforeDatasetDraw(chart, args) {
+                if (args.index !== 1) return;
+                const { ctx: c } = chart;
+                c.save();
+                c.shadowColor = isDark ? 'rgba(59, 130, 246, 0.35)' : 'rgba(37, 99, 235, 0.28)';
+                c.shadowBlur = 16;
+                c.shadowOffsetX = 0;
+                c.shadowOffsetY = 8;
+            },
+            afterDatasetDraw(chart, args) {
+                if (args.index !== 1) return;
+                const { ctx: c } = chart;
+                c.restore(); 
+
+                const meta = chart.getDatasetMeta(1);
+                if (!meta || !meta.data) return;
+
+                meta.data.forEach((pt, i) => {
+                    if (trendLineData[i] === null || trendLineData[i] === undefined) return;
+
+                    const x = pt.x;
+                    const y = pt.y;
+                    const accentColor = isDark ? '#3B82F6' : '#2563EB';
+
+                    if (i === monthNow) {
+                        const pulse = 0.4 + Math.sin(pulsePhase) * 0.25;
+                        const ringRadius = 12 + Math.sin(pulsePhase) * 3;
+
+                        c.save();
+                        c.beginPath();
+                        c.arc(x, y, ringRadius, 0, Math.PI * 2);
+                        c.fillStyle = isDark
+                            ? `rgba(59, 130, 246, ${pulse * 0.18})`
+                            : `rgba(37, 99, 235, ${pulse * 0.15})`;
+                        c.fill();
+                        c.restore();
+
+                        c.save();
+                        c.beginPath();
+                        c.arc(x, y, 7, 0, Math.PI * 2);
+                        c.fillStyle = isDark
+                            ? 'rgba(59, 130, 246, 0.15)'
+                            : 'rgba(37, 99, 235, 0.12)';
+                        c.fill();
+                        c.restore();
+
+                        c.save();
+                        c.beginPath();
+                        c.arc(x, y, 5, 0, Math.PI * 2);
+                        c.fillStyle = accentColor;
+                        c.fill();
+                        c.restore();
+
+                        c.save();
+                        c.beginPath();
+                        c.arc(x, y, 2.5, 0, Math.PI * 2);
+                        c.fillStyle = '#FFFFFF';
+                        c.fill();
+                        c.restore();
+                    } else {
+                        c.save();
+
+                        c.beginPath();
+                        c.arc(x, y, 5, 0, Math.PI * 2);
+                        c.fillStyle = isDark
+                            ? 'rgba(59, 130, 246, 0.08)'
+                            : 'rgba(37, 99, 235, 0.06)';
+                        c.fill();
+
+                        c.beginPath();
+                        c.arc(x, y, 3, 0, Math.PI * 2);
+                        c.fillStyle = isDark ? '#1E293B' : '#FFFFFF';
+                        c.fill();
+                        c.strokeStyle = accentColor;
+                        c.lineWidth = 1.5;
+                        c.stroke();
+
+                        c.restore();
+                    }
+                });
+            }
+        };
+
+        const pulseAnimationPlugin = {
+            id: 'pulseAnimation',
+            afterDraw(chart) {
+                pulsePhase += 0.04;
+                if (pulsePhase > Math.PI * 200) pulsePhase = 0;
+                requestAnimationFrame(() => chart.draw());
+            }
+        };
+
+        let cachedGradient = null;
+        const createLineGradient = (chart) => {
+            const area = chart.chartArea;
+            if (!area) return 'rgba(37, 99, 235, 0.05)';
+            if (cachedGradient) return cachedGradient;
+            const gradient = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+            if (isDark) {
+                gradient.addColorStop(0,   'rgba(59, 130, 246, 0.28)');
+                gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.14)');
+                gradient.addColorStop(0.6, 'rgba(59, 130, 246, 0.05)');
+                gradient.addColorStop(1,   'rgba(59, 130, 246, 0)');
+            } else {
+                gradient.addColorStop(0,   'rgba(37, 99, 235, 0.22)');
+                gradient.addColorStop(0.3, 'rgba(37, 99, 235, 0.10)');
+                gradient.addColorStop(0.6, 'rgba(37, 99, 235, 0.03)');
+                gradient.addColorStop(1,   'rgba(37, 99, 235, 0)');
+            }
+            cachedGradient = gradient;
+            return gradient;
         };
 
         new Chart(ctx, {
@@ -306,6 +426,24 @@
                         borderSkipped: false,
                         barPercentage: 0.6,
                         categoryPercentage: 0.7,
+                        order: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Tren Penerimaan',
+                        data: trendLineData,
+                        borderColor: isDark ? '#3B82F6' : '#2563EB',
+                        borderWidth: 2.5,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: function(context) {
+                            return createLineGradient(context.chart);
+                        },
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        pointHitRadius: 10,
+                        spanGaps: false,
+                        order: 1
                     }
                 ]
             },
@@ -347,6 +485,9 @@
                             size: 13
                         },
                         displayColors: false,
+                        filter: function(tooltipItem) {
+                            return tooltipItem.datasetIndex === 0;
+                        },
                         callbacks: {
                             title: function(items) {
                                 const idx = items[0].dataIndex;
@@ -414,7 +555,7 @@
                     }
                 }
             },
-            plugins: [floatingLabelPlugin]
+            plugins: [trendEffectsPlugin, floatingLabelPlugin, pulseAnimationPlugin]
         });
     });
 </script>
