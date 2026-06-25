@@ -115,7 +115,10 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::middleware('role:admin,bendahara,kepala_sekolah')->group(function () {
         Route::get('/laporan/tunggakan', [LaporanController::class, 'tunggakan'])->name('laporan.tunggakan');
         Route::get('/laporan/tunggakan/export/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.tunggakan.pdf');
+        Route::get('/laporan/tunggakan/export/excel', [LaporanController::class, 'exportExcel'])->name('laporan.tunggakan.excel');
         Route::get('/laporan/rekap-bulanan', [LaporanController::class, 'rekapBulanan'])->name('laporan.rekap');
+        Route::get('/laporan/rekap-bulanan/export/pdf', [LaporanController::class, 'exportRekapPdf'])->name('laporan.rekap.pdf');
+        Route::get('/laporan/rekap-bulanan/export/excel', [LaporanController::class, 'exportRekapExcel'])->name('laporan.rekap.excel');
     });
 
     /* ── Portal Wali Murid ── */

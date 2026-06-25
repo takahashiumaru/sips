@@ -244,6 +244,7 @@ body.sidebar-is-minimized .sidebar-brand .brand-logo-mark {
     height: 40px !important;
 }
 
+
 body.sidebar-is-minimized .sidebar-premium nav {
     position: absolute !important;
     top: 64px !important;
@@ -324,6 +325,40 @@ body.sidebar-is-minimized .sidebar-toggle-btn:hover {
 
 body.sidebar-is-minimized .sidebar-premium nav {
     padding-top: 0 !important; /* No extra padding needed since toggle floats on the border */
+}
+
+/* ========================================
+   SIDEBAR MINIMIZED - JS TOOLTIP STYLES
+   Tooltip div is appended to <body> by JS
+   ======================================== */
+
+#sidebar-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background: #1E293B;
+    color: #F1F5F9;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 6px 13px;
+    border-radius: 10px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.22), 0 2px 8px rgba(15,23,42,0.12);
+    pointer-events: none;
+    border: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.01em;
+    opacity: 0;
+    transition: opacity 0.14s ease;
+    transform: translateY(-50%);
+}
+
+#sidebar-tooltip.visible {
+    opacity: 1;
+}
+
+/* Reset ::before background highlight for minimized state */
+body.sidebar-is-minimized .sidebar-premium nav a.group::before {
+    display: none !important;
 }
 
 /* Sidebar Section Labels */
@@ -840,9 +875,76 @@ tr:hover .copy-btn {
     min-height: min(760px, calc(100dvh - clamp(2rem, 6vw, 5rem)));
     border-radius: 34px 0 0 34px;
     padding: clamp(2.5rem, 5vw, 5rem);
-    background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #0D9488 100%);
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(96, 165, 250, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(6, 95, 70, 0.35) 0%, transparent 45%),
+        linear-gradient(150deg, #3B82F6 0%, #2563EB 20%, #1E40AF 45%, #1E3A8A 70%, #0F172A 100%);
     color: #FFFFFF;
-    box-shadow: 0 28px 70px rgba(37, 99, 235, 0.16);
+    box-shadow: 0 28px 70px rgba(37, 99, 235, 0.22);
+}
+
+/* ============ HERO BRAND ============ */
+
+.auth-hero-brand {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2vw, 24px);
+    margin-bottom: 0.5rem;
+}
+
+/* Frosted-glass ring around logo */
+.auth-hero-logo-ring {
+    position: relative;
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        0 0 0 6px rgba(255, 255, 255, 0.08),
+        0 16px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-hero-logo-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    border-radius: 50%;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+}
+
+.auth-hero-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.auth-hero-app-name {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #FFFFFF;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.auth-hero-app-accent {
+    color: rgba(147, 197, 253, 0.9); /* Light blue accent for the dash */
+}
+
+.auth-hero-app-sub {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(191, 219, 254, 0.75);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 /* Subtle dot grid pattern on the hero panel */
@@ -850,23 +952,23 @@ tr:hover .copy-btn {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.6;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.5;
     pointer-events: none;
 }
 
-/* Modern glowing decorative orb on background */
+/* Decorative glowing orb at bottom-right */
 .auth-hero-panel::after {
     content: '';
     position: absolute;
-    top: -15%;
-    right: -15%;
-    width: 60%;
-    height: 60%;
+    bottom: -20%;
+    right: -10%;
+    width: 55%;
+    height: 55%;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, rgba(20, 184, 166, 0) 70%);
-    filter: blur(40px);
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.25) 0%, transparent 65%);
+    filter: blur(50px);
     pointer-events: none;
     z-index: 0;
 }

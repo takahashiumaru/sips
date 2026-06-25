@@ -7,9 +7,17 @@
     <section class="auth-hero-panel">
         <div class="auth-hero-inner">
             <div class="auth-hero-copy-block">
-                <div class="mb-4">
-                    @include('partials.brand-mark', ['showText' => true, 'tone' => 'dark', 'size' => 'lg'])
+                <!-- Premium Hero Brand -->
+                <div class="auth-hero-brand">
+                    <div class="auth-hero-logo-ring">
+                        <img src="{{ asset('logo.png') }}" alt="Logo Tut Wuri Handayani" class="auth-hero-logo-img">
+                    </div>
+                    <div class="auth-hero-brand-text">
+                        <span class="auth-hero-app-name">SIP<span class="auth-hero-app-accent">-</span>SPP</span>
+                        <span class="auth-hero-app-sub">Sistem Informasi Pembayaran</span>
+                    </div>
                 </div>
+
                 <div class="auth-badge">
                     <span data-i18n="login.badge">Sistem pembayaran sekolah</span>
                 </div>

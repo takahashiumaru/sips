@@ -44,18 +44,15 @@
                 background: isDark ? '#0f172a' : '#ffffff',
                 showConfirmButton: false,
                 timer: autoClose,
-                timerProgressBar: true,
+                timerProgressBar: false,
                 width: 340,
                 padding: '24px 28px 20px',
                 showClass: { popup: 'swal-premium-slide-in' },
                 hideClass: { popup: 'swal-premium-slide-out' },
                 customClass: {
-                    popup: 'swal-premium-popup',
-                    timerProgressBar: 'swal-premium-timer'
+                    popup: 'swal-premium-popup'
                 },
                 didOpen: (popup) => {
-                    const bar = popup.querySelector('.swal2-timer-progress-bar');
-                    if (bar) bar.style.background = timerColors[type] || timerColors.info;
                     popup.addEventListener('click', () => Swal.close());
                 }
             });
@@ -137,7 +134,7 @@
         
         <!-- Sidebar Brand Logo Section -->
         <div class="sidebar-brand h-16 flex items-center shrink-0 transition-all duration-300" :class="sidebarMinimized ? 'justify-center px-0' : 'px-5'">
-            <a href="{{ auth()->user()->isWaliMurid() ? route('portal.index') : route('dashboard') }}" class="flex items-center gap-2.5 font-bold text-lg tracking-tight text-slate-800">
+            <a href="{{ auth()->user()->isWaliMurid() ? route('portal.index') : route('dashboard') }}" class="flex items-center gap-2.5 font-bold text-lg tracking-tight text-slate-800" title="SIP-SPP">
                 @include('partials.brand-mark', ['showText' => true, 'tone' => 'dark'])
             </a>
         </div>
@@ -158,7 +155,7 @@
                 <a href="{{ route('dashboard') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('dashboard') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Dashboard' : ''">
+                   title="Dashboard">
                     <svg class="w-[18px] h-[18px] shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path>
                     </svg>
@@ -176,7 +173,7 @@
                 <a href="{{ route('users.index') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('users.*') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Manajemen Pengguna' : ''">
+                   title="User Management">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
@@ -196,7 +193,7 @@
                     <a href="{{ route('kelas.index') }}" 
                        class="flex items-center transition-all btn-premium group {{ request()->routeIs('kelas.index') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                        :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                       :title="sidebarMinimized ? 'Data Kelas' : ''">
+                       title="Data Kelas">
                         <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
@@ -210,7 +207,7 @@
                 <a href="{{ route('tarif.index') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('tarif.*') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Tarif SPP' : ''">
+                   title="Tarif SPP">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
                     </svg>
@@ -223,7 +220,7 @@
                 <a href="{{ route('siswa.index') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('siswa.*') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Data Siswa' : ''">
+                   title="Data Siswa">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
@@ -241,7 +238,7 @@
                 <a href="{{ route('tagihan.index') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('tagihan.*') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Tagihan SPP' : ''">
+                   title="Tagihan SPP">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                     </svg>
@@ -254,7 +251,7 @@
                 <a href="{{ route('pembayaran.index') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('pembayaran.*') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Pembayaran & Verifikasi' : ''">
+                   title="Pembayaran SPP">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                     </svg>
@@ -272,7 +269,7 @@
                 <a href="{{ route('laporan.tunggakan') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('laporan.tunggakan') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Laporan Tunggakan' : ''">
+                   title="Laporan Tunggakan">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
@@ -284,7 +281,7 @@
                 <a href="{{ route('laporan.rekap') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('laporan.rekap') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Rekap Bulanan' : ''">
+                   title="Rekap Bulanan">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
@@ -302,7 +299,7 @@
                 <a href="{{ route('portal.index') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('portal.index') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Dashboard Wali' : ''">
+                   title="Dashboard Wali">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11V11a1 1 0 00-1-1H5m11 4h2a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3a2 2 0 012-2h2m4.5-3a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                     </svg>
@@ -314,7 +311,7 @@
                 <a href="{{ route('portal.tagihan') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('portal.tagihan') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Tagihan SPP Anak' : ''">
+                   title="Tagihan Anak">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
                     </svg>
@@ -326,7 +323,7 @@
                 <a href="{{ route('portal.riwayat') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('portal.riwayat') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} {{ $isMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5' }}"
                    :class="sidebarMinimized ? 'justify-center mx-0.5 py-2 px-0 rounded-xl' : 'mx-1 px-3 py-2 rounded-xl gap-2.5'"
-                   :title="sidebarMinimized ? 'Riwayat Pembayaran' : ''">
+                   title="Riwayat Bayar">
                     <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -555,7 +552,7 @@
         </div>
 
         <footer class="md:pl-0 border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-bold bg-white mt-auto">
-            <span>&copy; {{ date('Y') }} <span data-i18n="app.footer">SIP-SPP &middot; SMP Negeri 1 Kelapa Dua. Hak Cipta Dilindungi.</span></span>
+            <span>&copy; {{ date('Y') }} <span data-i18n="app.footer">SIP-SPP &middot; SD Negeri 1 Kelapa Dua. Hak Cipta Dilindungi.</span></span>
         </footer>
     </main>
 
@@ -816,6 +813,76 @@
                 console.error('Error copying text: ', err);
             });
         }
+    </script>
+
+    <!-- Sidebar minimized tooltip: JS-based so it can escape overflow:auto containers -->
+    <div id="sidebar-tooltip" role="tooltip" aria-hidden="true"></div>
+    <script>
+    (function() {
+        const tooltip = document.getElementById('sidebar-tooltip');
+        if (!tooltip) return;
+
+        let hideTimeout = null;
+
+        function showTooltip(el) {
+            const label = el.getAttribute('title') || el.getAttribute('data-tooltip');
+            if (!label) return;
+
+            clearTimeout(hideTimeout);
+            tooltip.textContent = label;
+
+            // Position: vertically centered on the element, left = right edge of sidebar
+            const rect = el.getBoundingClientRect();
+            const SIDEBAR_WIDTH = 72; // minimized sidebar width in px
+            const GAP = 10; // gap between sidebar edge and tooltip
+
+            tooltip.style.left = (SIDEBAR_WIDTH + GAP) + 'px';
+            tooltip.style.top = (rect.top + rect.height / 2) + 'px';
+
+            // Force reflow before adding .visible so transition fires
+            tooltip.offsetHeight;
+            tooltip.classList.add('visible');
+        }
+
+        function hideTooltip() {
+            hideTimeout = setTimeout(() => {
+                tooltip.classList.remove('visible');
+            }, 80);
+        }
+
+        function isSidebarMinimized() {
+            return document.body.classList.contains('sidebar-is-minimized');
+        }
+
+        // Attach to all sidebar nav links and the brand link
+        function attachTooltips() {
+            const sidebar = document.querySelector('aside.sidebar-premium');
+            if (!sidebar) return;
+
+            const targets = sidebar.querySelectorAll('nav a[title], .sidebar-brand a[title]');
+            targets.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    if (isSidebarMinimized()) showTooltip(el);
+                });
+                el.addEventListener('mouseleave', hideTooltip);
+                el.addEventListener('focus', () => {
+                    if (isSidebarMinimized()) showTooltip(el);
+                });
+                el.addEventListener('blur', hideTooltip);
+            });
+        }
+
+        // Also re-attach after SPA navigation if any
+        document.addEventListener('DOMContentLoaded', attachTooltips);
+        // Run immediately in case DOMContentLoaded already fired
+        if (document.readyState !== 'loading') attachTooltips();
+
+        // Hide tooltip when sidebar is expanded
+        document.addEventListener('click', (e) => {
+            const toggleBtn = e.target.closest('[data-sidebar-toggle]');
+            if (toggleBtn) hideTooltip();
+        });
+    })();
     </script>
 
 </body>

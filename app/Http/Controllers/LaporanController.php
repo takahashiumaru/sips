@@ -8,6 +8,9 @@ use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\RekapBulananExport;
+use App\Exports\TunggakanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
@@ -50,10 +53,53 @@ class LaporanController extends Controller
         return $pdf->download('Laporan-Tunggakan-' . now()->format('Y-m-d') . '.pdf');
     }
 
+    public function exportExcel(Request $request)
+    {
+        $tunggakan = TagihanSpp::with(['siswa.kelas', 'siswa.waliMurid'])
+            ->where('status', '!=', 'lunas')
+            ->when($request->kelas_id, fn($q, $v) => $q->whereHas('siswa', fn($sq) => $sq->where('kelas_id', $v)))
+            ->when($request->bulan, fn($q, $v) => $q->where('bulan', $v))
+            ->when($request->tahun, fn($q, $v) => $q->where('tahun', $v))
+            ->orderByDesc(DB::raw('jumlah_tagihan - total_dibayar'))
+            ->get();
+
+        return Excel::download(
+            new TunggakanExport($tunggakan),
+            'Laporan-Tunggakan-' . now()->format('Y-m-d') . '.xlsx'
+        );
+    }
+
     public function rekapBulanan(Request $request)
     {
         $tahun = $request->tahun ?? now()->year;
+        $rekap = $this->getRekapData($tahun);
+        return view('laporan.rekap-bulanan', compact('rekap', 'tahun'));
+    }
 
+    public function exportRekapPdf(Request $request)
+    {
+        $tahun = $request->tahun ?? now()->year;
+        $rekap = $this->getRekapData($tahun);
+
+        $pdf = Pdf::loadView('laporan.pdf.rekap-bulanan', compact('rekap', 'tahun'));
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download('Rekap-Bulanan-SPP-' . $tahun . '-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function exportRekapExcel(Request $request)
+    {
+        $tahun = $request->tahun ?? now()->year;
+        $rekap = $this->getRekapData($tahun);
+
+        return Excel::download(
+            new \App\Exports\RekapBulananExport($rekap, $tahun),
+            'Rekap-Bulanan-SPP-' . $tahun . '-' . now()->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    private function getRekapData(int $tahun): array
+    {
         $rekap = [];
         for ($bulan = 1; $bulan <= 12; $bulan++) {
             $totalTagihan = TagihanSpp::where('bulan', $bulan)->where('tahun', $tahun)->sum('jumlah_tagihan');
@@ -71,7 +117,6 @@ class LaporanController extends Controller
                 'persentase' => $total > 0 ? round(($lunas / $total) * 100, 1) : 0,
             ];
         }
-
-        return view('laporan.rekap-bulanan', compact('rekap', 'tahun'));
+        return $rekap;
     }
 }

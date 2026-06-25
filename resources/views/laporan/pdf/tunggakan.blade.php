@@ -77,7 +77,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <h1 class="school-name">SMP NEGERI 1 KELAPA DUA</h1>
+        <h1 class="school-name">SD NEGERI 1 KELAPA DUA</h1>
         <p class="school-details">Jl. Pendidikan No. 45, Kecamatan Kelapa Dua, Tangerang · Telp: (021) 543210</p>
     </div>
 

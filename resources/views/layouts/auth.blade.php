@@ -44,18 +44,15 @@
                 background: isDark ? '#0f172a' : '#ffffff',
                 showConfirmButton: false,
                 timer: autoClose,
-                timerProgressBar: true,
+                timerProgressBar: false,
                 width: 340,
                 padding: '24px 28px 20px',
                 showClass: { popup: 'swal-premium-slide-in' },
                 hideClass: { popup: 'swal-premium-slide-out' },
                 customClass: {
-                    popup: 'swal-premium-popup',
-                    timerProgressBar: 'swal-premium-timer'
+                    popup: 'swal-premium-popup'
                 },
                 didOpen: (popup) => {
-                    const bar = popup.querySelector('.swal2-timer-progress-bar');
-                    if (bar) bar.style.background = timerColors[type] || timerColors.info;
                     popup.addEventListener('click', () => Swal.close());
                 }
             });
