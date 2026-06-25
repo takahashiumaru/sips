@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\TahunAjaran;
 use App\Models\Kelas;
-use App\Models\TarifSpp;
+use App\Models\Pembayaran;
 use App\Models\Siswa;
 use App\Models\TagihanSpp;
-use App\Models\Pembayaran;
+use App\Models\TahunAjaran;
+use App\Models\TarifSpp;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,7 +19,7 @@ class DummyDataSeeder extends Seeder
         // ── Users ──
         $admin = User::create([
             'name' => 'Administrator',
-            'email' => 'admin@sipspp.com',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
             'phone' => '081234567890',
@@ -29,7 +29,7 @@ class DummyDataSeeder extends Seeder
 
         $bendahara = User::create([
             'name' => 'Sri Wahyuni',
-            'email' => 'bendahara@sipspp.com',
+            'email' => 'bendahara@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'bendahara',
             'phone' => '081234567891',
@@ -39,7 +39,7 @@ class DummyDataSeeder extends Seeder
 
         $kepsek = User::create([
             'name' => 'Dr. Hadi Susanto, M.Pd.',
-            'email' => 'kepsek@sipspp.com',
+            'email' => 'kepsek@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'kepala_sekolah',
             'phone' => '081234567892',
@@ -68,7 +68,7 @@ class DummyDataSeeder extends Seeder
                 'email' => $w['email'],
                 'password' => Hash::make('password'),
                 'role' => 'wali_murid',
-                'phone' => '08' . rand(1000000000, 9999999999),
+                'phone' => '08'.rand(1000000000, 9999999999),
                 'is_active' => true,
             ]);
             $wali->assignRole('wali_murid');
@@ -106,7 +106,7 @@ class DummyDataSeeder extends Seeder
                 'tahun_ajaran_id' => $ta1->id,
                 'nama_kelas' => $k['nama_kelas'],
                 'tingkat' => $k['tingkat'],
-                'wali_kelas' => 'Guru Kelas ' . $k['nama_kelas'],
+                'wali_kelas' => 'Guru Kelas '.$k['nama_kelas'],
             ]);
         }
 
@@ -156,7 +156,7 @@ class DummyDataSeeder extends Seeder
         // ── Tagihan SPP (Juli - Desember 2024) ──
         foreach ($siswaModels as $siswa) {
             $kelas = $kelasModels[array_search($siswa->kelas_id, array_column(
-                array_map(fn($k) => ['id' => $k->id], $kelasModels), 'id'
+                array_map(fn ($k) => ['id' => $k->id], $kelasModels), 'id'
             ))];
             $tarif = TarifSpp::where('tahun_ajaran_id', $ta1->id)
                 ->where('tingkat', $kelas->tingkat)
@@ -194,7 +194,7 @@ class DummyDataSeeder extends Seeder
                     Pembayaran::create([
                         'tagihan_id' => $tagihan->id,
                         'jumlah_bayar' => $tarif->jumlah,
-                        'tanggal_bayar' => "2024-{$bulan}-" . rand(1, 10) . ' ' . rand(8, 16) . ':' . rand(10, 59) . ':00',
+                        'tanggal_bayar' => "2024-{$bulan}-".rand(1, 10).' '.rand(8, 16).':'.rand(10, 59).':00',
                         'metode_bayar' => ['tunai', 'transfer', 'qris'][rand(0, 2)],
                         'status_verifikasi' => 'terverifikasi',
                         'dicatat_oleh' => $bendahara->id,
