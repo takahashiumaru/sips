@@ -164,7 +164,7 @@
     $searchMenus = [];
     if (auth()->check()) {
         $user = auth()->user();
-        if ($user->isAdmin() || $user->isBendahara() || $user->isKepalaSekolah()) {
+        if ($user->isAdmin() || $user->isKepalaSekolah()) {
             $searchMenus[] = ['name' => 'Dashboard Utama', 'url' => route('dashboard'), 'svg' => $svgs['dashboard'], 'category' => 'Utama'];
             $searchMenus[] = ['name' => 'Tarif SPP', 'url' => route('tarif.index'), 'svg' => $svgs['tag'], 'category' => 'Akademik'];
             $searchMenus[] = ['name' => 'Data Siswa', 'url' => route('siswa.index'), 'svg' => $svgs['users'], 'category' => 'Akademik'];
@@ -243,7 +243,7 @@
         <!-- Navigation Menu -->
         <nav class="sidebar-nav space-y-1 overflow-y-auto flex-1 pt-4 {{ $isMinimized ? 'px-2 py-3' : 'p-3' }}"
              :class="{ 'px-2 py-3': sidebarMinimized, 'p-3': !sidebarMinimized }">
-            @if(auth()->user()->isAdmin() || auth()->user()->isBendahara() || auth()->user()->isKepalaSekolah())
+            @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
                 <a href="{{ route('dashboard') }}" 
                    class="flex items-center transition-all btn-premium group {{ request()->routeIs('dashboard') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} py-2 rounded-xl {{ $isMinimized ? 'justify-center mx-0.5 px-0' : 'mx-1 px-3 gap-2.5' }}"
                    :class="{ 'justify-center mx-0.5 px-0': sidebarMinimized, 'mx-1 px-3 gap-2.5': !sidebarMinimized }"
@@ -276,7 +276,7 @@
                 </a>
             @endif
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isBendahara() || auth()->user()->isKepalaSekolah())
+            @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
                 <div x-show="!sidebarMinimized" class="px-3.5 pt-5 pb-1 transition-all duration-200">
                     <span class="text-[9.5px] font-extrabold text-blue-600/90 uppercase tracking-wider block" data-i18n="nav.academic">Data Akademik</span>
                 </div>
@@ -323,7 +323,7 @@
                 </a>
             @endif
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isBendahara() || auth()->user()->isKepalaSekolah())
+            @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
                 <div x-show="!sidebarMinimized" class="px-3.5 pt-5 pb-1 transition-all duration-200">
                     <span class="text-[9.5px] font-extrabold text-blue-600/90 uppercase tracking-wider block" data-i18n="nav.finance">Keuangan & Transaksi</span>
                 </div>
@@ -354,7 +354,7 @@
                 </a>
             @endif
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isBendahara() || auth()->user()->isKepalaSekolah())
+            @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
                 <div x-show="!sidebarMinimized" class="px-3.5 pt-5 pb-1 transition-all duration-200">
                     <span class="text-[9.5px] font-extrabold text-blue-600/90 uppercase tracking-wider block" data-i18n="nav.reports">Laporan & Rekap</span>
                 </div>
@@ -460,7 +460,7 @@
             </button>
 
             <!-- Search trigger (Mobile only) -->
-            <button @click="$dispatch('open-search')" class="p-2 hover:bg-slate-50 text-slate-500 hover:text-slate-800 rounded-xl transition-colors md:hidden focus:outline-none focus:ring-2 focus:ring-slate-100" title="Cari menu">
+            <button type="button" data-open-search @click="$dispatch('open-search')" class="p-2 hover:bg-slate-50 text-slate-500 hover:text-slate-800 rounded-xl transition-colors md:hidden focus:outline-none focus:ring-2 focus:ring-slate-100" title="Cari menu">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
@@ -479,7 +479,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
-                <input type="text" placeholder="Cari menu... (Ctrl+K / ⌘K)" readonly
+                <input type="text" data-open-search placeholder="Cari menu... (Ctrl+K / ⌘K)" readonly
                     @click="$dispatch('open-search')"
                     class="cursor-pointer block w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light transition-all font-semibold form-input-premium">
             </div>
@@ -515,7 +515,7 @@
                 $pendingPayments = collect();
                 $unpaidBills = collect();
 
-                if (auth()->user()->isAdmin() || auth()->user()->isBendahara()) {
+                if (auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah()) {
                     $pendingPayments = \App\Models\Pembayaran::with('tagihan.siswa')
                         ->where('status_verifikasi', 'pending')
                         ->latest()
@@ -560,7 +560,7 @@
                         @endif
                     </div>
                     <div class="max-h-64 overflow-y-auto">
-                        <!-- Actionable Tasks Section (Admin/Bendahara) -->
+                        <!-- Actionable Tasks Section (Admin/Kepala Sekolah) -->
                         @if($pendingPayments->count() > 0)
                             <div class="px-4 py-1.5 bg-amber-50/50 border-b border-slate-100 flex items-center justify-between">
                                 <span class="text-[9px] font-extrabold text-amber-600 uppercase tracking-wider">Butuh Verifikasi</span>
@@ -1088,7 +1088,10 @@
     </script>
 
     <!-- Command Palette (Search Pop-up) -->
-    <div x-data="commandPaletteComponent()"
+    <script>
+        window.sipCommandMenus = @json($searchMenus);
+    </script>
+    <div x-data="window.commandPaletteComponent(window.sipCommandMenus || [])"
          @open-search.window="openPalette()"
          @keydown.window.prevent.cmd.k="openPalette()"
          @keydown.window.prevent.ctrl.k="openPalette()"
@@ -1179,74 +1182,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function commandPaletteComponent() {
-            return {
-                open: false,
-                search: '',
-                selectedIndex: 0,
-                menus: @json($searchMenus),
-                init() {
-                    this.$watch('open', value => {
-                        if (value) {
-                            document.body.classList.add('overflow-hidden');
-                        } else {
-                            document.body.classList.remove('overflow-hidden');
-                        }
-                    });
-                },
-                openPalette() {
-                    this.open = true;
-                    this.search = '';
-                    this.selectedIndex = 0;
-                    setTimeout(() => {
-                        if (this.$refs.searchInput) {
-                            this.$refs.searchInput.focus();
-                        }
-                    }, 50);
-                },
-                get filteredMenus() {
-                    if (!this.search) return this.menus;
-                    const query = this.search.toLowerCase();
-                    return this.menus.filter(m => m.name.toLowerCase().includes(query) || m.category.toLowerCase().includes(query));
-                },
-                selectNext() {
-                    if (this.selectedIndex < this.filteredMenus.length - 1) {
-                        this.selectedIndex++;
-                        this.scrollToSelected();
-                    }
-                },
-                selectPrev() {
-                    if (this.selectedIndex > 0) {
-                        this.selectedIndex--;
-                        this.scrollToSelected();
-                    }
-                },
-                navigateSelected() {
-                    const item = this.filteredMenus[this.selectedIndex];
-                    if (item) {
-                        this.open = false;
-                        const a = document.createElement('a');
-                        a.href = item.url;
-                        a.style.display = 'none';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    }
-                },
-                scrollToSelected() {
-                    this.$nextTick(() => {
-                        const container = this.$refs.resultsContainer;
-                        if (!container) return;
-                        const selectedEl = container.querySelector('[data-selected]');
-                        if (selectedEl) {
-                            selectedEl.scrollIntoView({ block: 'nearest' });
-                        }
-                    });
-                }
-            }
-        }
-    </script>
 </body>
 </html>

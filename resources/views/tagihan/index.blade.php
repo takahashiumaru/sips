@@ -4,7 +4,7 @@
 @section('page_subtitle', 'Kelola tagihan biaya pendidikan bulanan siswa secara massal maupun individu')
 
 @section('actions')
-@if(auth()->user()->isAdmin() || auth()->user()->isBendahara())
+@if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
 <button @click="$dispatch('open-modal-generate')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-50/50 border border-blue-100/40 hover:bg-blue-50 hover:text-brand-hover hover:border-blue-100/60 text-blue-600 text-xs font-bold rounded-xl transition-all shadow-sm btn-premium">
     <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
@@ -25,7 +25,7 @@
 <div class="bg-white rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden card-premium" x-data="{ }">
     <!-- Filter Section -->
     <div class="p-6 border-b border-blue-50/50">
-        <form action="{{ route('tagihan.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+        <form action="{{ route('tagihan.index') }}" method="GET" data-filter-form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
             <!-- Search -->
             <div class="relative lg:col-span-1">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -33,7 +33,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
-                <input type="text" name="search" value="{{ request('search') }}"
+                <input type="search" name="search" value="{{ request('search') }}" data-auto-submit-search autocomplete="off"
                     class="block w-full pl-9 pr-4 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all form-input-premium font-semibold"
                     placeholder="NIS / nama siswa...">
             </div>
@@ -149,13 +149,13 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                @if($t->status !== 'lunas' && (auth()->user()->isAdmin() || auth()->user()->isBendahara()))
+                                @if($t->status !== 'lunas' && (auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah()))
                                     <a href="{{ route('pembayaran.create', $t) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-light text-white text-[9px] font-bold rounded-xl hover:bg-brand-hover transition-all shadow-md shadow-brand-light/10 btn-premium">
                                         Bayar
                                     </a>
                                 @endif
 
-                                @if(auth()->user()->isAdmin() || auth()->user()->isBendahara())
+                                @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
                                     <a href="{{ route('tagihan.edit', $t) }}" class="p-2 bg-blue-50/40 border border-blue-100/30 text-blue-500 hover:text-brand-hover hover:bg-blue-50 hover:border-blue-100/50 rounded-xl transition-all btn-premium">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
@@ -193,7 +193,7 @@
         </div>
     @endif
 
-    @if(auth()->user()->isAdmin() || auth()->user()->isBendahara())
+    @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
         <!-- Modal Generate Massal -->
         <div x-data="{ open: false }" 
              @open-modal-generate.window="open = true" 

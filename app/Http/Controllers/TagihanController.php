@@ -13,12 +13,29 @@ class TagihanController extends Controller
 {
     public function index(Request $request)
     {
+        $search = trim((string) $request->search);
+        $searchTerms = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
         $tagihan = TagihanSpp::with(['siswa.kelas'])
             ->when($request->bulan, fn($q, $v) => $q->where('bulan', $v))
             ->when($request->tahun, fn($q, $v) => $q->where('tahun', $v))
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
             ->when($request->kelas_id, fn($q, $v) => $q->whereHas('siswa', fn($sq) => $sq->where('kelas_id', $v)))
-            ->when($request->search, fn($q, $s) => $q->whereHas('siswa', fn($sq) => $sq->where('nama_lengkap', 'like', "%{$s}%")->orWhere('nis', 'like', "%{$s}%")))
+            ->when($search !== '', function ($q) use ($search, $searchTerms) {
+                $q->whereHas('siswa', function ($sq) use ($search, $searchTerms) {
+                    $sq->where(function ($student) use ($search, $searchTerms) {
+                        $student->where('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nis', 'like', "%{$search}%")
+                            ->orWhereHas('kelas', fn($kelas) => $kelas->where('nama_kelas', 'like', "%{$search}%"));
+
+                        $student->orWhere(function ($name) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $name->where('nama_lengkap', 'like', "%{$term}%");
+                            }
+                        });
+                    });
+                });
+            })
             ->orderByDesc('tahun')
             ->orderByDesc('bulan')
             ->paginate(20)

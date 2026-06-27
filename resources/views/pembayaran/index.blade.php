@@ -13,16 +13,16 @@
 }">
     <!-- Filter Section -->
     <div class="p-6 border-b border-blue-50/50">
-        <form action="{{ route('pembayaran.index') }}" method="GET" class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <form action="{{ route('pembayaran.index') }}" method="GET" data-filter-form class="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div class="relative w-full lg:max-w-xs">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
-                <input type="text" name="search" value="{{ request('search') }}"
+                <input type="search" name="search" value="{{ request('search') }}" data-auto-submit-search autocomplete="off"
                     class="block w-full pl-9 pr-4 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all form-input-premium font-semibold"
-                    placeholder="Cari nama siswa...">
+                    placeholder="Cari nama / NIS siswa...">
             </div>
             
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
@@ -117,7 +117,7 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                @if ($p->status_verifikasi === 'pending' && (auth()->user()->isAdmin() || auth()->user()->isBendahara()))
+                                @if ($p->status_verifikasi === 'pending' && (auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah()))
                                     <button type="button" 
                                         @click="
                                             verifyActionUrl = '{{ route('pembayaran.verifikasi', $p) }}';

@@ -27,16 +27,6 @@ class DummyDataSeeder extends Seeder
         ]);
         $admin->assignRole('admin');
 
-        $bendahara = User::create([
-            'name' => 'Sri Wahyuni',
-            'email' => 'bendahara@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'bendahara',
-            'phone' => '081234567891',
-            'is_active' => true,
-        ]);
-        $bendahara->assignRole('bendahara');
-
         $kepsek = User::create([
             'name' => 'Dr. Hadi Susanto, M.Pd.',
             'email' => 'kepsek@gmail.com',
@@ -197,8 +187,8 @@ class DummyDataSeeder extends Seeder
                         'tanggal_bayar' => "2024-{$bulan}-".rand(1, 10).' '.rand(8, 16).':'.rand(10, 59).':00',
                         'metode_bayar' => ['tunai', 'transfer', 'qris'][rand(0, 2)],
                         'status_verifikasi' => 'terverifikasi',
-                        'dicatat_oleh' => $bendahara->id,
-                        'diverifikasi_oleh' => $bendahara->id,
+                        'dicatat_oleh' => $kepsek->id,
+                        'diverifikasi_oleh' => $kepsek->id,
                         'diverifikasi_at' => now(),
                     ]);
                 }

@@ -212,9 +212,124 @@ window.applySipTheme = applyTheme;
 window.applySipLanguage = applyLanguage;
 window.getStoredPreference = getStoredPreference;
 
+window.commandPaletteComponent = function commandPaletteComponent(menus = []) {
+    return {
+        open: false,
+        search: '',
+        selectedIndex: 0,
+        menus,
+        init() {
+            this.$watch('open', (value) => {
+                document.body.classList.toggle('overflow-hidden', value);
+            });
+            this.$watch('search', () => {
+                this.selectedIndex = 0;
+            });
+        },
+        openPalette() {
+            this.open = true;
+            this.search = '';
+            this.selectedIndex = 0;
+            setTimeout(() => {
+                if (this.$refs.searchInput) {
+                    this.$refs.searchInput.focus();
+                }
+            }, 50);
+        },
+        get filteredMenus() {
+            if (!this.search) return this.menus;
+            const query = this.search.toLowerCase();
+            return this.menus.filter((menu) => {
+                return menu.name.toLowerCase().includes(query)
+                    || menu.category.toLowerCase().includes(query);
+            });
+        },
+        selectNext() {
+            if (this.selectedIndex < this.filteredMenus.length - 1) {
+                this.selectedIndex++;
+                this.scrollToSelected();
+            }
+        },
+        selectPrev() {
+            if (this.selectedIndex > 0) {
+                this.selectedIndex--;
+                this.scrollToSelected();
+            }
+        },
+        navigateSelected() {
+            const item = this.filteredMenus[this.selectedIndex];
+            if (!item) return;
+
+            this.open = false;
+            window.location.href = item.url;
+        },
+        scrollToSelected() {
+            this.$nextTick(() => {
+                const container = this.$refs.resultsContainer;
+                if (!container) return;
+                const selectedEl = container.querySelector('[data-selected]');
+                if (selectedEl) {
+                    selectedEl.scrollIntoView({ block: 'nearest' });
+                }
+            });
+        },
+    };
+};
+
+function setupSearchTriggers() {
+    document.querySelectorAll('[data-open-search]').forEach((trigger) => {
+        if (trigger.dataset.searchTriggerBound === 'true') return;
+        trigger.dataset.searchTriggerBound = 'true';
+
+        trigger.addEventListener('click', () => {
+            window.dispatchEvent(new CustomEvent('open-search'));
+        });
+    });
+}
+
+function setupAutoSubmitSearch() {
+    document.querySelectorAll('input[data-auto-submit-search]').forEach((input) => {
+        if (input.dataset.autoSubmitBound === 'true') return;
+        input.dataset.autoSubmitBound = 'true';
+
+        let timer = null;
+        let previousValue = input.value;
+
+        const submitForm = () => {
+            const form = input.closest('form');
+            if (!form || input.value === previousValue) return;
+            previousValue = input.value;
+
+            if (typeof form.requestSubmit === 'function') {
+                form.requestSubmit();
+            } else {
+                form.submit();
+            }
+        };
+
+        input.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(submitForm, 550);
+        });
+
+        input.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            clearTimeout(timer);
+            submitForm();
+        });
+    });
+}
+
+function initializeInteractiveControls() {
+    setupSearchTriggers();
+    setupAutoSubmitSearch();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     applyTheme(getStoredPreference('sip_spp_theme', document.documentElement.dataset.theme || 'light'));
     applyLanguage(getStoredPreference('sip_spp_lang', document.documentElement.lang || 'id'));
+    initializeInteractiveControls();
 
     document.querySelectorAll('[data-theme-option]').forEach((button) => {
         button.addEventListener('click', () => applyTheme(button.dataset.themeOption));
@@ -224,5 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => applyLanguage(button.dataset.langOption));
     });
 });
+
+document.addEventListener('pjax:success', initializeInteractiveControls);
 
 Alpine.start();

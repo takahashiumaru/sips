@@ -12,10 +12,27 @@ class PembayaranController extends Controller
 {
     public function index(Request $request)
     {
+        $search = trim((string) $request->search);
+        $searchTerms = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
         $pembayaran = Pembayaran::with(['tagihan.siswa.kelas', 'dicatatOleh'])
             ->when($request->status, fn($q, $v) => $q->where('status_verifikasi', $v))
             ->when($request->metode, fn($q, $v) => $q->where('metode_bayar', $v))
-            ->when($request->search, fn($q, $s) => $q->whereHas('tagihan.siswa', fn($sq) => $sq->where('nama_lengkap', 'like', "%{$s}%")))
+            ->when($search !== '', function ($q) use ($search, $searchTerms) {
+                $q->whereHas('tagihan.siswa', function ($sq) use ($search, $searchTerms) {
+                    $sq->where(function ($student) use ($search, $searchTerms) {
+                        $student->where('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nis', 'like', "%{$search}%")
+                            ->orWhereHas('kelas', fn($kelas) => $kelas->where('nama_kelas', 'like', "%{$search}%"));
+
+                        $student->orWhere(function ($name) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $name->where('nama_lengkap', 'like', "%{$term}%");
+                            }
+                        });
+                    });
+                });
+            })
             ->orderByDesc('created_at')
             ->paginate(20)
             ->withQueryString();
@@ -90,7 +107,7 @@ class PembayaranController extends Controller
 
         $tagihan->update(['status' => 'menunggu_verifikasi']);
 
-        return back()->with('success', 'Bukti transfer berhasil diupload. Menunggu verifikasi bendahara.');
+        return back()->with('success', 'Bukti transfer berhasil diupload. Menunggu verifikasi pihak sekolah.');
     }
 
     public function verifikasi(Request $request, Pembayaran $pembayaran)

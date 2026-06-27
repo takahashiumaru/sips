@@ -356,9 +356,9 @@
                 <td class="sig-col">
                     <div class="signature-container">
                         <p class="sig-date">Tangerang, {{ \Carbon\Carbon::parse($pembayaran->tanggal_bayar)->translatedFormat('d F Y') }}</p>
-                        <p class="sig-label">Penerima / Bendahara,</p>
+                        <p class="sig-label">Penerima / Petugas Sekolah,</p>
                         <div class="sig-space"></div>
-                        <span class="sig-name">{{ $pembayaran->dicatatOleh->name ?? 'Bendahara Sekolah' }}</span>
+                        <span class="sig-name">{{ $pembayaran->dicatatOleh->name ?? 'Petugas Sekolah' }}</span>
                         <p class="sig-title">NIP. 19820512 200904 2 003</p>
                     </div>
                 </td>

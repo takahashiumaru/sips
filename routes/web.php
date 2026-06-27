@@ -35,9 +35,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::delete('/profil/avatar', [AuthController::class, 'deleteAvatar'])->name('profil.avatar.delete');
     Route::put('/profil/password', [AuthController::class, 'changePassword'])->name('profil.password');
 
-    /* ── Dashboard (Admin, Bendahara, Kepala Sekolah) ── */
+    /* ── Dashboard (Admin, Kepala Sekolah) ── */
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware('role:admin,bendahara,kepala_sekolah')
+        ->middleware('role:admin,kepala_sekolah')
         ->name('dashboard');
 
     /* ── User Management (Admin only) ── */
@@ -56,7 +56,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     /* ── Master Data: Tarif SPP ── */
     Route::get('/tarif-spp', [TarifSppController::class, 'index'])
-        ->middleware('role:admin,bendahara,kepala_sekolah')
+        ->middleware('role:admin,kepala_sekolah')
         ->name('tarif.index');
     Route::middleware('role:admin')->group(function () {
         Route::post('/tarif-spp', [TarifSppController::class, 'store'])->name('tarif.store');
@@ -65,10 +65,10 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     /* ── Data Siswa ── */
     Route::get('/siswa', [SiswaController::class, 'index'])
-        ->middleware('role:admin,bendahara,kepala_sekolah')
+        ->middleware('role:admin,kepala_sekolah')
         ->name('siswa.index');
     Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])
-        ->middleware('role:admin,bendahara,kepala_sekolah,wali_murid')
+        ->middleware('role:admin,kepala_sekolah,wali_murid')
         ->name('siswa.show');
     Route::middleware('role:admin')->group(function () {
         Route::get('/siswa-create', [SiswaController::class, 'create'])->name('siswa.create');
@@ -80,9 +80,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     /* ── Tagihan SPP ── */
     Route::get('/tagihan', [TagihanController::class, 'index'])
-        ->middleware('role:admin,bendahara,kepala_sekolah')
+        ->middleware('role:admin,kepala_sekolah')
         ->name('tagihan.index');
-    Route::middleware('role:admin,bendahara')->group(function () {
+    Route::middleware('role:admin,kepala_sekolah')->group(function () {
         Route::get('/tagihan/create', [TagihanController::class, 'create'])->name('tagihan.create');
         Route::post('/tagihan', [TagihanController::class, 'store'])->name('tagihan.store');
         Route::post('/tagihan/generate', [TagihanController::class, 'generateMassal'])->name('tagihan.generate');
@@ -95,9 +95,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     /* ── Pembayaran ── */
     Route::get('/pembayaran', [PembayaranController::class, 'index'])
-        ->middleware('role:admin,bendahara,kepala_sekolah')
+        ->middleware('role:admin,kepala_sekolah')
         ->name('pembayaran.index');
-    Route::middleware('role:admin,bendahara')->group(function () {
+    Route::middleware('role:admin,kepala_sekolah')->group(function () {
         Route::get('/pembayaran/create/{tagihan}', [PembayaranController::class, 'create'])->name('pembayaran.create');
         Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
         Route::patch('/pembayaran/{pembayaran}/verifikasi', [PembayaranController::class, 'verifikasi'])->name('pembayaran.verifikasi');
@@ -108,11 +108,11 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     /* ── Kwitansi ── */
     Route::get('/kwitansi/{pembayaran}', [KwitansiController::class, 'download'])
-        ->middleware('role:admin,bendahara,wali_murid,kepala_sekolah')
+        ->middleware('role:admin,wali_murid,kepala_sekolah')
         ->name('kwitansi.download');
 
     /* ── Laporan ── */
-    Route::middleware('role:admin,bendahara,kepala_sekolah')->group(function () {
+    Route::middleware('role:admin,kepala_sekolah')->group(function () {
         Route::get('/laporan/tunggakan', [LaporanController::class, 'tunggakan'])->name('laporan.tunggakan');
         Route::get('/laporan/tunggakan/export/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.tunggakan.pdf');
         Route::get('/laporan/tunggakan/export/excel', [LaporanController::class, 'exportExcel'])->name('laporan.tunggakan.excel');

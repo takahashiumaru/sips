@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('email', 150)->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'bendahara', 'wali_murid', 'kepala_sekolah']);
+            $table->enum('role', ['admin', 'wali_murid', 'kepala_sekolah']);
             $table->string('phone', 20)->nullable();
             $table->string('avatar', 255)->nullable();
             $table->boolean('is_active')->default(true);

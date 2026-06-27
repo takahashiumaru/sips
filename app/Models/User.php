@@ -78,7 +78,7 @@ class User extends Authenticatable
 
     public function isBendahara(): bool
     {
-        return $this->role === 'bendahara';
+        return false;
     }
 
     public function isWaliMurid(): bool

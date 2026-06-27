@@ -183,7 +183,7 @@
                                                         Upload Bukti
                                                     </button>
                                                 @endif
-                                            @elseif (auth()->user()->isAdmin() || auth()->user()->isBendahara())
+                                            @elseif (auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
                                                 <a href="{{ route('pembayaran.create', $tagihan) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-light hover:bg-brand-hover text-white text-[9px] font-bold rounded-xl transition-all shadow-md shadow-brand-light/10 btn-premium">
                                                     Bayar
                                                  </a>

@@ -32,7 +32,7 @@ class UserController extends Controller
             'name' => 'required|string|max:100',
             'email' => 'required|email|max:150|unique:users',
             'password' => 'required|min:8|confirmed',
-            'role' => 'required|in:admin,bendahara,wali_murid,kepala_sekolah',
+            'role' => 'required|in:admin,wali_murid,kepala_sekolah',
             'phone' => 'nullable|string|max:20',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -60,7 +60,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'email' => ['required', 'email', 'max:150', Rule::unique('users')->ignore($user->id)],
-            'role' => 'required|in:admin,bendahara,wali_murid,kepala_sekolah',
+            'role' => 'required|in:admin,wali_murid,kepala_sekolah',
             'phone' => 'nullable|string|max:20',
             'password' => 'nullable|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
