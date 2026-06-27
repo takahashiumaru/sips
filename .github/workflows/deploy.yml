@@ -24,35 +24,39 @@ jobs:
 
             cd /home/ubuntu/sips
 
-            echo "[1/7] Fetch & reset ke update terbaru"
+            echo "[1/9] Fetch & reset ke update terbaru"
             git fetch origin
             sudo chown -R ubuntu:www-data storage bootstrap/cache || true
             sudo chmod -R ug+rwX storage bootstrap/cache || true
             git reset --hard origin/main
 
-            echo "[2/7] Rapikan permission storage & cache"
+            echo "[2/9] Rapikan permission storage & cache"
             sudo chown -R ubuntu:www-data storage bootstrap/cache
             sudo chmod -R ug+rwX storage bootstrap/cache
             sudo find storage bootstrap/cache -type d -exec chmod g+s {} \;
 
-            echo "[3/7] Install composer dependencies"
+            echo "[3/9] Install composer dependencies"
             /home/ubuntu/.local/bin/composer install --no-interaction --no-dev --optimize-autoloader
 
-            echo "[4/7] Refresh storage link & migrate"
+            echo "[4/9] Build frontend assets"
+            npm ci --no-audit --no-fund
+            npm run build
+
+            echo "[5/9] Refresh storage link & migrate"
             rm -f public/storage
             php artisan storage:link
             php artisan migrate --force
 
-            echo "[5/7] Clear & rebuild cache"
+            echo "[6/9] Clear & rebuild cache"
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan optimize
 
-            echo "[6/7] Restart PHP-FPM"
+            echo "[7/9] Restart PHP-FPM"
             sudo systemctl restart php8.3-fpm
 
-            echo "[7/7] Reload Nginx"
+            echo "[8/9] Reload Nginx"
             sudo systemctl reload nginx
 
-            echo "Deploy SIPS selesai"
+            echo "[9/9] Deploy SIPS selesai"
