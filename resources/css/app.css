@@ -679,6 +679,119 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
 }
 
+.dashboard-stat-card {
+    position: relative;
+    overflow: hidden;
+    border-color: transparent !important;
+    box-shadow:
+        0 18px 42px rgba(15, 23, 42, 0.055),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+}
+
+.dashboard-stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.92), transparent 28%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.34), transparent 52%);
+    opacity: 0.74;
+}
+
+.dashboard-stat-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-stat-paid {
+    background: linear-gradient(180deg, #F4FEF9, #ECFDF5) !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.dashboard-stat-unpaid {
+    background: linear-gradient(180deg, #FFFBEB, #FEF3C7) !important;
+    border-color: rgba(245, 158, 11, 0.22) !important;
+}
+
+.dashboard-stat-arrears {
+    background: linear-gradient(180deg, #FFF7F7, #FFF1F2) !important;
+    border-color: rgba(244, 63, 94, 0.22) !important;
+}
+
+.dashboard-stat-label {
+    color: #64748B;
+}
+
+.dashboard-stat-help {
+    color: #7C8CA3;
+}
+
+.dashboard-stat-paid .dashboard-stat-value {
+    color: #059669 !important;
+}
+
+.dashboard-stat-unpaid .dashboard-stat-value {
+    color: #D97706 !important;
+}
+
+.dashboard-stat-arrears .dashboard-stat-value {
+    color: #E11D48 !important;
+}
+
+.dashboard-stat-chip {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.15;
+    border: 1px solid currentColor;
+}
+
+.dashboard-stat-chip-paid {
+    background: rgba(209, 250, 229, 0.84);
+    color: #047857;
+    border-color: rgba(16, 185, 129, 0.22);
+}
+
+.dashboard-stat-track {
+    width: min(132px, 100%);
+    height: 5px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-stat-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #10B981, #34D399);
+}
+
+.dashboard-stat-icon {
+    border: 1px solid transparent;
+}
+
+.dashboard-stat-icon-paid {
+    background: linear-gradient(135deg, #D1FAE5, #F0FDF4);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.24);
+    box-shadow: 0 14px 26px rgba(16, 185, 129, 0.14);
+}
+
+.dashboard-stat-icon-unpaid {
+    background: linear-gradient(135deg, #FEF3C7, #FFFBEB);
+    color: #D97706;
+    border-color: rgba(245, 158, 11, 0.24);
+    box-shadow: 0 14px 26px rgba(245, 158, 11, 0.14);
+}
+
+.dashboard-stat-icon-arrears {
+    background: linear-gradient(135deg, #FFE4E6, #FFF1F2);
+    color: #E11D48;
+    border-color: rgba(244, 63, 94, 0.24);
+    box-shadow: 0 14px 26px rgba(225, 29, 72, 0.14);
+}
+
 /* Section divider (minimized mode) */
 .sidebar-divider-mini {
     height: 1px;
@@ -1362,6 +1475,85 @@ html[data-theme="dark"] .chart-shell {
     border: 1px solid rgba(148, 163, 184, 0.16) !important;
 }
 
+html[data-theme="dark"] .dashboard-stat-card {
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-card::before {
+    background:
+        radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.08), transparent 30%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035), transparent 54%);
+    opacity: 1;
+}
+
+html[data-theme="dark"] .dashboard-stat-paid {
+    background: linear-gradient(180deg, rgba(10, 45, 35, 0.96), rgba(11, 18, 32, 0.96)) !important;
+    border-color: rgba(52, 211, 153, 0.28) !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-unpaid {
+    background: linear-gradient(180deg, rgba(58, 39, 10, 0.96), rgba(11, 18, 32, 0.96)) !important;
+    border-color: rgba(251, 191, 36, 0.28) !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-arrears {
+    background: linear-gradient(180deg, rgba(63, 19, 35, 0.96), rgba(11, 18, 32, 0.96)) !important;
+    border-color: rgba(251, 113, 133, 0.3) !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-label {
+    color: #9AA8BC !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-help {
+    color: #93A4BA !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-paid .dashboard-stat-value {
+    color: #6EE7B7 !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-unpaid .dashboard-stat-value {
+    color: #FBBF24 !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-arrears .dashboard-stat-value {
+    color: #FDA4AF !important;
+}
+
+html[data-theme="dark"] .dashboard-stat-chip-paid {
+    background: rgba(16, 185, 129, 0.16);
+    color: #A7F3D0;
+    border-color: rgba(52, 211, 153, 0.3);
+}
+
+html[data-theme="dark"] .dashboard-stat-track {
+    background: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="dark"] .dashboard-stat-icon-paid {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24), rgba(5, 150, 105, 0.14));
+    color: #A7F3D0;
+    border-color: rgba(52, 211, 153, 0.32);
+    box-shadow: 0 14px 28px rgba(16, 185, 129, 0.12);
+}
+
+html[data-theme="dark"] .dashboard-stat-icon-unpaid {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.14));
+    color: #FDE68A;
+    border-color: rgba(251, 191, 36, 0.32);
+    box-shadow: 0 14px 28px rgba(245, 158, 11, 0.12);
+}
+
+html[data-theme="dark"] .dashboard-stat-icon-arrears {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.28), rgba(225, 29, 72, 0.16));
+    color: #FDA4AF;
+    border-color: rgba(251, 113, 133, 0.34);
+    box-shadow: 0 14px 28px rgba(244, 63, 94, 0.14);
+}
+
 html[data-theme="dark"] .sidebar-premium {
     background:
         linear-gradient(180deg, rgba(14, 24, 42, 0.98) 0%, rgba(12, 23, 39, 0.98) 54%, rgba(8, 17, 31, 0.98) 100%);
@@ -1579,14 +1771,73 @@ html[data-theme="dark"] .text-blue-500 { color: #60A5FA !important; }
 
 /* Targeted dark-mode contrast fixes for laporan/tagihan action surfaces */
 .arrears-student-summary,
+.arrears-amount-summary,
 .invoice-item-summary,
 .stat-icon-blue,
+.stat-icon-rose,
 .stat-icon-cyan,
 .btn-generate-massal,
 .settlement-badge,
 .settlement-track,
 .settlement-fill {
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.arrears-student-summary {
+    background: linear-gradient(180deg, #F8FBFF, #EFF6FF) !important;
+    border-color: rgba(59, 130, 246, 0.22) !important;
+    box-shadow:
+        0 14px 32px rgba(37, 99, 235, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+.arrears-student-summary .metric-value-blue {
+    color: #1D4ED8 !important;
+}
+
+.arrears-amount-summary {
+    background: linear-gradient(180deg, #FFF7F7, #FFF1F2) !important;
+    border-color: rgba(244, 63, 94, 0.24) !important;
+    box-shadow:
+        0 14px 32px rgba(225, 29, 72, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+.arrears-amount-summary .metric-value-rose {
+    color: #E11D48 !important;
+}
+
+.invoice-item-summary {
+    background: linear-gradient(180deg, #F6FEFC, #ECFDF5) !important;
+    border-color: rgba(20, 184, 166, 0.24) !important;
+    box-shadow:
+        0 14px 32px rgba(20, 184, 166, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+.invoice-item-summary .metric-value-cyan {
+    color: #0F766E !important;
+}
+
+.stat-icon-blue {
+    background: linear-gradient(135deg, #DBEAFE, #EFF6FF) !important;
+    color: #2563EB !important;
+    border-color: rgba(59, 130, 246, 0.24) !important;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.12) !important;
+}
+
+.stat-icon-rose {
+    background: linear-gradient(135deg, #FFE4E6, #FFF1F2) !important;
+    color: #E11D48 !important;
+    border-color: rgba(244, 63, 94, 0.26) !important;
+    box-shadow: 0 10px 22px rgba(225, 29, 72, 0.12) !important;
+}
+
+.stat-icon-cyan {
+    background: linear-gradient(135deg, #CCFBF1, #ECFDF5) !important;
+    color: #0F766E !important;
+    border-color: rgba(20, 184, 166, 0.24) !important;
+    box-shadow: 0 10px 22px rgba(20, 184, 166, 0.12) !important;
 }
 
 .btn-generate-massal {
@@ -1661,6 +1912,18 @@ html[data-theme="dark"] .arrears-student-summary .metric-value-blue {
     color: #DBEAFE !important;
 }
 
+html[data-theme="dark"] .arrears-amount-summary {
+    background: linear-gradient(180deg, rgba(63, 19, 35, 0.95), rgba(11, 18, 32, 0.95)) !important;
+    border-color: rgba(251, 113, 133, 0.3) !important;
+    box-shadow:
+        0 22px 58px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(253, 164, 175, 0.1) !important;
+}
+
+html[data-theme="dark"] .arrears-amount-summary .metric-value-rose {
+    color: #FDA4AF !important;
+}
+
 html[data-theme="dark"] .invoice-item-summary {
     background: linear-gradient(180deg, rgba(14, 44, 51, 0.95), rgba(11, 18, 32, 0.95)) !important;
     border-color: rgba(45, 212, 191, 0.26) !important;
@@ -1679,6 +1942,15 @@ html[data-theme="dark"] .stat-icon-blue {
     border-color: rgba(147, 197, 253, 0.38) !important;
     box-shadow:
         0 14px 28px rgba(37, 99, 235, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .stat-icon-rose {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.28), rgba(225, 29, 72, 0.16)) !important;
+    color: #FDA4AF !important;
+    border-color: rgba(251, 113, 133, 0.34) !important;
+    box-shadow:
+        0 14px 28px rgba(244, 63, 94, 0.14),
         inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
