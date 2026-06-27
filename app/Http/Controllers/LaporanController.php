@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TagihanSpp;
+use App\Models\Pembayaran;
 use App\Models\Siswa;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
@@ -109,22 +110,34 @@ class LaporanController extends Controller
 
     private function getRekapData(int $tahun): array
     {
-        $tagihanPerBulan = TagihanSpp::where('tahun', $tahun)
-            ->withSum([
-                'pembayaran as pembayaran_terverifikasi_total' => fn($q) => $q->where('status_verifikasi', 'terverifikasi'),
-            ], 'jumlah_bayar')
+        $pembayaranTerverifikasi = Pembayaran::query()
+            ->select('tagihan_id', DB::raw('SUM(jumlah_bayar) as total_bayar'))
+            ->where('status_verifikasi', 'terverifikasi')
+            ->groupBy('tagihan_id');
+
+        $rekapBulanan = TagihanSpp::query()
+            ->leftJoinSub($pembayaranTerverifikasi, 'pembayaran_terverifikasi', function ($join) {
+                $join->on('tagihan_spp.id', '=', 'pembayaran_terverifikasi.tagihan_id');
+            })
+            ->where('tagihan_spp.tahun', $tahun)
+            ->selectRaw('
+                tagihan_spp.bulan as bulan,
+                SUM(tagihan_spp.jumlah_tagihan) as total_tagihan,
+                SUM(COALESCE(pembayaran_terverifikasi.total_bayar, 0)) as total_bayar,
+                COUNT(*) as total,
+                SUM(CASE WHEN COALESCE(pembayaran_terverifikasi.total_bayar, 0) >= tagihan_spp.jumlah_tagihan THEN 1 ELSE 0 END) as lunas
+            ')
+            ->groupBy('tagihan_spp.bulan')
             ->get()
-            ->groupBy('bulan');
+            ->keyBy('bulan');
 
         $rekap = [];
         for ($bulan = 1; $bulan <= 12; $bulan++) {
-            $tagihanBulan = $tagihanPerBulan->get($bulan, collect());
-            $totalTagihan = $tagihanBulan->sum(fn(TagihanSpp $tagihan) => (float) $tagihan->jumlah_tagihan);
-            $totalBayar = $tagihanBulan->sum(fn(TagihanSpp $tagihan) => (float) ($tagihan->pembayaran_terverifikasi_total ?? 0));
-            $lunas = $tagihanBulan->filter(function (TagihanSpp $tagihan) {
-                return (float) ($tagihan->pembayaran_terverifikasi_total ?? 0) >= (float) $tagihan->jumlah_tagihan;
-            })->count();
-            $total = $tagihanBulan->count();
+            $row = $rekapBulanan->get($bulan);
+            $totalTagihan = (float) ($row->total_tagihan ?? 0);
+            $totalBayar = (float) ($row->total_bayar ?? 0);
+            $lunas = (int) ($row->lunas ?? 0);
+            $total = (int) ($row->total ?? 0);
 
             $rekap[] = [
                 'bulan' => $bulan,

@@ -35,25 +35,29 @@ class DashboardController extends Controller
 
         $tunggakanTertinggi = Siswa::aktif()
             ->with('kelas')
+            ->whereHas('tagihanSpp', fn($q) => $q->where('status', '!=', 'lunas'))
             ->withSum(['tagihanSpp as total_tunggakan' => function ($q) {
                 $q->where('status', '!=', 'lunas');
             }], DB::raw('jumlah_tagihan - total_dibayar'))
-            ->get()
-            ->filter(fn(Siswa $siswa) => (float) $siswa->total_tunggakan > 0)
-            ->sortByDesc(fn(Siswa $siswa) => (float) $siswa->total_tunggakan)
-            ->take(5)
-            ->values();
+            ->orderByDesc('total_tunggakan')
+            ->limit(5)
+            ->get();
 
         // Tren penerimaan kas tahun ini: hanya pembayaran yang benar-benar terverifikasi.
         $now = now();
+        $monthExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? "CAST(strftime('%m', tanggal_bayar) AS INTEGER)"
+            : 'MONTH(tanggal_bayar)';
+
         $trenBulanan = Pembayaran::where('status_verifikasi', 'terverifikasi')
             ->whereBetween('tanggal_bayar', [
                 $now->copy()->startOfYear(),
                 $now->copy()->endOfYear(),
             ])
-            ->get(['tanggal_bayar', 'jumlah_bayar'])
-            ->groupBy(fn(Pembayaran $pembayaran) => $pembayaran->tanggal_bayar->month)
-            ->map(fn($payments) => $payments->sum(fn(Pembayaran $pembayaran) => (float) $pembayaran->jumlah_bayar))
+            ->selectRaw("{$monthExpression} as bulan, SUM(jumlah_bayar) as total")
+            ->groupBy('bulan')
+            ->pluck('total', 'bulan')
+            ->map(fn($total) => (float) $total)
             ->toArray();
 
         $trenData = [];

@@ -98,42 +98,55 @@ class TagihanController extends Controller
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
-        $siswaAktif = Siswa::aktif()->with('kelas')->get();
+        $tarifByTingkat = TarifSpp::where('tahun_ajaran_id', $tahunAjaran->id)
+            ->get()
+            ->keyBy('tingkat');
+        $createdBy = auth()->id();
+        $jatuhTempo = "{$tahun}-" . str_pad($bulan, 2, '0', STR_PAD_LEFT) . '-10';
         $created = 0;
         $skipped = 0;
 
-        DB::transaction(function () use ($siswaAktif, $bulan, $tahun, $tahunAjaran, &$created, &$skipped) {
-            foreach ($siswaAktif as $siswa) {
-                $exists = TagihanSpp::where('siswa_id', $siswa->id)
-                    ->where('bulan', $bulan)
-                    ->where('tahun', $tahun)
-                    ->exists();
+        Siswa::aktif()->with('kelas:id,tingkat')->chunkById(200, function ($siswaAktif) use ($bulan, $tahun, $tahunAjaran, $tarifByTingkat, $createdBy, $jatuhTempo, &$created, &$skipped) {
+            $siswaIds = $siswaAktif->pluck('id');
+            $existingSiswaIds = TagihanSpp::whereIn('siswa_id', $siswaIds)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->pluck('siswa_id')
+                ->all();
+            $existingLookup = array_flip($existingSiswaIds);
+            $now = now();
+            $rows = [];
 
-                if ($exists) {
+            foreach ($siswaAktif as $siswa) {
+                if (isset($existingLookup[$siswa->id])) {
                     $skipped++;
                     continue;
                 }
 
-                $tarif = TarifSpp::where('tahun_ajaran_id', $tahunAjaran->id)
-                    ->where('tingkat', $siswa->kelas->tingkat ?? 0)
-                    ->first();
-
+                $tarif = $tarifByTingkat->get($siswa->kelas->tingkat ?? null);
                 if (!$tarif) {
                     $skipped++;
                     continue;
                 }
 
-                TagihanSpp::create([
+                $rows[] = [
                     'siswa_id' => $siswa->id,
                     'tahun_ajaran_id' => $tahunAjaran->id,
                     'bulan' => $bulan,
                     'tahun' => $tahun,
                     'jumlah_tagihan' => $tarif->jumlah,
-                    'jatuh_tempo' => "{$tahun}-" . str_pad($bulan, 2, '0', STR_PAD_LEFT) . '-10',
-                    'created_by' => auth()->id(),
-                ]);
+                    'total_dibayar' => 0,
+                    'status' => 'belum_bayar',
+                    'jatuh_tempo' => $jatuhTempo,
+                    'created_by' => $createdBy,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
 
-                $created++;
+            if ($rows !== []) {
+                DB::transaction(fn() => TagihanSpp::insert($rows));
+                $created += count($rows);
             }
         });
 
