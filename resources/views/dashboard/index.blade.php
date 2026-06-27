@@ -11,7 +11,7 @@
 <!-- Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <!-- Stat Card 1 -->
-    <div class="px-5 py-4 rounded-2xl shadow-lg border border-blue-600/10 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl shrink-0">
+    <div class="px-5 py-5 rounded-2xl shadow-lg border border-blue-600/10 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl shrink-0">
         <div class="space-y-0.5">
             <span class="text-[10px] font-bold text-blue-200 uppercase tracking-widest block" data-i18n="dashboard.activeStudents">Total Siswa Aktif</span>
             <span class="text-[1.55rem] font-black text-white leading-none tracking-tight block font-mono">{{ number_format($totalSiswa, 0, ',', '.') }}</span>
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Stat Card 2 -->
-    <div class="dashboard-stat-card dashboard-stat-paid px-5 py-4 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
+    <div class="dashboard-stat-card dashboard-stat-paid px-5 py-5 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
         <div class="space-y-1.5 min-w-0">
             <span class="dashboard-stat-label text-[10px] font-bold uppercase tracking-widest block" data-i18n="dashboard.paidThisMonth">Lunas Bulan Ini</span>
             <span class="dashboard-stat-value text-[1.55rem] font-black leading-none tracking-tight block font-mono">{{ number_format($lunasBulanIni, 0, ',', '.') }}</span>
@@ -45,7 +45,7 @@
     </div>
 
     <!-- Stat Card 3 -->
-    <div class="dashboard-stat-card dashboard-stat-unpaid px-5 py-4 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
+    <div class="dashboard-stat-card dashboard-stat-unpaid px-5 py-5 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
         <div class="space-y-1.5 min-w-0">
             <span class="dashboard-stat-label text-[10px] font-bold uppercase tracking-widest block" data-i18n="dashboard.unpaidThisMonth">Belum Lunas Bulan Ini</span>
             <span class="dashboard-stat-value text-[1.55rem] font-black leading-none tracking-tight block font-mono">{{ number_format($menunggakBulanIni, 0, ',', '.') }}</span>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- Stat Card 4 -->
-    <div class="dashboard-stat-card dashboard-stat-arrears px-5 py-4 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
+    <div class="dashboard-stat-card dashboard-stat-arrears px-5 py-5 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
         <div class="space-y-1.5 min-w-0">
             <span class="dashboard-stat-label text-[10px] font-bold uppercase tracking-widest block" data-i18n="dashboard.totalArrears">Tunggakan Kumulatif</span>
             <span class="dashboard-stat-value text-lg font-black tracking-tight block font-mono">Rp {{ number_format($totalTunggakan, 0, ',', '.') }}</span>
