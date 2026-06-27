@@ -16,11 +16,14 @@ class LaporanController extends Controller
 {
     public function tunggakan(Request $request)
     {
+        $filterBulan = $request->has('bulan') ? $request->input('bulan') : now()->month;
+        $filterTahun = $request->has('tahun') ? $request->input('tahun') : now()->year;
+
         $query = TagihanSpp::with(['siswa.kelas', 'siswa.waliMurid'])
             ->where('status', '!=', 'lunas')
             ->when($request->kelas_id, fn($q, $v) => $q->whereHas('siswa', fn($sq) => $sq->where('kelas_id', $v)))
-            ->when($request->bulan, fn($q, $v) => $q->where('bulan', $v))
-            ->when($request->tahun, fn($q, $v) => $q->where('tahun', $v));
+            ->when($filterBulan !== '', fn($q) => $q->where('bulan', $filterBulan))
+            ->when($filterTahun !== '', fn($q) => $q->where('tahun', $filterTahun));
 
         $tunggakan = $query->orderByDesc(DB::raw('jumlah_tagihan - total_dibayar'))->paginate(20)->withQueryString();
 
@@ -32,16 +35,19 @@ class LaporanController extends Controller
 
         $kelas = Kelas::orderBy('tingkat')->orderBy('nama_kelas')->get();
 
-        return view('laporan.tunggakan', compact('tunggakan', 'ringkasan', 'kelas'));
+        return view('laporan.tunggakan', compact('tunggakan', 'ringkasan', 'kelas', 'filterBulan', 'filterTahun'));
     }
 
     public function exportPdf(Request $request)
     {
+        $filterBulan = $request->has('bulan') ? $request->input('bulan') : now()->month;
+        $filterTahun = $request->has('tahun') ? $request->input('tahun') : now()->year;
+
         $tunggakan = TagihanSpp::with(['siswa.kelas', 'siswa.waliMurid'])
             ->where('status', '!=', 'lunas')
             ->when($request->kelas_id, fn($q, $v) => $q->whereHas('siswa', fn($sq) => $sq->where('kelas_id', $v)))
-            ->when($request->bulan, fn($q, $v) => $q->where('bulan', $v))
-            ->when($request->tahun, fn($q, $v) => $q->where('tahun', $v))
+            ->when($filterBulan !== '', fn($q) => $q->where('bulan', $filterBulan))
+            ->when($filterTahun !== '', fn($q) => $q->where('tahun', $filterTahun))
             ->orderByDesc(DB::raw('jumlah_tagihan - total_dibayar'))
             ->get();
 
@@ -55,11 +61,14 @@ class LaporanController extends Controller
 
     public function exportExcel(Request $request)
     {
+        $filterBulan = $request->has('bulan') ? $request->input('bulan') : now()->month;
+        $filterTahun = $request->has('tahun') ? $request->input('tahun') : now()->year;
+
         $tunggakan = TagihanSpp::with(['siswa.kelas', 'siswa.waliMurid'])
             ->where('status', '!=', 'lunas')
             ->when($request->kelas_id, fn($q, $v) => $q->whereHas('siswa', fn($sq) => $sq->where('kelas_id', $v)))
-            ->when($request->bulan, fn($q, $v) => $q->where('bulan', $v))
-            ->when($request->tahun, fn($q, $v) => $q->where('tahun', $v))
+            ->when($filterBulan !== '', fn($q) => $q->where('bulan', $filterBulan))
+            ->when($filterTahun !== '', fn($q) => $q->where('tahun', $filterTahun))
             ->orderByDesc(DB::raw('jumlah_tagihan - total_dibayar'))
             ->get();
 
@@ -100,12 +109,22 @@ class LaporanController extends Controller
 
     private function getRekapData(int $tahun): array
     {
+        $tagihanPerBulan = TagihanSpp::where('tahun', $tahun)
+            ->withSum([
+                'pembayaran as pembayaran_terverifikasi_total' => fn($q) => $q->where('status_verifikasi', 'terverifikasi'),
+            ], 'jumlah_bayar')
+            ->get()
+            ->groupBy('bulan');
+
         $rekap = [];
         for ($bulan = 1; $bulan <= 12; $bulan++) {
-            $totalTagihan = TagihanSpp::where('bulan', $bulan)->where('tahun', $tahun)->sum('jumlah_tagihan');
-            $totalBayar = TagihanSpp::where('bulan', $bulan)->where('tahun', $tahun)->sum('total_dibayar');
-            $lunas = TagihanSpp::where('bulan', $bulan)->where('tahun', $tahun)->where('status', 'lunas')->count();
-            $total = TagihanSpp::where('bulan', $bulan)->where('tahun', $tahun)->count();
+            $tagihanBulan = $tagihanPerBulan->get($bulan, collect());
+            $totalTagihan = $tagihanBulan->sum(fn(TagihanSpp $tagihan) => (float) $tagihan->jumlah_tagihan);
+            $totalBayar = $tagihanBulan->sum(fn(TagihanSpp $tagihan) => (float) ($tagihan->pembayaran_terverifikasi_total ?? 0));
+            $lunas = $tagihanBulan->filter(function (TagihanSpp $tagihan) {
+                return (float) ($tagihan->pembayaran_terverifikasi_total ?? 0) >= (float) $tagihan->jumlah_tagihan;
+            })->count();
+            $total = $tagihanBulan->count();
 
             $rekap[] = [
                 'bulan' => $bulan,

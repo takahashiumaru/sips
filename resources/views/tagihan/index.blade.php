@@ -55,7 +55,7 @@
                     class="block w-full px-3.5 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all font-semibold">
                     <option value="">Semua Bulan</option>
                     @for ($m = 1; $m <= 12; $m++)
-                        <option value="{{ $m }}" {{ request('bulan') == $m ? 'selected' : '' }}>
+                        <option value="{{ $m }}" {{ (string) $filterBulan === (string) $m ? 'selected' : '' }}>
                             {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
                         </option>
                     @endfor
@@ -68,7 +68,7 @@
                     class="block w-full px-3.5 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all font-semibold">
                     <option value="">Semua Tahun</option>
                     @for ($y = date('Y') - 2; $y <= date('Y') + 1; $y++)
-                        <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        <option value="{{ $y }}" {{ (string) $filterTahun === (string) $y ? 'selected' : '' }}>{{ $y }}</option>
                     @endfor
                 </select>
             </div>

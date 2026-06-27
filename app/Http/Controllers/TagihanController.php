@@ -15,10 +15,12 @@ class TagihanController extends Controller
     {
         $search = trim((string) $request->search);
         $searchTerms = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $filterBulan = $request->has('bulan') ? $request->input('bulan') : now()->month;
+        $filterTahun = $request->has('tahun') ? $request->input('tahun') : now()->year;
 
         $tagihan = TagihanSpp::with(['siswa.kelas'])
-            ->when($request->bulan, fn($q, $v) => $q->where('bulan', $v))
-            ->when($request->tahun, fn($q, $v) => $q->where('tahun', $v))
+            ->when($filterBulan !== '', fn($q) => $q->where('bulan', $filterBulan))
+            ->when($filterTahun !== '', fn($q) => $q->where('tahun', $filterTahun))
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
             ->when($request->kelas_id, fn($q, $v) => $q->whereHas('siswa', fn($sq) => $sq->where('kelas_id', $v)))
             ->when($search !== '', function ($q) use ($search, $searchTerms) {
@@ -43,7 +45,7 @@ class TagihanController extends Controller
 
         $kelas = \App\Models\Kelas::orderBy('tingkat')->orderBy('nama_kelas')->get();
 
-        return view('tagihan.index', compact('tagihan', 'kelas'));
+        return view('tagihan.index', compact('tagihan', 'kelas', 'filterBulan', 'filterTahun'));
     }
 
     public function create()

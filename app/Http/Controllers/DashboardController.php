@@ -38,18 +38,22 @@ class DashboardController extends Controller
             ->withSum(['tagihanSpp as total_tunggakan' => function ($q) {
                 $q->where('status', '!=', 'lunas');
             }], DB::raw('jumlah_tagihan - total_dibayar'))
-            ->having('total_tunggakan', '>', 0)
-            ->orderByDesc('total_tunggakan')
-            ->limit(5)
-            ->get();
+            ->get()
+            ->filter(fn(Siswa $siswa) => (float) $siswa->total_tunggakan > 0)
+            ->sortByDesc(fn(Siswa $siswa) => (float) $siswa->total_tunggakan)
+            ->take(5)
+            ->values();
 
-        // Tren bulanan (tahun ini)
-        $trenBulanan = TagihanSpp::where('tahun', $tahunIni)
-            ->where('status', 'lunas')
-            ->select('bulan', DB::raw('SUM(total_dibayar) as total'))
-            ->groupBy('bulan')
-            ->orderBy('bulan')
-            ->pluck('total', 'bulan')
+        // Tren penerimaan kas tahun ini: hanya pembayaran yang benar-benar terverifikasi.
+        $now = now();
+        $trenBulanan = Pembayaran::where('status_verifikasi', 'terverifikasi')
+            ->whereBetween('tanggal_bayar', [
+                $now->copy()->startOfYear(),
+                $now->copy()->endOfYear(),
+            ])
+            ->get(['tanggal_bayar', 'jumlah_bayar'])
+            ->groupBy(fn(Pembayaran $pembayaran) => $pembayaran->tanggal_bayar->month)
+            ->map(fn($payments) => $payments->sum(fn(Pembayaran $pembayaran) => (float) $pembayaran->jumlah_bayar))
             ->toArray();
 
         $trenData = [];
