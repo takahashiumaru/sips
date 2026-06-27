@@ -39,7 +39,7 @@ jobs:
             /home/ubuntu/.local/bin/composer install --no-interaction --no-dev --optimize-autoloader
 
             echo "[4/9] Build frontend assets"
-            npm ci --no-audit --no-fund
+            npm ci --no-audit --no-fund --registry https://registry.npmjs.org
             npm run build
 
             echo "[5/9] Refresh storage link & migrate"
@@ -48,9 +48,7 @@ jobs:
             php artisan migrate --force
 
             echo "[6/9] Clear & rebuild cache"
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
+            rm -f bootstrap/cache/config.php bootstrap/cache/routes-v7.php bootstrap/cache/packages.php
             php artisan optimize
 
             echo "[7/9] Restart PHP-FPM"
