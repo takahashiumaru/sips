@@ -837,6 +837,12 @@ tr:hover .copy-btn {
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
 }
 
+.sidebar-mobile-controls {
+    background: rgba(248, 250, 252, 0.82);
+    border-top-color: rgba(203, 213, 225, 0.7);
+    box-shadow: 0 -18px 42px rgba(15, 23, 42, 0.06);
+}
+
 /* Auth redesign */
 .auth-body {
     background:
@@ -1442,6 +1448,15 @@ html[data-theme="dark"] .segmented-control,
 html[data-theme="dark"] .theme-switch {
     background: rgba(15, 23, 42, 0.82);
     border-color: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="dark"] .sidebar-mobile-controls {
+    background:
+        linear-gradient(180deg, rgba(12, 23, 39, 0.98), rgba(8, 17, 31, 0.98)) !important;
+    border-top-color: rgba(71, 85, 105, 0.38) !important;
+    box-shadow:
+        0 -20px 44px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(148, 163, 184, 0.08);
 }
 
 html[data-theme="dark"] .segmented-btn.active,

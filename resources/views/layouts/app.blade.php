@@ -428,7 +428,7 @@
         </nav>
         
         <!-- Mobile Theme/Lang Controls -->
-        <div class="md:hidden p-4 border-t border-slate-200/50 mt-auto flex items-center justify-between gap-3 bg-white/40 backdrop-blur-xs">
+        <div class="sidebar-mobile-controls md:hidden p-4 border-t border-slate-200/50 mt-auto flex items-center justify-between gap-3 bg-white/40 backdrop-blur-xs">
             <div class="theme-switch scale-90 origin-left" aria-label="Theme">
                 <button type="button" data-theme-option="light" class="theme-option active" title="Light mode" aria-label="Light mode">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
