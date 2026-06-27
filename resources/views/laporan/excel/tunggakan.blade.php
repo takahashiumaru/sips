@@ -1,7 +1,7 @@
 <table>
     <thead>
         <tr>
-            <th colspan="8" style="font-weight: bold; font-size: 14px; text-align: center;">SD NEGERI 1 KELAPA DUA</th>
+            <th colspan="8" style="font-weight: bold; font-size: 14px; text-align: center;">MI AL-HAQ</th>
         </tr>
         <tr>
             <th colspan="8" style="font-style: italic; text-align: center;">LAPORAN TUNGGAKAN PEMBAYARAN SPP</th>

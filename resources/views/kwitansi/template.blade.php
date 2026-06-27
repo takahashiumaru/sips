@@ -261,7 +261,7 @@
                     <img src="{{ public_path('logo.png') }}" style="width: 36px; height: 36px; display: block;">
                 </td>
                 <td class="school-info-cell">
-                    <h1 class="school-name">SD NEGERI 1 KELAPA DUA</h1>
+                    <h1 class="school-name">MI AL-HAQ</h1>
                     <p class="school-details">Jl. Pendidikan No. 45, Kecamatan Kelapa Dua, Tangerang · Telp: (021) 543210</p>
                 </td>
                 <td class="receipt-title-cell">

@@ -746,7 +746,7 @@
         </div>
 
         <footer class="md:pl-0 border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-bold bg-white mt-auto">
-            <span>&copy; {{ date('Y') }} <span data-i18n="app.footer">SIP-SPP &middot; SD Negeri 1 Kelapa Dua. Hak Cipta Dilindungi.</span></span>
+            <span>&copy; {{ date('Y') }} <span data-i18n="app.footer">SIP-SPP &middot; MI Al-Haq. Hak Cipta Dilindungi.</span></span>
         </footer>
     </main>
 

@@ -92,7 +92,7 @@
             @endif
 
             <div class="mt-8 pt-6 border-t border-slate-100 text-center">
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">SIP-SPP &middot; SD Negeri 1 Kelapa Dua</p>
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">SIP-SPP &middot; MI Al-Haq</p>
             </div>
         </div>
     </div>

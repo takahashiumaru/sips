@@ -90,7 +90,7 @@
         </div>
         <div class="bg-white border border-blue-100 p-4 rounded-xl card-premium">
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Atas Nama</span>
-            <span class="text-xs font-bold text-slate-800 block mt-0.5">SD Negeri 1 Kelapa Dua</span>
+            <span class="text-xs font-bold text-slate-800 block mt-0.5">MI Al-Haq</span>
         </div>
     </div>
     <p class="text-[10px] text-blue-600/80 font-bold uppercase mt-4 tracking-wider">*Setelah melakukan transfer, pastikan Anda masuk ke menu <strong>"Tagihan SPP Anak"</strong> dan mengupload bukti transfer untuk diverifikasi oleh pihak sekolah.</p>
