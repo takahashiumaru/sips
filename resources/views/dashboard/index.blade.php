@@ -212,8 +212,9 @@
     .legend-current { background-color: #2563EB; }
     .legend-past { background-color: #CBD5E1; }
     .legend-future { background-color: #E2E8F0; }
-    [data-theme='dark'] .legend-past { background-color: #334155; }
-    [data-theme='dark'] .legend-future { background-color: #1E293B; }
+    [data-theme='dark'] .legend-current { background-color: #3B82F6; }
+    [data-theme='dark'] .legend-past { background-color: #7F91A8; }
+    [data-theme='dark'] .legend-future { background-color: #273447; }
 </style>
 
 <script>
@@ -232,22 +233,85 @@
             maximumFractionDigits: 0
         });
 
-        const isDark = document.documentElement.dataset.theme === 'dark';
+        const chartPalettes = {
+            light: {
+                current: '#2563EB',
+                currentHover: '#1D4ED8',
+                line: '#2563EB',
+                past: '#CBD5E1',
+                pastHover: '#94A3B8',
+                future: '#E2E8F0',
+                futureHover: '#CBD5E1',
+                grid: 'rgba(148, 163, 184, 0.10)',
+                tick: '#94A3B8',
+                tooltipBg: '#0F172A',
+                tooltipTitle: '#94A3B8',
+                tooltipBody: '#FFFFFF',
+                tooltipBorder: 'rgba(255, 255, 255, 0.06)',
+                floatingBg: '#0F172A',
+                floatingBorder: 'rgba(255, 255, 255, 0)',
+                floatingText: '#FFFFFF',
+                markerFill: '#FFFFFF',
+                shadow: 'rgba(37, 99, 235, 0.28)',
+                pointHalo: 'rgba(37, 99, 235, 0.12)',
+                pointSoft: 'rgba(37, 99, 235, 0.06)',
+                gradient: [
+                    'rgba(37, 99, 235, 0.22)',
+                    'rgba(37, 99, 235, 0.10)',
+                    'rgba(37, 99, 235, 0.03)',
+                    'rgba(37, 99, 235, 0)'
+                ]
+            },
+            dark: {
+                current: '#3B82F6',
+                currentHover: '#60A5FA',
+                line: '#60A5FA',
+                past: '#7F91A8',
+                pastHover: '#A9B8CC',
+                future: '#273447',
+                futureHover: '#34445A',
+                grid: 'rgba(148, 163, 184, 0.16)',
+                tick: '#9CAEC4',
+                tooltipBg: '#0A1020',
+                tooltipTitle: '#A9B8CC',
+                tooltipBody: '#F8FAFC',
+                tooltipBorder: 'rgba(147, 197, 253, 0.16)',
+                floatingBg: '#0A1020',
+                floatingBorder: 'rgba(147, 197, 253, 0.18)',
+                floatingText: '#F8FAFC',
+                markerFill: '#F8FAFC',
+                shadow: 'rgba(96, 165, 250, 0.34)',
+                pointHalo: 'rgba(96, 165, 250, 0.16)',
+                pointSoft: 'rgba(96, 165, 250, 0.10)',
+                gradient: [
+                    'rgba(96, 165, 250, 0.24)',
+                    'rgba(96, 165, 250, 0.12)',
+                    'rgba(96, 165, 250, 0.045)',
+                    'rgba(96, 165, 250, 0)'
+                ]
+            }
+        };
+
+        const getChartPalette = (theme = document.documentElement.dataset.theme) => {
+            return chartPalettes[theme === 'dark' ? 'dark' : 'light'];
+        };
+
+        let currentPalette = getChartPalette();
 
         // Trendline data: only up to current month, null for future months (line won't render there)
         const trendLineData = chartData.map((val, i) => i <= monthNow ? val : null);
 
         // Per-bar colors: current month = vibrant blue, past = soft slate, future = very faint
-        const barColors = chartData.map((val, i) => {
-            if (i === monthNow) return '#2563EB';
-            if (i < monthNow)   return isDark ? '#334155' : '#CBD5E1';
-            return isDark ? '#1E293B' : '#E2E8F0';
+        const createBarColors = () => chartData.map((val, i) => {
+            if (i === monthNow) return currentPalette.current;
+            if (i < monthNow) return currentPalette.past;
+            return currentPalette.future;
         });
 
-        const barHoverColors = chartData.map((val, i) => {
-            if (i === monthNow) return '#1D4ED8';
-            if (i < monthNow)   return isDark ? '#475569' : '#94A3B8';
-            return isDark ? '#334155' : '#CBD5E1';
+        const createBarHoverColors = () => chartData.map((val, i) => {
+            if (i === monthNow) return currentPalette.currentHover;
+            if (i < monthNow) return currentPalette.pastHover;
+            return currentPalette.futureHover;
         });
 
         // Floating value label plugin — shows value above current month bar
@@ -273,10 +337,13 @@
 
                 c.beginPath();
                 c.roundRect(pillX, pillY, pillW, pillH, 6);
-                c.fillStyle = isDark ? '#1E293B' : '#0F172A';
+                c.fillStyle = currentPalette.floatingBg;
                 c.fill();
+                c.strokeStyle = currentPalette.floatingBorder;
+                c.lineWidth = 1;
+                c.stroke();
 
-                c.fillStyle = '#FFFFFF';
+                c.fillStyle = currentPalette.floatingText;
                 c.textAlign = 'center';
                 c.textBaseline = 'middle';
                 c.fillText(text, bar.x, pillY + pillH / 2);
@@ -286,7 +353,7 @@
                 c.lineTo(bar.x, pillY + pillH + 4);
                 c.lineTo(bar.x + 4, pillY + pillH);
                 c.closePath();
-                c.fillStyle = isDark ? '#1E293B' : '#0F172A';
+                c.fillStyle = currentPalette.floatingBg;
                 c.fill();
 
                 c.restore();
@@ -301,7 +368,7 @@
                 if (args.index !== 1) return;
                 const { ctx: c } = chart;
                 c.save();
-                c.shadowColor = isDark ? 'rgba(59, 130, 246, 0.35)' : 'rgba(37, 99, 235, 0.28)';
+                c.shadowColor = currentPalette.shadow;
                 c.shadowBlur = 16;
                 c.shadowOffsetX = 0;
                 c.shadowOffsetY = 8;
@@ -319,7 +386,7 @@
 
                     const x = pt.x;
                     const y = pt.y;
-                    const accentColor = isDark ? '#3B82F6' : '#2563EB';
+                    const accentColor = currentPalette.line;
 
                     if (i === monthNow) {
                         const pulse = 0.4 + Math.sin(pulsePhase) * 0.25;
@@ -328,18 +395,14 @@
                         c.save();
                         c.beginPath();
                         c.arc(x, y, ringRadius, 0, Math.PI * 2);
-                        c.fillStyle = isDark
-                            ? `rgba(59, 130, 246, ${pulse * 0.18})`
-                            : `rgba(37, 99, 235, ${pulse * 0.15})`;
+                        c.fillStyle = `rgba(${document.documentElement.dataset.theme === 'dark' ? '96, 165, 250' : '37, 99, 235'}, ${pulse * 0.16})`;
                         c.fill();
                         c.restore();
 
                         c.save();
                         c.beginPath();
                         c.arc(x, y, 7, 0, Math.PI * 2);
-                        c.fillStyle = isDark
-                            ? 'rgba(59, 130, 246, 0.15)'
-                            : 'rgba(37, 99, 235, 0.12)';
+                        c.fillStyle = currentPalette.pointHalo;
                         c.fill();
                         c.restore();
 
@@ -353,7 +416,7 @@
                         c.save();
                         c.beginPath();
                         c.arc(x, y, 2.5, 0, Math.PI * 2);
-                        c.fillStyle = '#FFFFFF';
+                        c.fillStyle = currentPalette.markerFill;
                         c.fill();
                         c.restore();
                     } else {
@@ -361,14 +424,12 @@
 
                         c.beginPath();
                         c.arc(x, y, 5, 0, Math.PI * 2);
-                        c.fillStyle = isDark
-                            ? 'rgba(59, 130, 246, 0.08)'
-                            : 'rgba(37, 99, 235, 0.06)';
+                        c.fillStyle = currentPalette.pointSoft;
                         c.fill();
 
                         c.beginPath();
                         c.arc(x, y, 3, 0, Math.PI * 2);
-                        c.fillStyle = isDark ? '#1E293B' : '#FFFFFF';
+                        c.fillStyle = currentPalette.markerFill;
                         c.fill();
                         c.strokeStyle = accentColor;
                         c.lineWidth = 1.5;
@@ -390,27 +451,23 @@
         };
 
         let cachedGradient = null;
+        let cachedGradientTheme = null;
         const createLineGradient = (chart) => {
             const area = chart.chartArea;
-            if (!area) return 'rgba(37, 99, 235, 0.05)';
-            if (cachedGradient) return cachedGradient;
+            if (!area) return currentPalette.gradient[2];
+            const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+            if (cachedGradient && cachedGradientTheme === theme) return cachedGradient;
             const gradient = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
-            if (isDark) {
-                gradient.addColorStop(0,   'rgba(59, 130, 246, 0.28)');
-                gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.14)');
-                gradient.addColorStop(0.6, 'rgba(59, 130, 246, 0.05)');
-                gradient.addColorStop(1,   'rgba(59, 130, 246, 0)');
-            } else {
-                gradient.addColorStop(0,   'rgba(37, 99, 235, 0.22)');
-                gradient.addColorStop(0.3, 'rgba(37, 99, 235, 0.10)');
-                gradient.addColorStop(0.6, 'rgba(37, 99, 235, 0.03)');
-                gradient.addColorStop(1,   'rgba(37, 99, 235, 0)');
-            }
+            gradient.addColorStop(0, currentPalette.gradient[0]);
+            gradient.addColorStop(0.3, currentPalette.gradient[1]);
+            gradient.addColorStop(0.6, currentPalette.gradient[2]);
+            gradient.addColorStop(1, currentPalette.gradient[3]);
             cachedGradient = gradient;
+            cachedGradientTheme = theme;
             return gradient;
         };
 
-        new Chart(ctx, {
+        const paymentChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -418,8 +475,8 @@
                     {
                         label: 'Penerimaan SPP',
                         data: chartData,
-                        backgroundColor: barColors,
-                        hoverBackgroundColor: barHoverColors,
+                        backgroundColor: createBarColors(),
+                        hoverBackgroundColor: createBarHoverColors(),
                         borderWidth: 0,
                         borderRadius: {
                             topLeft: 6,
@@ -436,7 +493,7 @@
                         type: 'line',
                         label: 'Tren Penerimaan',
                         data: trendLineData,
-                        borderColor: isDark ? '#3B82F6' : '#2563EB',
+                        borderColor: currentPalette.line,
                         borderWidth: 2.5,
                         tension: 0.4,
                         fill: true,
@@ -470,10 +527,10 @@
                     tooltip: {
                         enabled: true,
                         padding: { top: 10, bottom: 10, left: 14, right: 14 },
-                        backgroundColor: '#0F172A',
-                        titleColor: '#94A3B8',
-                        bodyColor: '#FFFFFF',
-                        borderColor: 'rgba(255, 255, 255, 0.06)',
+                        backgroundColor: currentPalette.tooltipBg,
+                        titleColor: currentPalette.tooltipTitle,
+                        bodyColor: currentPalette.tooltipBody,
+                        borderColor: currentPalette.tooltipBorder,
                         borderWidth: 1,
                         cornerRadius: 10,
                         caretPadding: 6,
@@ -520,11 +577,11 @@
                             display: false
                         },
                         grid: {
-                            color: 'rgba(148, 163, 184, 0.10)',
+                            color: currentPalette.grid,
                             drawTicks: false
                         },
                         ticks: {
-                            color: '#94A3B8',
+                            color: currentPalette.tick,
                             padding: 12,
                             maxTicksLimit: 6,
                             font: {
@@ -548,7 +605,7 @@
                             display: false
                         },
                         ticks: {
-                            color: (context) => context.index === monthNow ? '#2563EB' : '#94A3B8',
+                            color: (context) => context.index === monthNow ? currentPalette.current : currentPalette.tick,
                             padding: 8,
                             font: {
                                 family: "'Plus Jakarta Sans', sans-serif",
@@ -560,6 +617,31 @@
                 }
             },
             plugins: [trendEffectsPlugin, floatingLabelPlugin, pulseAnimationPlugin]
+        });
+
+        const applyChartTheme = (theme) => {
+            currentPalette = getChartPalette(theme);
+            cachedGradient = null;
+            cachedGradientTheme = null;
+
+            paymentChart.data.datasets[0].backgroundColor = createBarColors();
+            paymentChart.data.datasets[0].hoverBackgroundColor = createBarHoverColors();
+            paymentChart.data.datasets[1].borderColor = currentPalette.line;
+            paymentChart.data.datasets[1].backgroundColor = (context) => createLineGradient(context.chart);
+
+            paymentChart.options.plugins.tooltip.backgroundColor = currentPalette.tooltipBg;
+            paymentChart.options.plugins.tooltip.titleColor = currentPalette.tooltipTitle;
+            paymentChart.options.plugins.tooltip.bodyColor = currentPalette.tooltipBody;
+            paymentChart.options.plugins.tooltip.borderColor = currentPalette.tooltipBorder;
+            paymentChart.options.scales.y.grid.color = currentPalette.grid;
+            paymentChart.options.scales.y.ticks.color = currentPalette.tick;
+            paymentChart.options.scales.x.ticks.color = (context) => context.index === monthNow ? currentPalette.current : currentPalette.tick;
+
+            paymentChart.update('none');
+        };
+
+        window.addEventListener('sip-theme-change', (event) => {
+            applyChartTheme(event.detail?.theme);
         });
     });
 </script>

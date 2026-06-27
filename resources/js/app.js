@@ -168,6 +168,7 @@ function setStoredPreference(key, value) {
 
 function applyTheme(theme) {
     const nextTheme = theme === 'dark' ? 'dark' : 'light';
+    const previousTheme = document.documentElement.dataset.theme;
     document.documentElement.dataset.theme = nextTheme;
     document.querySelectorAll('[data-theme-option]').forEach((button) => {
         const active = button.dataset.themeOption === nextTheme;
@@ -175,6 +176,11 @@ function applyTheme(theme) {
         button.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
     setStoredPreference('sip_spp_theme', nextTheme);
+    if (previousTheme !== nextTheme) {
+        window.dispatchEvent(new CustomEvent('sip-theme-change', {
+            detail: { theme: nextTheme }
+        }));
+    }
 }
 
 function applyLanguage(lang) {
