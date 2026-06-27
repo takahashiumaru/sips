@@ -74,10 +74,10 @@
                         <td class="px-6 py-4 text-center font-bold text-slate-500 font-mono">{{ $r['total'] }} item</td>
                         <td class="px-6 py-4 text-center font-bold text-slate-500 font-mono">{{ $r['lunas'] }} item</td>
                         <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2.5">
-                                <span class="bg-blue-50/50 text-brand-light border border-blue-100 px-2 py-0.5 rounded-lg text-[9px] font-bold font-mono">{{ $r['persentase'] }}%</span>
-                                <div class="w-12 bg-blue-100/60 rounded-full h-1.5 overflow-hidden hidden sm:block">
-                                    <div class="bg-brand-light h-1.5 rounded-full" style="width: {{ $r['persentase'] }}%"></div>
+                            <div class="flex items-center justify-end gap-2.5 settlement-meter">
+                                <span class="settlement-badge bg-blue-50/50 text-brand-light border border-blue-100 px-2 py-0.5 rounded-lg text-[9px] font-bold font-mono">{{ $r['persentase'] }}%</span>
+                                <div class="settlement-track w-12 bg-blue-100/60 rounded-full h-1.5 overflow-hidden hidden sm:block">
+                                    <div class="settlement-fill bg-brand-light h-1.5 rounded-full" style="width: {{ $r['persentase'] }}%"></div>
                                 </div>
                             </div>
                         </td>

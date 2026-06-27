@@ -1562,6 +1562,196 @@ html[data-theme="dark"] .text-amber-600 { color: #FBBF24 !important; }
 html[data-theme="dark"] .text-rose-600 { color: #F87171 !important; }
 html[data-theme="dark"] .text-blue-500 { color: #60A5FA !important; }
 
+/* Targeted dark-mode contrast fixes for laporan/tagihan action surfaces */
+.arrears-student-summary,
+.invoice-item-summary,
+.stat-icon-blue,
+.stat-icon-cyan,
+.btn-generate-massal,
+.settlement-badge,
+.settlement-track,
+.settlement-fill {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-generate-massal {
+    background: linear-gradient(135deg, #FFFBEB, #FEF3C7) !important;
+    color: #B45309 !important;
+    border-color: rgba(245, 158, 11, 0.38) !important;
+    box-shadow: 0 10px 24px rgba(245, 158, 11, 0.12);
+}
+
+.btn-generate-massal:hover {
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A) !important;
+    color: #92400E !important;
+}
+
+.settlement-badge {
+    display: inline-flex;
+    min-width: 38px;
+    justify-content: center;
+}
+
+.action-btn-view,
+.action-btn-edit,
+.action-btn-delete {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.action-btn-view {
+    background-color: rgba(239, 246, 255, 0.88) !important;
+    border-color: rgba(147, 197, 253, 0.62) !important;
+    color: #2563EB !important;
+}
+
+.action-btn-view:hover {
+    background-color: #DBEAFE !important;
+    border-color: rgba(59, 130, 246, 0.42) !important;
+    color: #1D4ED8 !important;
+}
+
+.action-btn-edit {
+    background-color: rgba(255, 251, 235, 0.92) !important;
+    border-color: rgba(245, 158, 11, 0.34) !important;
+    color: #B45309 !important;
+}
+
+.action-btn-edit:hover {
+    background-color: #FEF3C7 !important;
+    border-color: rgba(217, 119, 6, 0.42) !important;
+    color: #92400E !important;
+}
+
+.action-btn-delete {
+    background-color: rgba(255, 241, 242, 0.92) !important;
+    border-color: rgba(244, 63, 94, 0.34) !important;
+    color: #E11D48 !important;
+}
+
+.action-btn-delete:hover {
+    background-color: #FFE4E6 !important;
+    border-color: rgba(225, 29, 72, 0.44) !important;
+    color: #BE123C !important;
+}
+
+html[data-theme="dark"] .arrears-student-summary {
+    background: linear-gradient(180deg, rgba(15, 30, 55, 0.98), rgba(11, 18, 32, 0.95)) !important;
+    border-color: rgba(96, 165, 250, 0.34) !important;
+    box-shadow:
+        0 22px 58px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(147, 197, 253, 0.1) !important;
+}
+
+html[data-theme="dark"] .arrears-student-summary .metric-value-blue {
+    color: #DBEAFE !important;
+}
+
+html[data-theme="dark"] .invoice-item-summary {
+    background: linear-gradient(180deg, rgba(14, 44, 51, 0.95), rgba(11, 18, 32, 0.95)) !important;
+    border-color: rgba(45, 212, 191, 0.26) !important;
+    box-shadow:
+        0 22px 58px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(94, 234, 212, 0.1) !important;
+}
+
+html[data-theme="dark"] .invoice-item-summary .metric-value-cyan {
+    color: #CCFBF1 !important;
+}
+
+html[data-theme="dark"] .stat-icon-blue {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(20, 184, 166, 0.18)) !important;
+    color: #BFDBFE !important;
+    border-color: rgba(147, 197, 253, 0.38) !important;
+    box-shadow:
+        0 14px 28px rgba(37, 99, 235, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .stat-icon-cyan {
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.26), rgba(6, 182, 212, 0.16)) !important;
+    color: #99F6E4 !important;
+    border-color: rgba(94, 234, 212, 0.32) !important;
+    box-shadow:
+        0 14px 28px rgba(20, 184, 166, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .btn-generate-massal {
+    background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+    border-color: rgba(252, 211, 77, 0.5) !important;
+    color: #111827 !important;
+    box-shadow:
+        0 16px 30px rgba(245, 158, 11, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+html[data-theme="dark"] .btn-generate-massal:hover {
+    background: linear-gradient(135deg, #FBBF24, #F59E0B) !important;
+    border-color: rgba(253, 230, 138, 0.68) !important;
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .btn-generate-massal svg,
+html[data-theme="dark"] .btn-generate-massal span {
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .settlement-badge {
+    background: rgba(59, 130, 246, 0.24) !important;
+    color: #DBEAFE !important;
+    border-color: rgba(147, 197, 253, 0.34) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .settlement-track {
+    background: rgba(148, 163, 184, 0.28) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.26);
+}
+
+html[data-theme="dark"] .settlement-fill {
+    background: linear-gradient(90deg, #60A5FA, #34D399) !important;
+    box-shadow: 0 0 10px rgba(96, 165, 250, 0.36);
+}
+
+html[data-theme="dark"] .action-btn-view {
+    background-color: rgba(37, 99, 235, 0.16) !important;
+    border-color: rgba(96, 165, 250, 0.32) !important;
+    color: #60A5FA !important;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.08);
+}
+
+html[data-theme="dark"] .action-btn-view:hover {
+    background-color: rgba(37, 99, 235, 0.28) !important;
+    border-color: rgba(147, 197, 253, 0.5) !important;
+    color: #BFDBFE !important;
+}
+
+html[data-theme="dark"] .action-btn-edit {
+    background-color: rgba(245, 158, 11, 0.16) !important;
+    border-color: rgba(252, 211, 77, 0.34) !important;
+    color: #FBBF24 !important;
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="dark"] .action-btn-edit:hover {
+    background-color: rgba(245, 158, 11, 0.28) !important;
+    border-color: rgba(253, 230, 138, 0.5) !important;
+    color: #FDE68A !important;
+}
+
+html[data-theme="dark"] .action-btn-delete {
+    background-color: rgba(244, 63, 94, 0.14) !important;
+    border-color: rgba(251, 113, 133, 0.34) !important;
+    color: #FB7185 !important;
+    box-shadow: 0 10px 20px rgba(244, 63, 94, 0.08);
+}
+
+html[data-theme="dark"] .action-btn-delete:hover {
+    background-color: rgba(244, 63, 94, 0.24) !important;
+    border-color: rgba(253, 164, 175, 0.48) !important;
+    color: #FDA4AF !important;
+}
+
 /* Table border rules */
 html[data-theme="dark"] table,
 html[data-theme="dark"] tr,
@@ -2047,5 +2237,3 @@ html[data-theme="dark"] .swal-premium-btn-cancel:hover {
     background: #334155 !important;
     color: #f1f5f9 !important;
 }
-
-

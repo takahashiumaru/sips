@@ -23,13 +23,13 @@
 @section('content')
 <!-- Ringkasan Cards -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex items-center justify-between card-premium">
+    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex items-center justify-between card-premium arrears-student-summary">
         <div class="space-y-1">
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Siswa Menunggak</span>
-            <span class="text-xl font-black text-slate-900 block">{{ number_format($ringkasan['total_siswa'], 0, ',', '.') }} orang</span>
+            <span class="text-xl font-black text-slate-900 block metric-value-blue">{{ number_format($ringkasan['total_siswa'], 0, ',', '.') }} orang</span>
             <span class="text-[9px] font-semibold text-slate-400 block">Siswa aktif terhitung</span>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-blue-50/60 text-blue-600 flex items-center justify-center border border-blue-100/30 shrink-0 shadow-xs">
+        <div class="w-12 h-12 rounded-xl bg-blue-50/60 text-blue-600 flex items-center justify-center border border-blue-100/30 shrink-0 shadow-xs stat-icon-blue">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
             </svg>
@@ -49,13 +49,13 @@
         </div>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex items-center justify-between card-premium">
+    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex items-center justify-between card-premium invoice-item-summary">
         <div class="space-y-1">
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Total Item Tagihan</span>
-            <span class="text-xl font-black text-slate-900 block">{{ number_format($ringkasan['total_tagihan'], 0, ',', '.') }} item</span>
+            <span class="text-xl font-black text-slate-900 block metric-value-cyan">{{ number_format($ringkasan['total_tagihan'], 0, ',', '.') }} item</span>
             <span class="text-[9px] font-semibold text-slate-400 block">Item tagihan belum lunas</span>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-blue-50/60 text-blue-600 flex items-center justify-center border border-blue-100/30 shrink-0 shadow-xs">
+        <div class="w-12 h-12 rounded-xl bg-blue-50/60 text-blue-600 flex items-center justify-center border border-blue-100/30 shrink-0 shadow-xs stat-icon-cyan">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
             </svg>
