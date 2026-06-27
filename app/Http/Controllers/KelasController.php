@@ -26,7 +26,7 @@ class KelasController extends Controller
         $validated = $request->validate([
             'tahun_ajaran_id' => 'required|exists:tahun_ajaran,id',
             'nama_kelas' => 'required|string|max:10',
-            'tingkat' => 'required|integer|in:7,8,9',
+            'tingkat' => 'required|integer|in:1,2,3,4,5,6',
             'wali_kelas' => 'nullable|string|max:100',
         ]);
 
@@ -39,7 +39,7 @@ class KelasController extends Controller
     {
         $validated = $request->validate([
             'nama_kelas' => 'required|string|max:10',
-            'tingkat' => 'required|integer|in:7,8,9',
+            'tingkat' => 'required|integer|in:1,2,3,4,5,6',
             'wali_kelas' => 'nullable|string|max:100',
         ]);
 

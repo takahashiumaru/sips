@@ -24,7 +24,7 @@ class TarifSppController extends Controller
     {
         $validated = $request->validate([
             'tahun_ajaran_id' => 'required|exists:tahun_ajaran,id',
-            'tingkat' => 'required|integer|in:7,8,9',
+            'tingkat' => 'required|integer|in:1,2,3,4,5,6',
             'jumlah' => 'required|numeric|min:0',
             'keterangan' => 'nullable|string|max:255',
         ]);

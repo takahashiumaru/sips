@@ -100,9 +100,9 @@
                     <label for="tingkat" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Tingkat</label>
                     <select name="tingkat" id="tingkat" required
                         class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium">
-                        <option value="7">Tingkat 7</option>
-                        <option value="8">Tingkat 8</option>
-                        <option value="9">Tingkat 9</option>
+                        @for($i = 1; $i <= 6; $i++)
+                            <option value="{{ $i }}">Tingkat {{ $i }}</option>
+                        @endfor
                     </select>
                 </div>
 
@@ -110,7 +110,7 @@
                     <label for="nama_kelas" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Nama Kelas</label>
                     <input type="text" name="nama_kelas" id="nama_kelas" required
                         class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Contoh: 7-A atau 8-Unggulan">
+                        placeholder="Contoh: 1-A atau 2-Unggulan">
                 </div>
 
                 <div>
@@ -154,9 +154,9 @@
                     <label for="edit_tingkat" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Tingkat</label>
                     <select name="tingkat" id="edit_tingkat" required x-model="editForm.tingkat"
                         class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium">
-                        <option value="7">Tingkat 7</option>
-                        <option value="8">Tingkat 8</option>
-                        <option value="9">Tingkat 9</option>
+                        @for($i = 1; $i <= 6; $i++)
+                            <option value="{{ $i }}">Tingkat {{ $i }}</option>
+                        @endfor
                     </select>
                 </div>
 
@@ -164,7 +164,7 @@
                     <label for="edit_nama_kelas" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Nama Kelas</label>
                     <input type="text" name="nama_kelas" id="edit_nama_kelas" required x-model="editForm.nama_kelas"
                         class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Contoh: 7-A">
+                        placeholder="Contoh: 1-A">
                 </div>
 
                 <div>

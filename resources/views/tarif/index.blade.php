@@ -89,9 +89,9 @@
                         <label for="tingkat" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Tingkat Kelas</label>
                         <select name="tingkat" id="tingkat" required
                             class="block w-full px-3 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold">
-                            <option value="7">Tingkat 7</option>
-                            <option value="8">Tingkat 8</option>
-                            <option value="9">Tingkat 9</option>
+                            @for($i = 1; $i <= 6; $i++)
+                                <option value="{{ $i }}">Tingkat {{ $i }}</option>
+                            @endfor
                         </select>
                     </div>
 
