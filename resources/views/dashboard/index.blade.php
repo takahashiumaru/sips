@@ -9,26 +9,26 @@
     $paidRateWidth = min(100, max(0, (float) $persentaseLunas));
 @endphp
 <!-- Stats Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <!-- Stat Card 1 -->
-    <div class="p-6 rounded-2xl shadow-lg border border-blue-600/10 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl shrink-0">
-        <div class="space-y-1.5">
+    <div class="px-5 py-4 rounded-2xl shadow-lg border border-blue-600/10 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl shrink-0">
+        <div class="space-y-0.5">
             <span class="text-[10px] font-bold text-blue-200 uppercase tracking-widest block" data-i18n="dashboard.activeStudents">Total Siswa Aktif</span>
-            <span class="text-3xl font-black text-white leading-none tracking-tight block font-mono">{{ number_format($totalSiswa, 0, ',', '.') }}</span>
+            <span class="text-[1.55rem] font-black text-white leading-none tracking-tight block font-mono">{{ number_format($totalSiswa, 0, ',', '.') }}</span>
             <span class="text-[10px] font-bold text-blue-100/70 block" data-i18n="dashboard.activeStudentsHelp">Siswa terdaftar aktif</span>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center border border-white/20 shrink-0 shadow-sm">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center border border-white/20 shrink-0 shadow-sm">
+            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
             </svg>
         </div>
     </div>
 
     <!-- Stat Card 2 -->
-    <div class="dashboard-stat-card dashboard-stat-paid p-6 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
-        <div class="space-y-2.5 min-w-0">
+    <div class="dashboard-stat-card dashboard-stat-paid px-5 py-4 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
+        <div class="space-y-1.5 min-w-0">
             <span class="dashboard-stat-label text-[10px] font-bold uppercase tracking-widest block" data-i18n="dashboard.paidThisMonth">Lunas Bulan Ini</span>
-            <span class="dashboard-stat-value text-3xl font-black leading-none tracking-tight block font-mono">{{ number_format($lunasBulanIni, 0, ',', '.') }}</span>
+            <span class="dashboard-stat-value text-[1.55rem] font-black leading-none tracking-tight block font-mono">{{ number_format($lunasBulanIni, 0, ',', '.') }}</span>
             <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="dashboard-stat-chip dashboard-stat-chip-paid text-[9px] font-black px-2 py-0.5 rounded-lg">{{ $persentaseLunas }}%</span>
                 <span class="dashboard-stat-help text-[10px] font-bold" data-i18n="dashboard.paidRate">tingkat kelunasan</span>
@@ -37,36 +37,36 @@
                 <span class="dashboard-stat-fill" style="width: {{ $paidRateWidth }}%"></span>
             </div>
         </div>
-        <div class="dashboard-stat-icon dashboard-stat-icon-paid w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="dashboard-stat-icon dashboard-stat-icon-paid w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
         </div>
     </div>
 
     <!-- Stat Card 3 -->
-    <div class="dashboard-stat-card dashboard-stat-unpaid p-6 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
-        <div class="space-y-2.5 min-w-0">
+    <div class="dashboard-stat-card dashboard-stat-unpaid px-5 py-4 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
+        <div class="space-y-1.5 min-w-0">
             <span class="dashboard-stat-label text-[10px] font-bold uppercase tracking-widest block" data-i18n="dashboard.unpaidThisMonth">Belum Lunas Bulan Ini</span>
-            <span class="dashboard-stat-value text-3xl font-black leading-none tracking-tight block font-mono">{{ number_format($menunggakBulanIni, 0, ',', '.') }}</span>
+            <span class="dashboard-stat-value text-[1.55rem] font-black leading-none tracking-tight block font-mono">{{ number_format($menunggakBulanIni, 0, ',', '.') }}</span>
             <span class="dashboard-stat-help text-[10px] font-bold block" data-i18n="dashboard.unpaidHelp">Siswa belum membayar</span>
         </div>
-        <div class="dashboard-stat-icon dashboard-stat-icon-unpaid w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="dashboard-stat-icon dashboard-stat-icon-unpaid w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
         </div>
     </div>
 
     <!-- Stat Card 4 -->
-    <div class="dashboard-stat-card dashboard-stat-arrears p-6 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
-        <div class="space-y-2.5 min-w-0">
+    <div class="dashboard-stat-card dashboard-stat-arrears px-5 py-4 rounded-2xl shadow-sm border bg-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md card-premium">
+        <div class="space-y-1.5 min-w-0">
             <span class="dashboard-stat-label text-[10px] font-bold uppercase tracking-widest block" data-i18n="dashboard.totalArrears">Tunggakan Kumulatif</span>
-            <span class="dashboard-stat-value text-xl font-black tracking-tight block font-mono">Rp {{ number_format($totalTunggakan, 0, ',', '.') }}</span>
+            <span class="dashboard-stat-value text-lg font-black tracking-tight block font-mono">Rp {{ number_format($totalTunggakan, 0, ',', '.') }}</span>
             <span class="dashboard-stat-help text-[10px] font-bold block" data-i18n="dashboard.allYears">Semua tahun ajaran</span>
         </div>
-        <div class="dashboard-stat-icon dashboard-stat-icon-arrears w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="dashboard-stat-icon dashboard-stat-icon-arrears w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
         </div>
