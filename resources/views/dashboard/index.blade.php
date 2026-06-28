@@ -76,7 +76,7 @@
 <!-- Chart & Recent Activity -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
     <!-- Chart Card -->
-    <div class="lg:col-span-2 rounded-2xl p-6 dashboard-panel">
+    <div class="lg:col-span-2 rounded-2xl p-6 dashboard-panel" data-reveal-delay="225">
         <div class="dashboard-panel-heading mb-5 pb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="text-xs font-bold text-slate-800 uppercase" data-i18n="dashboard.paymentTrend">Tren Penerimaan Pembayaran</h2>
@@ -141,7 +141,7 @@
 </div>
 
 <!-- Recent Transactions -->
-<div class="rounded-2xl p-6 dashboard-panel">
+<div class="rounded-2xl p-6 dashboard-panel" data-reveal-delay="225" data-reveal-eager="true">
     <h2 class="dashboard-panel-heading text-xs font-bold text-slate-800 uppercase mb-6 pb-3" data-i18n="dashboard.latestTransactions">10 Transaksi Pembayaran Terbaru</h2>
     <div class="overflow-x-auto -mx-6">
         <div class="inline-block min-w-full align-middle px-6">

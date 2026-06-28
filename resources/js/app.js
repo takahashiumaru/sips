@@ -351,7 +351,8 @@ function setupMotionEnhancements() {
 
     elements.forEach((element, index) => {
         element.classList.add('motion-reveal');
-        element.style.setProperty('--reveal-delay', `${Math.min(index, 8) * 45}ms`);
+        const customDelay = element.dataset.revealDelay;
+        element.style.setProperty('--reveal-delay', customDelay ? `${customDelay}ms` : `${Math.min(index, 8) * 45}ms`);
         if (prefersReducedMotion) {
             element.classList.add('is-visible');
         } else {
@@ -391,7 +392,14 @@ function setupMotionEnhancements() {
         threshold: 0.08
     });
 
-    elements.forEach((element) => observer.observe(element));
+    elements.forEach((element) => {
+        if (element.dataset.revealEager === 'true') {
+            requestAnimationFrame(() => element.classList.add('is-visible'));
+            return;
+        }
+
+        observer.observe(element);
+    });
 
     window.setTimeout(() => {
         elements.forEach((element) => {
