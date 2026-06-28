@@ -4,16 +4,16 @@
 @section('page_subtitle', 'Manajemen data kelas, tingkat akademik, dan wali kelas')
 
 @section('actions')
-<button @click="$dispatch('open-modal-add')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-brand-light/10 btn-premium">
+<a href="{{ route('kelas.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-brand-light/10 btn-premium">
     <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
     </svg>
     <span>Tambah Kelas</span>
-</button>
+</a>
 @endsection
 
 @section('content')
-<div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden card-premium" x-data="{ editMode: false, editForm: { id: '', nama_kelas: '', tingkat: '', wali_kelas: '' } }">
+<div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden card-premium">
     <div class="p-6 border-b border-slate-100/80 flex items-center justify-between">
         <h2 class="text-xs font-extrabold text-slate-800 uppercase tracking-widest">Daftar Kelas (Tahun Ajaran: {{ $tahunAktif->nama ?? '-' }})</h2>
     </div>
@@ -46,13 +46,12 @@
                         </td>
                         <td>
                             <div class="flex items-center justify-end gap-2">
-                                <button type="button" 
-                                    @click="editMode = true; editForm = { id: '{{ $k->id }}', nama_kelas: '{{ $k->nama_kelas }}', tingkat: '{{ $k->tingkat }}', wali_kelas: '{{ $k->wali_kelas }}' }; $dispatch('open-modal-edit')"
+                                <a href="{{ route('kelas.edit', $k) }}"
                                     class="p-2 bg-slate-50 border border-slate-200/60 text-slate-500 hover:text-brand-hover hover:bg-blue-50/60 hover:border-blue-100 rounded-xl transition-all btn-premium shadow-xs action-btn-edit" title="Ubah Data">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                                     </svg>
-                                </button>
+                                </a>
                                 <form action="{{ route('kelas.destroy', $k) }}" method="POST" onsubmit="return window.confirmSubmit(event, 'Apakah Anda yakin ingin menghapus kelas ini?', 'Hapus Kelas', 'danger')" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -72,124 +71,6 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-
-    <!-- Modal Add Kelas -->
-    <div x-data="{ open: false }" 
-          @open-modal-add.window="open = true" 
-          @close-modal-add.window="open = false"
-          x-show="open" 
-          class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-xs"
-          style="display: none;"
-          x-transition:enter="modal-backdrop-enter"
-          x-transition:enter-start="modal-backdrop-enter-start"
-          x-transition:enter-end="modal-backdrop-enter-end"
-          x-transition:leave="modal-backdrop-leave"
-          x-transition:leave-start="modal-backdrop-leave-start"
-          x-transition:leave-end="modal-backdrop-leave-end">
-        <div class="modal-premium-panel bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100" @click.away="open = false">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3.5 mb-5">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Tambah Kelas Baru</h3>
-                <button @click="open = false" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <form action="{{ route('kelas.store') }}" method="POST" class="space-y-4">
-                @csrf
-                <input type="hidden" name="tahun_ajaran_id" value="{{ $tahunAktif->id ?? '' }}">
-
-                <div>
-                    <label for="tingkat" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Tingkat</label>
-                    <select name="tingkat" id="tingkat" required
-                        class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium">
-                        @for($i = 1; $i <= 6; $i++)
-                            <option value="{{ $i }}">Tingkat {{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-
-                <div>
-                    <label for="nama_kelas" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Nama Kelas</label>
-                    <input type="text" name="nama_kelas" id="nama_kelas" required
-                        class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Contoh: 1-A atau 2-Unggulan">
-                </div>
-
-                <div>
-                    <label for="wali_kelas" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Wali Kelas (Nama Guru)</label>
-                    <input type="text" name="wali_kelas" id="wali_kelas"
-                        class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Masukkan nama wali kelas">
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3">
-                    <button type="button" @click="open = false" class="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 text-xs font-bold rounded-xl transition-colors btn-premium">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-brand-light/10 btn-premium">Simpan Kelas</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Edit Kelas -->
-    <div x-data="{ open: false }" 
-          @open-modal-edit.window="open = true" 
-          @close-modal-edit.window="open = false"
-          x-show="open" 
-          class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-xs"
-          style="display: none;"
-          x-transition:enter="modal-backdrop-enter"
-          x-transition:enter-start="modal-backdrop-enter-start"
-          x-transition:enter-end="modal-backdrop-enter-end"
-          x-transition:leave="modal-backdrop-leave"
-          x-transition:leave-start="modal-backdrop-leave-start"
-          x-transition:leave-end="modal-backdrop-leave-end">
-        <div class="modal-premium-panel bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100" @click.away="open = false">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3.5 mb-5">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Perbarui Data Kelas</h3>
-                <button @click="open = false" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <form :action="'{{ route('kelas.index') }}/' + editForm.id" method="POST" class="space-y-4">
-                @csrf
-                @method('PUT')
-
-                <div>
-                    <label for="edit_tingkat" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Tingkat</label>
-                    <select name="tingkat" id="edit_tingkat" required x-model="editForm.tingkat"
-                        class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium">
-                        @for($i = 1; $i <= 6; $i++)
-                            <option value="{{ $i }}">Tingkat {{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-
-                <div>
-                    <label for="edit_nama_kelas" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Nama Kelas</label>
-                    <input type="text" name="nama_kelas" id="edit_nama_kelas" required x-model="editForm.nama_kelas"
-                        class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Contoh: 1-A">
-                </div>
-
-                <div>
-                    <label for="edit_wali_kelas" class="block text-[9px] font-bold text-blue-600/90 uppercase tracking-wider mb-2">Wali Kelas (Nama Guru)</label>
-                    <input type="text" name="wali_kelas" id="edit_wali_kelas" x-model="editForm.wali_kelas"
-                        class="block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Masukkan nama wali kelas">
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3">
-                    <button type="button" @click="open = false" class="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 text-xs font-bold rounded-xl transition-colors btn-premium">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-brand-light/10 btn-premium">Perbarui Kelas</button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 @endsection

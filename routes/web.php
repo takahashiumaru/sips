@@ -49,7 +49,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     /* ── Master Data: Kelas (Admin) ── */
     Route::middleware('role:admin')->group(function () {
         Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
+        Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
         Route::post('/kelas', [KelasController::class, 'store'])->name('kelas.store');
+        Route::get('/kelas/{kela}/edit', [KelasController::class, 'edit'])->name('kelas.edit');
         Route::put('/kelas/{kela}', [KelasController::class, 'update'])->name('kelas.update');
         Route::delete('/kelas/{kela}', [KelasController::class, 'destroy'])->name('kelas.destroy');
     });
@@ -59,7 +61,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         ->middleware('role:admin,kepala_sekolah')
         ->name('tarif.index');
     Route::middleware('role:admin')->group(function () {
+        Route::get('/tarif-spp/create', [TarifSppController::class, 'create'])->name('tarif.create');
         Route::post('/tarif-spp', [TarifSppController::class, 'store'])->name('tarif.store');
+        Route::get('/tarif-spp/{tarifSpp}/edit', [TarifSppController::class, 'edit'])->name('tarif.edit');
         Route::put('/tarif-spp/{tarifSpp}', [TarifSppController::class, 'update'])->name('tarif.update');
     });
 

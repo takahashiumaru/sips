@@ -4,15 +4,9 @@
 @section('page_subtitle', 'Catat transaksi pembayaran langsung (tunai) atau transfer lunas untuk siswa')
 
 @section('content')
-<div class="max-w-2xl bg-white rounded-2xl border border-blue-100/60 p-6 shadow-sm card-premium">
+<div class="form-page-card bg-white rounded-2xl border border-blue-100/60 p-6 shadow-sm card-premium">
     <div class="flex items-center justify-between border-b border-blue-100/50 pb-4 mb-6">
         <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Form Catat Transaksi Pembayaran</h2>
-        <a href="{{ route('tagihan.index') }}" class="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Kembali
-        </a>
     </div>
 
     @if ($errors->any())
@@ -53,7 +47,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="form-grid-wide">
             <div>
                 <label for="jumlah_bayar" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Jumlah Bayar (IDR)</label>
                 <div class="relative">
@@ -82,7 +76,13 @@
                 placeholder="Tambahkan catatan seperti nama penyetor atau nomor referensi bank">{{ old('catatan_verifikasi') }}</textarea>
         </div>
 
-        <div class="pt-4 flex justify-end">
+        <div class="form-action-bar">
+            <a href="{{ route('tagihan.index') }}" class="form-secondary-action">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span>Kembali</span>
+            </a>
             <button type="submit"
                 class="px-5 py-2.5 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-md shadow-brand-light/10 btn-premium">
                 Simpan & Cetak Kwitansi

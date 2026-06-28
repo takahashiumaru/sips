@@ -4,15 +4,9 @@
 @section('page_subtitle', 'Buat akun pengguna baru dengan role spesifik')
 
 @section('content')
-<div class="max-w-2xl rounded-2xl p-6 shadow-sm border border-blue-100/60 bg-white card-premium">
+<div class="form-page-card rounded-2xl p-6 shadow-sm border border-blue-100/60 bg-white card-premium">
     <div class="flex items-center justify-between border-b border-blue-100/50 pb-4 mb-6">
         <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Form Pengguna Baru</h2>
-        <a href="{{ route('users.index') }}" class="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Kembali
-        </a>
     </div>
 
     @if ($errors->any())
@@ -28,7 +22,7 @@
     <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
         @csrf
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="form-grid-wide">
             <div>
                 <label for="name" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Nama Lengkap</label>
                 <input type="text" name="name" id="name" value="{{ old('name') }}" required
@@ -48,7 +42,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="form-grid-wide">
             <div>
                 <label for="email" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Alamat Email</label>
                 <input type="email" name="email" id="email" value="{{ old('email') }}" required
@@ -71,7 +65,7 @@
             <p class="text-slate-400 text-[10px] mt-1.5">Format: JPEG, PNG, JPG, GIF, SVG. Ukuran maks: 2MB.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-blue-100/50">
+        <div class="form-grid-wide pt-2 border-t border-blue-100/50">
             <div>
                 <label for="password" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Password</label>
                 <input type="password" name="password" id="password" required
@@ -87,7 +81,13 @@
             </div>
         </div>
 
-        <div class="pt-4 flex justify-end">
+        <div class="form-action-bar">
+            <a href="{{ route('users.index') }}" class="form-secondary-action">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span>Kembali</span>
+            </a>
             <button type="submit"
                 class="px-5 py-2.5 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-md shadow-brand-light/10 btn-premium">
                 Tambah User

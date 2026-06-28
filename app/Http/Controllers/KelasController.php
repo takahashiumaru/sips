@@ -21,6 +21,21 @@ class KelasController extends Controller
         return view('kelas.index', compact('kelas', 'tahunAjaran', 'tahunAktif'));
     }
 
+    public function create()
+    {
+        $tahunAjaran = TahunAjaran::orderByDesc('is_aktif')->orderByDesc('tahun_mulai')->get();
+        $tahunAktif = TahunAjaran::aktif()->first();
+
+        return view('kelas.create', compact('tahunAjaran', 'tahunAktif'));
+    }
+
+    public function edit(Kelas $kela)
+    {
+        $tahunAjaran = TahunAjaran::orderByDesc('is_aktif')->orderByDesc('tahun_mulai')->get();
+
+        return view('kelas.edit', compact('kela', 'tahunAjaran'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,12 +47,13 @@ class KelasController extends Controller
 
         Kelas::create($validated);
 
-        return back()->with('success', 'Kelas berhasil ditambahkan.');
+        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil ditambahkan.');
     }
 
     public function update(Request $request, Kelas $kela)
     {
         $validated = $request->validate([
+            'tahun_ajaran_id' => 'required|exists:tahun_ajaran,id',
             'nama_kelas' => 'required|string|max:10',
             'tingkat' => 'required|integer|in:1,2,3,4,5,6',
             'wali_kelas' => 'nullable|string|max:100',
@@ -45,7 +61,7 @@ class KelasController extends Controller
 
         $kela->update($validated);
 
-        return back()->with('success', 'Kelas berhasil diperbarui.');
+        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil diperbarui.');
     }
 
     public function destroy(Kelas $kela)
