@@ -699,7 +699,7 @@
 
     <!-- Main Content Area -->
     <main class="pt-16 min-h-screen flex flex-col pl-0 md:pl-[var(--sidebar-w)]">
-        <div class="flex-1 p-4 sm:p-6 md:p-10 max-w-7xl w-full mx-auto">
+        <div class="flex-1 p-4 sm:p-6 md:p-10 max-w-7xl w-full mx-auto" data-motion-root>
             <!-- Toast notification messages using SweetAlert2 -->
             @if (session('success'))
                 <script>
@@ -731,7 +731,7 @@
             @endif
 
             <!-- Page header -->
-            <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="page-heading-motion mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-none" @if(request()->routeIs('dashboard')) data-i18n="dashboard.title" @endif>@yield('page_title', 'Dashboard')</h1>
                     <p class="text-slate-400 text-xs mt-2 font-semibold" @if(request()->routeIs('dashboard')) data-i18n="dashboard.subtitle" @endif>@yield('page_subtitle', 'Sistem Informasi Pembayaran SPP Sekolah')</p>

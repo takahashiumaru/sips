@@ -327,9 +327,84 @@ function setupAutoSubmitSearch() {
     });
 }
 
+function setupMotionEnhancements() {
+    const root = document.querySelector('[data-motion-root]');
+    if (!root) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const selectors = [
+        '.page-heading-motion',
+        '.dashboard-stat-primary',
+        '.dashboard-stat-card',
+        '.dashboard-panel',
+        '.card-premium',
+        'form[data-filter-form]',
+        'table',
+        '.pagination-premium'
+    ];
+
+    const elements = Array.from(root.querySelectorAll(selectors.join(',')))
+        .filter((element, index, list) => {
+            if (element.closest('.modal-premium-backdrop')) return false;
+            return list.indexOf(element) === index;
+        });
+
+    elements.forEach((element, index) => {
+        element.classList.add('motion-reveal');
+        element.style.setProperty('--reveal-delay', `${Math.min(index, 8) * 45}ms`);
+        if (prefersReducedMotion) {
+            element.classList.add('is-visible');
+        } else {
+            element.classList.remove('is-visible');
+        }
+    });
+
+    if (prefersReducedMotion) {
+        root.querySelectorAll('.chart-shell').forEach((shell) => {
+            shell.classList.add('is-chart-ready');
+            shell.setAttribute('aria-busy', 'false');
+        });
+        return;
+    }
+
+    root.querySelectorAll('.chart-shell').forEach((shell) => {
+        if (!shell.classList.contains('is-chart-ready')) {
+            shell.setAttribute('aria-busy', 'true');
+        }
+    });
+
+    if (!('IntersectionObserver' in window)) {
+        requestAnimationFrame(() => {
+            elements.forEach((element) => element.classList.add('is-visible'));
+        });
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        });
+    }, {
+        rootMargin: '0px 0px -8% 0px',
+        threshold: 0.08
+    });
+
+    elements.forEach((element) => observer.observe(element));
+
+    window.setTimeout(() => {
+        elements.forEach((element) => {
+            element.classList.add('is-visible');
+            observer.unobserve(element);
+        });
+    }, 900);
+}
+
 function initializeInteractiveControls() {
     setupSearchTriggers();
     setupAutoSubmitSearch();
+    setupMotionEnhancements();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

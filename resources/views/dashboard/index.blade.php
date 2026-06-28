@@ -11,7 +11,7 @@
 <!-- Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <!-- Stat Card 1 -->
-    <div class="px-5 py-5 rounded-2xl shadow-lg border border-blue-600/10 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl shrink-0">
+    <div class="dashboard-stat-primary px-5 py-5 rounded-2xl shadow-lg border border-blue-600/10 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl shrink-0">
         <div class="space-y-0.5">
             <span class="text-[10px] font-bold text-blue-200 uppercase tracking-widest block" data-i18n="dashboard.activeStudents">Total Siswa Aktif</span>
             <span class="text-[1.55rem] font-black text-white leading-none tracking-tight block font-mono">{{ number_format($totalSiswa, 0, ',', '.') }}</span>
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <div class="chart-shell h-[21rem] min-h-80">
+        <div class="chart-shell h-[21rem] min-h-80" aria-busy="true" aria-live="polite">
             <canvas id="paymentChart"></canvas>
         </div>
     </div>
@@ -226,6 +226,8 @@
         const chartData = @json($trenData).map((value) => Number(value || 0));
         const monthNow = {{ now()->month - 1 }};
         const maxValue = Math.max(...chartData, 0);
+        const chartShell = canvas.closest('.chart-shell');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         const currencyFormatter = new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -444,6 +446,7 @@
         const pulseAnimationPlugin = {
             id: 'pulseAnimation',
             afterDraw(chart) {
+                if (prefersReducedMotion) return;
                 pulsePhase += 0.04;
                 if (pulsePhase > Math.PI * 200) pulsePhase = 0;
                 requestAnimationFrame(() => chart.draw());
@@ -516,9 +519,9 @@
                     mode: 'index'
                 },
                 animation: {
-                    duration: 700,
+                    duration: prefersReducedMotion ? 0 : 950,
                     easing: 'easeOutQuart',
-                    delay: (context) => context.dataIndex * 40
+                    delay: (context) => prefersReducedMotion ? 0 : context.dataIndex * 55
                 },
                 plugins: {
                     legend: {
@@ -616,7 +619,16 @@
                     }
                 }
             },
-            plugins: [trendEffectsPlugin, floatingLabelPlugin, pulseAnimationPlugin]
+            plugins: prefersReducedMotion
+                ? [trendEffectsPlugin, floatingLabelPlugin]
+                : [trendEffectsPlugin, floatingLabelPlugin, pulseAnimationPlugin]
+        });
+
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                chartShell?.classList.add('is-chart-ready');
+                chartShell?.setAttribute('aria-busy', 'false');
+            }, prefersReducedMotion ? 0 : 240);
         });
 
         const applyChartTheme = (theme) => {

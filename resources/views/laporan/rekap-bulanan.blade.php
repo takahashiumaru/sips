@@ -89,7 +89,7 @@
                     $grandSisa = $grandTotalTagihan - $grandTotalBayar;
                     $grandPersentase = $grandCountTagihan > 0 ? round(($grandCountLunas / $grandCountTagihan) * 100, 1) : 0;
                 @endphp
-                <tr class="bg-blue-50/30 font-bold text-xs text-slate-900 border-t border-blue-100/50">
+                <tr class="rekap-grand-total-row bg-blue-50/30 font-bold text-xs text-slate-900 border-t border-blue-100/50">
                     <td class="px-6 py-4 font-bold text-slate-900">GRAND TOTAL</td>
                     <td class="px-6 py-4 font-bold font-mono">Rp {{ number_format($grandTotalTagihan, 0, ',', '.') }}</td>
                     <td class="px-6 py-4 text-emerald-600 font-mono">Rp {{ number_format($grandTotalBayar, 0, ',', '.') }}</td>

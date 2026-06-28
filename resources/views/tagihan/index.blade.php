@@ -199,10 +199,15 @@
              @open-modal-generate.window="open = true" 
              @close-modal-generate.window="open = false"
              x-show="open" 
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs"
+             class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs"
              style="display: none;"
-             x-transition.opacity>
-            <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-blue-100/50" @click.away="open = false">
+             x-transition:enter="modal-backdrop-enter"
+             x-transition:enter-start="modal-backdrop-enter-start"
+             x-transition:enter-end="modal-backdrop-enter-end"
+             x-transition:leave="modal-backdrop-leave"
+             x-transition:leave-start="modal-backdrop-leave-start"
+             x-transition:leave-end="modal-backdrop-leave-end">
+            <div class="modal-premium-panel bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-blue-100/50" @click.away="open = false">
                 <div class="flex items-center justify-between border-b border-blue-50 pb-3.5 mb-5">
                     <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Generate Tagihan Bulanan</h3>
                     <button @click="open = false" class="text-slate-400 hover:text-slate-600 transition-colors">

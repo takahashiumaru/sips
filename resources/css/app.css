@@ -32,6 +32,109 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* ========================================
+   MOTION SYSTEM
+   ======================================== */
+
+:root {
+    --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --motion-ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-motion-root] .motion-reveal {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.985);
+    transition:
+        opacity 520ms var(--motion-ease-out),
+        transform 520ms var(--motion-ease-out),
+        box-shadow 240ms ease,
+        border-color 240ms ease,
+        background-color 240ms ease;
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+[data-motion-root] .motion-reveal.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.page-heading-motion {
+    animation: pageHeadingIn 520ms var(--motion-ease-out) both;
+}
+
+@keyframes pageHeadingIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes modalPanelIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 18px, 0) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+}
+
+@keyframes modalPanelOut {
+    from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate3d(0, -8px, 0) scale(0.97);
+    }
+}
+
+.modal-premium-backdrop {
+    transition:
+        opacity 240ms ease,
+        backdrop-filter 240ms ease,
+        -webkit-backdrop-filter 240ms ease;
+}
+
+.modal-backdrop-enter,
+.modal-backdrop-leave {
+    transition:
+        opacity 240ms ease,
+        backdrop-filter 240ms ease,
+        -webkit-backdrop-filter 240ms ease;
+}
+
+.modal-backdrop-enter-start,
+.modal-backdrop-leave-end {
+    opacity: 0;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+}
+
+.modal-backdrop-enter-end,
+.modal-backdrop-leave-start {
+    opacity: 1;
+}
+
+.modal-backdrop-enter .modal-premium-panel {
+    animation: modalPanelIn 300ms var(--motion-ease-out) both;
+}
+
+.modal-backdrop-leave .modal-premium-panel {
+    animation: modalPanelOut 180ms var(--motion-ease-in) both;
+}
+
 /* Custom scrollbar for premium look */
 ::-webkit-scrollbar {
     width: 6px;
@@ -50,7 +153,13 @@ body {
 
 /* Hover scales and click compress animations */
 .btn-premium {
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+        transform 0.22s var(--motion-ease-out),
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background-color 0.22s ease,
+        color 0.22s ease;
+    will-change: transform;
 }
 .btn-premium:hover {
     transform: translateY(-1px);
@@ -72,10 +181,17 @@ body {
     background-color: #FFFFFF;
     border: 1px solid #F1F5F9;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.02), 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition:
+        transform 0.28s var(--motion-ease-out),
+        box-shadow 0.28s ease,
+        border-color 0.28s ease,
+        background-color 0.28s ease;
 }
-.card-premium-hover {
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.card-premium-hover:hover,
+.card-premium:hover {
+    border-color: rgba(191, 219, 254, 0.78);
 }
+
 .card-premium-hover:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.04), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
@@ -241,6 +357,10 @@ body {
     overflow: hidden;
     isolation: isolate;
     border: 1px solid transparent;
+    transition:
+        transform 0.22s var(--motion-ease-out),
+        border-color 0.22s ease,
+        color 0.22s ease;
 }
 
 .sidebar-premium nav a.group::before {
@@ -258,7 +378,7 @@ body {
     color: #1D4ED8 !important;
     background-color: transparent !important;
     border-color: rgba(191, 219, 254, 0.86);
-    transform: translateX(1px);
+    transform: translateX(2px);
 }
 
 .sidebar-premium nav a.group:hover::before {
@@ -268,10 +388,12 @@ body {
 .sidebar-premium nav a.group svg {
     color: #94A3B8;
     stroke-width: 1.9;
+    transition: transform 0.22s var(--motion-ease-out), color 0.22s ease;
 }
 
 .sidebar-premium nav a.group:hover svg {
     color: #2563EB;
+    transform: scale(1.05);
 }
 
 .sidebar-premium nav a.group span {
@@ -737,6 +859,16 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     background: #FFFFFF;
     border: 1px solid rgba(203, 213, 225, 0.58);
     box-shadow: 0 18px 48px rgba(15, 23, 42, 0.045);
+    transition:
+        transform 0.28s var(--motion-ease-out),
+        box-shadow 0.28s ease,
+        border-color 0.28s ease,
+        background-color 0.28s ease;
+}
+
+.dashboard-panel:hover {
+    border-color: rgba(147, 197, 253, 0.5);
+    box-shadow: 0 22px 54px rgba(15, 23, 42, 0.06);
 }
 
 .dashboard-panel-heading {
@@ -750,6 +882,61 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     background: #FFFFFF;
     border: 1px solid rgba(226, 232, 240, 0.72);
     padding: 18px 18px 8px;
+    overflow: hidden;
+    transition:
+        border-color 0.28s ease,
+        box-shadow 0.28s ease,
+        transform 0.28s var(--motion-ease-out);
+}
+
+.chart-shell:hover {
+    border-color: rgba(147, 197, 253, 0.72);
+    box-shadow: 0 18px 44px rgba(37, 99, 235, 0.075);
+}
+
+.chart-shell canvas {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.99);
+    transition:
+        opacity 520ms var(--motion-ease-out),
+        transform 520ms var(--motion-ease-out);
+}
+
+.chart-shell.is-chart-ready canvas {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.chart-shell::before {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border-radius: 14px;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
+        linear-gradient(180deg, rgba(239, 246, 255, 0.86), rgba(248, 250, 252, 0.62));
+    background-size: 220% 100%, 100% 100%;
+    opacity: 1;
+    animation: chartLoadingSweep 1.25s ease-in-out infinite;
+    transition: opacity 360ms ease, transform 360ms var(--motion-ease-out);
+}
+
+.chart-shell.is-chart-ready::before {
+    opacity: 0;
+    transform: scale(1.02);
+}
+
+@keyframes chartLoadingSweep {
+    from {
+        background-position: 120% 0, 0 0;
+    }
+    to {
+        background-position: -120% 0, 0 0;
+    }
 }
 
 .chart-shell::after {
@@ -761,6 +948,7 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px);
     background-size: 100% 52px;
     mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+    z-index: 0;
 }
 
 .dashboard-stat-card {
@@ -770,6 +958,47 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     box-shadow:
         0 18px 42px rgba(15, 23, 42, 0.055),
         inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+}
+
+.dashboard-stat-primary {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 84% 18%, rgba(96, 165, 250, 0.22), transparent 30%),
+        linear-gradient(135deg, #2563EB 0%, #1D4ED8 45%, #0F2A6F 100%) !important;
+    border-color: rgba(37, 99, 235, 0.28) !important;
+    box-shadow:
+        0 20px 48px rgba(29, 78, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        inset 0 -1px 0 rgba(15, 23, 42, 0.22) !important;
+}
+
+.dashboard-stat-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 38%),
+        radial-gradient(circle at 92% 72%, rgba(15, 23, 42, 0.28), transparent 28%);
+    opacity: 0.88;
+}
+
+.dashboard-stat-primary:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 26px 58px rgba(29, 78, 216, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32),
+        inset 0 -1px 0 rgba(15, 23, 42, 0.24) !important;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 24px 52px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
 }
 
 .dashboard-stat-card::before {
@@ -849,6 +1078,17 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     height: 100%;
     border-radius: inherit;
     background: linear-gradient(90deg, #10B981, #34D399);
+    transform-origin: left center;
+    animation: statFillIn 760ms var(--motion-ease-out) both;
+}
+
+@keyframes statFillIn {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
 }
 
 .dashboard-stat-icon {
@@ -917,6 +1157,10 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
     border-right: 1px solid #F1F5F9/50;
     color: #334155;
     vertical-align: middle;
+    transition:
+        background-color 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 .table-premium td:last-child {
@@ -925,10 +1169,38 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
 
 .table-premium tr:hover td {
     background-color: #F8FAFC;
+    box-shadow: inset 0 1px 0 rgba(37, 99, 235, 0.04), inset 0 -1px 0 rgba(37, 99, 235, 0.04);
 }
 
 .table-premium tbody tr:last-child td {
     border-bottom: none;
+}
+
+[data-motion-root] table tbody tr {
+    transition:
+        background-color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s var(--motion-ease-out);
+}
+
+[data-motion-root] table tbody tr:hover {
+    transform: translateX(2px);
+}
+
+[data-motion-root] table tbody tr:hover td {
+    transition:
+        background-color 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.rekap-grand-total-row {
+    background:
+        linear-gradient(180deg, rgba(239, 246, 255, 0.82), rgba(219, 234, 254, 0.72)) !important;
+}
+
+.rekap-grand-total-row td {
+    border-top: 1px solid rgba(147, 197, 253, 0.6);
 }
 
 /* Copy button utility */
@@ -1616,6 +1888,12 @@ html[data-theme="dark"] .chart-shell::after {
     background-image: linear-gradient(rgba(148, 163, 184, 0.10) 1px, transparent 1px);
 }
 
+html[data-theme="dark"] .chart-shell::before {
+    background:
+        linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.84), transparent),
+        linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(8, 17, 31, 0.78));
+}
+
 html[data-theme="dark"] .dashboard-stat-card {
     box-shadow:
         0 22px 54px rgba(0, 0, 0, 0.24),
@@ -1775,6 +2053,29 @@ html[data-theme="dark"] .table-premium td,
 html[data-theme="dark"] .table-premium th {
     border-color: rgba(148, 163, 184, 0.16);
     color: #CBD5E1;
+}
+
+html[data-theme="dark"] .rekap-grand-total-row {
+    background:
+        linear-gradient(180deg, rgba(30, 58, 138, 0.42), rgba(15, 23, 42, 0.96)) !important;
+    border-top-color: rgba(96, 165, 250, 0.34) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(147, 197, 253, 0.22),
+        inset 0 -1px 0 rgba(15, 23, 42, 0.9);
+}
+
+html[data-theme="dark"] .rekap-grand-total-row td {
+    background: transparent !important;
+    border-top-color: rgba(96, 165, 250, 0.24) !important;
+    color: #E5EEF9 !important;
+}
+
+html[data-theme="dark"] .rekap-grand-total-row .text-emerald-600 {
+    color: #34D399 !important;
+}
+
+html[data-theme="dark"] .rekap-grand-total-row .text-rose-600 {
+    color: #FB7185 !important;
 }
 
 html[data-theme="dark"] .segmented-control,
@@ -2664,4 +2965,32 @@ html[data-theme="dark"] .swal-premium-btn-cancel {
 html[data-theme="dark"] .swal-premium-btn-cancel:hover {
     background: #334155 !important;
     color: #f1f5f9 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+    }
+
+    [data-motion-root] .motion-reveal,
+    [data-motion-root] .motion-reveal.is-visible,
+    .chart-shell canvas,
+    .chart-shell.is-chart-ready canvas {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .chart-shell::before {
+        display: none !important;
+    }
 }
