@@ -22,39 +22,42 @@
 
     <!-- Table Section -->
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-blue-50 text-left">
+        <table class="table-premium min-w-[760px]">
             <thead>
-                <tr class="text-[10px] font-bold text-blue-500/80 uppercase tracking-wider bg-blue-50/40">
-                    <th class="px-6 py-4">Tingkat Kelas</th>
-                    <th class="px-6 py-4">Tahun Ajaran</th>
-                    <th class="px-6 py-4">Nominal Bulanan</th>
-                    <th class="px-6 py-4">Keterangan</th>
+                <tr>
+                    <th>Tingkat Kelas</th>
+                    <th>Tahun Ajaran</th>
+                    <th>Nominal Bulanan</th>
+                    <th>Keterangan</th>
                     @if(auth()->user()->isAdmin())
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="w-24 text-right">Aksi</th>
                     @endif
                 </tr>
             </thead>
-            <tbody class="divide-y divide-blue-50/50 text-slate-700">
+            <tbody>
                 @forelse ($tarif as $t)
                     <tr class="text-xs hover:bg-blue-50/20 transition-colors">
-                        <td class="px-6 py-4 font-bold text-slate-900">Tingkat {{ $t->tingkat }}</td>
-                        <td class="px-6 py-4 text-slate-500 font-semibold">{{ $t->tahunAjaran->nama ?? '-' }}</td>
-                        <td class="px-6 py-4 font-bold text-slate-900 text-sm font-mono">Rp {{ number_format($t->jumlah, 0, ',', '.') }}</td>
-                        <td class="px-6 py-4 text-slate-400 font-semibold">{{ $t->keterangan ?? '-' }}</td>
+                        <td class="font-bold text-slate-900">Tingkat {{ $t->tingkat }}</td>
+                        <td class="text-slate-500 font-semibold">{{ $t->tahunAjaran->nama ?? '-' }}</td>
+                        <td class="font-bold text-slate-900 text-sm font-mono">Rp {{ number_format($t->jumlah, 0, ',', '.') }}</td>
+                        <td class="text-slate-400 font-semibold">{{ $t->keterangan ?? '-' }}</td>
                         @if(auth()->user()->isAdmin())
-                            <td class="px-6 py-4 text-right">
-                                <a href="{{ route('tarif.edit', $t) }}"
-                                    class="p-2 bg-blue-50/40 border border-blue-100/30 text-blue-500 hover:text-brand-hover hover:bg-blue-50 hover:border-blue-100/50 rounded-xl transition-all btn-premium action-btn-edit">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                                    </svg>
-                                </a>
+                            <td class="w-24">
+                                <div class="flex items-center justify-end">
+                                    <a href="{{ route('tarif.edit', $t) }}"
+                                        class="inline-flex h-9 w-9 items-center justify-center bg-blue-50/40 border border-blue-100/30 text-blue-500 hover:text-brand-hover hover:bg-blue-50 hover:border-blue-100/50 rounded-xl transition-all btn-premium action-btn-edit"
+                                        title="Ubah Tarif">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                        </svg>
+                                    </a>
+                                </div>
                             </td>
                         @endif
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-slate-400 font-semibold">Tidak ada data tarif SPP untuk tahun ajaran aktif.</td>
+                        <td colspan="{{ auth()->user()->isAdmin() ? 5 : 4 }}" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data tarif SPP untuk tahun ajaran aktif.</td>
                     </tr>
                 @endforelse
             </tbody>
