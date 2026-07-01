@@ -54,7 +54,6 @@
         }
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         window.showAlert = function(type, title, message) {
             const isDark = document.documentElement.dataset.theme === 'dark';
@@ -736,7 +735,7 @@
                     <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-none" @if(request()->routeIs('dashboard')) data-i18n="dashboard.title" @endif>@yield('page_title', 'Dashboard')</h1>
                     <p class="text-slate-400 text-xs mt-2 font-semibold" @if(request()->routeIs('dashboard')) data-i18n="dashboard.subtitle" @endif>@yield('page_subtitle', 'Sistem Informasi Pembayaran SPP Sekolah')</p>
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center justify-start sm:justify-end gap-3 w-full sm:w-auto">
                     @yield('actions')
                 </div>
             </div>

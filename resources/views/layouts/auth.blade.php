@@ -18,7 +18,6 @@
         })();
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         window.showAlert = function(type, title, message) {
             const isDark = document.documentElement.dataset.theme === 'dark';

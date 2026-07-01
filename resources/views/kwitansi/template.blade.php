@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <title>Kwitansi Pembayaran SPP - {{ $kwitansi->nomor_kwitansi }}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'DejaVu Sans', sans-serif;
             font-size: 11px;
             color: #334155;
             margin: 0;

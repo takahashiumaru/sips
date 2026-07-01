@@ -221,6 +221,13 @@
     document.addEventListener("DOMContentLoaded", function() {
         const canvas = document.getElementById('paymentChart');
         if (!canvas) return;
+
+        window.sipPaymentChartCleanup?.();
+        if (window.sipPaymentChart) {
+            window.sipPaymentChart.destroy();
+            window.sipPaymentChart = null;
+        }
+
         const ctx = canvas.getContext('2d');
         const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         const chartData = @json($trenData).map((value) => Number(value || 0));
@@ -362,8 +369,7 @@
             }
         };
 
-        // Premium trendline effects plugin — shadow, custom points, animated pulse
-        let pulsePhase = 0;
+        // Premium trendline effects plugin — shadow and custom points without idle redraw.
         const trendEffectsPlugin = {
             id: 'trendEffects',
             beforeDatasetDraw(chart, args) {
@@ -391,13 +397,10 @@
                     const accentColor = currentPalette.line;
 
                     if (i === monthNow) {
-                        const pulse = 0.4 + Math.sin(pulsePhase) * 0.25;
-                        const ringRadius = 12 + Math.sin(pulsePhase) * 3;
-
                         c.save();
                         c.beginPath();
-                        c.arc(x, y, ringRadius, 0, Math.PI * 2);
-                        c.fillStyle = `rgba(${document.documentElement.dataset.theme === 'dark' ? '96, 165, 250' : '37, 99, 235'}, ${pulse * 0.16})`;
+                        c.arc(x, y, 13, 0, Math.PI * 2);
+                        c.fillStyle = `rgba(${document.documentElement.dataset.theme === 'dark' ? '96, 165, 250' : '37, 99, 235'}, 0.09)`;
                         c.fill();
                         c.restore();
 
@@ -440,16 +443,6 @@
                         c.restore();
                     }
                 });
-            }
-        };
-
-        const pulseAnimationPlugin = {
-            id: 'pulseAnimation',
-            afterDraw(chart) {
-                if (prefersReducedMotion) return;
-                pulsePhase += 0.04;
-                if (pulsePhase > Math.PI * 200) pulsePhase = 0;
-                requestAnimationFrame(() => chart.draw());
             }
         };
 
@@ -619,10 +612,10 @@
                     }
                 }
             },
-            plugins: prefersReducedMotion
-                ? [trendEffectsPlugin, floatingLabelPlugin]
-                : [trendEffectsPlugin, floatingLabelPlugin, pulseAnimationPlugin]
+            plugins: [trendEffectsPlugin, floatingLabelPlugin]
         });
+
+        window.sipPaymentChart = paymentChart;
 
         requestAnimationFrame(() => {
             setTimeout(() => {
@@ -652,9 +645,17 @@
             paymentChart.update('none');
         };
 
-        window.addEventListener('sip-theme-change', (event) => {
+        const handleThemeChange = (event) => {
             applyChartTheme(event.detail?.theme);
-        });
+        };
+
+        window.addEventListener('sip-theme-change', handleThemeChange);
+        window.sipPaymentChartCleanup = () => {
+            window.removeEventListener('sip-theme-change', handleThemeChange);
+            if (window.sipPaymentChart === paymentChart) {
+                window.sipPaymentChart = null;
+            }
+        };
     });
 </script>
 @endsection

@@ -1,4 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import '@fontsource/plus-jakarta-sans/latin-300.css';
+@import '@fontsource/plus-jakarta-sans/latin-400.css';
+@import '@fontsource/plus-jakarta-sans/latin-400-italic.css';
+@import '@fontsource/plus-jakarta-sans/latin-500.css';
+@import '@fontsource/plus-jakarta-sans/latin-600.css';
+@import '@fontsource/plus-jakarta-sans/latin-700.css';
+@import '@fontsource/plus-jakarta-sans/latin-800.css';
+@import '@fontsource/jetbrains-mono/latin-300.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-400-italic.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-600.css';
+@import '@fontsource/jetbrains-mono/latin-700.css';
 
 @import 'tailwindcss';
 
@@ -807,14 +819,14 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
 /* Sidebar Toggle Button */
 .sidebar-toggle-btn {
     top: 18px !important;
-    right: 14px !important;
-    width: 32px !important;
-    height: 32px !important;
-    border-radius: 12px !important;
-    background: #F8FAFC;
-    border: 1px solid rgba(203, 213, 225, 0.9);
+    right: -14px !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 9999px !important;
+    background: #FFFFFF;
+    border: 1px solid rgba(191, 219, 254, 0.95);
     color: #2563EB;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.14);
 }
 
 .sidebar-toggle-btn:hover {
@@ -1184,9 +1196,33 @@ body.sidebar-is-minimized .sidebar-premium nav a.group::before {
 /* Premium Table Redesign styling */
 .table-premium {
     width: 100%;
+    min-width: max(100%, 760px);
     border-collapse: separate;
     border-spacing: 0;
     text-align: left;
+}
+
+.overflow-x-auto {
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+}
+
+.overflow-x-auto > table,
+.overflow-x-auto > .inline-block {
+    min-width: max(100%, 760px);
+}
+
+.overflow-x-auto > table th,
+.overflow-x-auto > table td {
+    white-space: nowrap;
+}
+
+.overflow-x-auto > table td:first-child,
+.overflow-x-auto > table th:first-child,
+.overflow-x-auto > .inline-block table td:first-child,
+.overflow-x-auto > .inline-block table th:first-child {
+    white-space: normal;
 }
 
 .table-premium thead tr {
