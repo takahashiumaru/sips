@@ -65,6 +65,19 @@ class DashboardController extends Controller
             $trenData[] = $trenBulanan[$i] ?? 0;
         }
 
+        $trenTunggakanBulanan = TagihanSpp::where('tahun', $tahunIni)
+            ->where('status', '!=', 'lunas')
+            ->selectRaw('bulan, SUM(jumlah_tagihan - total_dibayar) as total')
+            ->groupBy('bulan')
+            ->pluck('total', 'bulan')
+            ->map(fn($total) => (float) $total)
+            ->toArray();
+
+        $trenTunggakanData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $trenTunggakanData[] = $trenTunggakanBulanan[$i] ?? 0;
+        }
+
         return view('dashboard.index', compact(
             'totalSiswa',
             'lunasBulanIni',
@@ -74,6 +87,7 @@ class DashboardController extends Controller
             'transaksiTerbaru',
             'tunggakanTertinggi',
             'trenData',
+            'trenTunggakanData',
         ));
     }
 }

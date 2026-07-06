@@ -188,6 +188,7 @@ function applyTheme(theme) {
 function applyLanguage(lang) {
     const nextLang = lang === 'en' ? 'en' : 'id';
     const dict = translations[nextLang];
+    const previousLang = document.documentElement.lang;
     document.documentElement.lang = nextLang;
     document.documentElement.dataset.lang = nextLang;
 
@@ -213,6 +214,11 @@ function applyLanguage(lang) {
     });
 
     setStoredPreference('sip_spp_lang', nextLang);
+    if (previousLang !== nextLang) {
+        window.dispatchEvent(new CustomEvent('sip-language-change', {
+            detail: { lang: nextLang }
+        }));
+    }
 }
 
 // Expose preferences to window for PJAX re-run

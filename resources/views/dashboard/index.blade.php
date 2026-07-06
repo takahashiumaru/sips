@@ -5,7 +5,7 @@
 
 @section('content')
 @php
-    $chartPeak = collect($trenData)->max();
+    $chartPeak = max(collect($trenData)->max(), collect($trenTunggakanData)->max());
     $paidRateWidth = min(100, max(0, (float) $persentaseLunas));
 @endphp
 <!-- Stats Grid -->
@@ -78,26 +78,32 @@
     <!-- Chart Card -->
     <div class="lg:col-span-2 rounded-2xl p-6 dashboard-panel" data-reveal-delay="225">
         <div class="dashboard-panel-heading mb-5 pb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-xs font-bold text-slate-800 uppercase" data-i18n="dashboard.paymentTrend">Tren Penerimaan Pembayaran</h2>
-                <p class="mt-1 text-[11px] font-semibold text-slate-400" data-i18n="dashboard.paymentTrendHelp">Akumulasi pembayaran lunas tahun ini</p>
+            <div class="trend-heading-stack">
+                <h2 class="sr-only" data-dashboard-trend-title>Tren Penerimaan Pembayaran</h2>
+                <div class="trend-title-toggle" role="group" aria-label="Pilih grafik tren" data-chart-toggle-group data-active-mode="payment">
+                    <button type="button" class="trend-toggle-btn is-active" data-chart-mode="payment" aria-pressed="true">
+                        <span class="trend-toggle-line"></span>
+                        <span data-chart-toggle-label="payment">Tren Pembayaran</span>
+                    </button>
+                    <button type="button" class="trend-toggle-btn" data-chart-mode="arrears" aria-pressed="false">
+                        <span class="trend-toggle-line"></span>
+                        <span data-chart-toggle-label="arrears">Tren Tunggakan</span>
+                    </button>
+                </div>
+                <p class="mt-1 text-[11px] font-semibold text-slate-400" data-dashboard-trend-help>Akumulasi pembayaran lunas tahun ini</p>
             </div>
-            <div class="flex items-center gap-4 self-start sm:self-auto flex-wrap">
+            <div class="chart-legend-row flex items-center gap-4 self-start sm:self-auto flex-wrap">
                 <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                     <span class="legend-color legend-current h-2.5 w-2.5 rounded-sm"></span>
-                    <span>Bulan Ini</span>
+                    <span data-chart-copy="currentMonth">Bulan Ini</span>
                 </div>
                 <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                     <span class="legend-color legend-past h-2.5 w-2.5 rounded-sm"></span>
-                    <span>Sebelumnya</span>
+                    <span data-chart-copy="previousMonths">Sebelumnya</span>
                 </div>
                 <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-300 dark:text-slate-600">
                     <span class="legend-color legend-future h-2.5 w-2.5 rounded-sm"></span>
-                    <span>Mendatang</span>
-                </div>
-                <div class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-blue-500 dark:text-blue-400">
-                    <span class="h-0.5 w-4 rounded-full bg-blue-500 dark:bg-blue-400"></span>
-                    <span>Tren</span>
+                    <span data-chart-copy="futureMonths">Mendatang</span>
                 </div>
             </div>
         </div>
@@ -209,12 +215,12 @@
 </div>
 
 <style>
-    .legend-current { background-color: #2563EB; }
-    .legend-past { background-color: #CBD5E1; }
-    .legend-future { background-color: #E2E8F0; }
-    [data-theme='dark'] .legend-current { background-color: #3B82F6; }
-    [data-theme='dark'] .legend-past { background-color: #7F91A8; }
-    [data-theme='dark'] .legend-future { background-color: #273447; }
+    .legend-current { background-color: var(--chart-current-color, #2563EB); }
+    .legend-past { background-color: var(--chart-past-color, #CBD5E1); }
+    .legend-future { background-color: var(--chart-future-color, #E2E8F0); }
+    [data-theme='dark'] .legend-current { background-color: var(--chart-current-color, #3B82F6); }
+    [data-theme='dark'] .legend-past { background-color: var(--chart-past-color, #7F91A8); }
+    [data-theme='dark'] .legend-future { background-color: var(--chart-future-color, #273447); }
 </style>
 
 <script>
@@ -230,11 +236,15 @@
 
         const ctx = canvas.getContext('2d');
         const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        const chartData = @json($trenData).map((value) => Number(value || 0));
+        const toNumberSeries = (series) => series.map((value) => Number(value || 0));
         const monthNow = {{ now()->month - 1 }};
-        const maxValue = Math.max(...chartData, 0);
         const chartShell = canvas.closest('.chart-shell');
+        const chartPanel = canvas.closest('.dashboard-panel');
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const toggleButtons = Array.from(document.querySelectorAll('[data-chart-mode]'));
+        const trendTitle = document.querySelector('[data-dashboard-trend-title]');
+        const trendHelp = document.querySelector('[data-dashboard-trend-help]');
+        const trendToggleGroup = document.querySelector('[data-chart-toggle-group]');
 
         const currencyFormatter = new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -242,73 +252,235 @@
             maximumFractionDigits: 0
         });
 
-        const chartPalettes = {
-            light: {
-                current: '#2563EB',
-                currentHover: '#1D4ED8',
-                line: '#2563EB',
-                past: '#CBD5E1',
-                pastHover: '#94A3B8',
-                future: '#E2E8F0',
-                futureHover: '#CBD5E1',
-                grid: 'rgba(148, 163, 184, 0.10)',
-                tick: '#94A3B8',
-                tooltipBg: '#0F172A',
-                tooltipTitle: '#94A3B8',
-                tooltipBody: '#FFFFFF',
-                tooltipBorder: 'rgba(255, 255, 255, 0.06)',
-                floatingBg: '#0F172A',
-                floatingBorder: 'rgba(255, 255, 255, 0)',
-                floatingText: '#FFFFFF',
-                markerFill: '#FFFFFF',
-                shadow: 'rgba(37, 99, 235, 0.28)',
-                pointHalo: 'rgba(37, 99, 235, 0.12)',
-                pointSoft: 'rgba(37, 99, 235, 0.06)',
-                gradient: [
-                    'rgba(37, 99, 235, 0.22)',
-                    'rgba(37, 99, 235, 0.10)',
-                    'rgba(37, 99, 235, 0.03)',
-                    'rgba(37, 99, 235, 0)'
-                ]
+        const trendCopy = {
+            id: {
+                currentMonth: 'Bulan Ini',
+                previousMonths: 'Sebelumnya',
+                futureMonths: 'Mendatang',
+                toggleAria: 'Pilih grafik tren',
+                currentSuffix: ' (Bulan Ini)',
+                payment: {
+                    title: 'Tren Penerimaan Pembayaran',
+                    help: 'Akumulasi pembayaran lunas tahun ini',
+                    toggle: 'Tren Pembayaran',
+                    barLabel: 'Penerimaan SPP',
+                    lineLabel: 'Tren Pembayaran',
+                    chartLabel: 'Grafik tren pembayaran SPP bulanan'
+                },
+                arrears: {
+                    title: 'Tren Tunggakan SPP',
+                    help: 'Akumulasi tunggakan siswa tahun ini',
+                    toggle: 'Tren Tunggakan',
+                    barLabel: 'Tunggakan SPP',
+                    lineLabel: 'Tren Tunggakan',
+                    chartLabel: 'Grafik tren tunggakan SPP bulanan'
+                }
             },
-            dark: {
-                current: '#3B82F6',
-                currentHover: '#60A5FA',
-                line: '#60A5FA',
-                past: '#7F91A8',
-                pastHover: '#A9B8CC',
-                future: '#273447',
-                futureHover: '#34445A',
-                grid: 'rgba(148, 163, 184, 0.16)',
-                tick: '#9CAEC4',
-                tooltipBg: '#0A1020',
-                tooltipTitle: '#A9B8CC',
-                tooltipBody: '#F8FAFC',
-                tooltipBorder: 'rgba(147, 197, 253, 0.16)',
-                floatingBg: '#0A1020',
-                floatingBorder: 'rgba(147, 197, 253, 0.18)',
-                floatingText: '#F8FAFC',
-                markerFill: '#F8FAFC',
-                shadow: 'rgba(96, 165, 250, 0.34)',
-                pointHalo: 'rgba(96, 165, 250, 0.16)',
-                pointSoft: 'rgba(96, 165, 250, 0.10)',
-                gradient: [
-                    'rgba(96, 165, 250, 0.24)',
-                    'rgba(96, 165, 250, 0.12)',
-                    'rgba(96, 165, 250, 0.045)',
-                    'rgba(96, 165, 250, 0)'
-                ]
+            en: {
+                currentMonth: 'This Month',
+                previousMonths: 'Previous',
+                futureMonths: 'Upcoming',
+                toggleAria: 'Choose trend chart',
+                currentSuffix: ' (This Month)',
+                payment: {
+                    title: 'Payment collection trend',
+                    help: 'Completed payment total this year',
+                    toggle: 'Payment Trend',
+                    barLabel: 'SPP Collection',
+                    lineLabel: 'Payment Trend',
+                    chartLabel: 'Monthly SPP payment trend chart'
+                },
+                arrears: {
+                    title: 'SPP arrears trend',
+                    help: 'Student arrears total this year',
+                    toggle: 'Arrears Trend',
+                    barLabel: 'SPP Arrears',
+                    lineLabel: 'Arrears Trend',
+                    chartLabel: 'Monthly SPP arrears trend chart'
+                }
             }
         };
 
-        const getChartPalette = (theme = document.documentElement.dataset.theme) => {
-            return chartPalettes[theme === 'dark' ? 'dark' : 'light'];
+        const chartModes = {
+            payment: {
+                data: toNumberSeries(@json($trenData))
+            },
+            arrears: {
+                data: toNumberSeries(@json($trenTunggakanData))
+            }
+        };
+
+        const chartPalettes = {
+            payment: {
+                light: {
+                    current: '#2563EB',
+                    currentHover: '#1D4ED8',
+                    line: '#2563EB',
+                    past: '#CBD5E1',
+                    pastHover: '#94A3B8',
+                    future: '#E2E8F0',
+                    futureHover: '#CBD5E1',
+                    grid: 'rgba(148, 163, 184, 0.10)',
+                    tick: '#94A3B8',
+                    tooltipBg: '#0F172A',
+                    tooltipTitle: '#94A3B8',
+                    tooltipBody: '#FFFFFF',
+                    tooltipBorder: 'rgba(255, 255, 255, 0.06)',
+                    floatingBg: '#0F172A',
+                    floatingBorder: 'rgba(255, 255, 255, 0)',
+                    floatingText: '#FFFFFF',
+                    markerFill: '#FFFFFF',
+                    shadow: 'rgba(37, 99, 235, 0.28)',
+                    pointHalo: 'rgba(37, 99, 235, 0.12)',
+                    pointSoft: 'rgba(37, 99, 235, 0.06)',
+                    haloRgb: '37, 99, 235',
+                    gradient: [
+                        'rgba(37, 99, 235, 0.22)',
+                        'rgba(37, 99, 235, 0.10)',
+                        'rgba(37, 99, 235, 0.03)',
+                        'rgba(37, 99, 235, 0)'
+                    ]
+                },
+                dark: {
+                    current: '#38BDF8',
+                    currentHover: '#7DD3FC',
+                    line: '#7DD3FC',
+                    past: '#5B6F8D',
+                    pastHover: '#7B8FAE',
+                    future: '#1B2A3F',
+                    futureHover: '#24364F',
+                    grid: 'rgba(148, 163, 184, 0.13)',
+                    tick: '#A5B4C7',
+                    tooltipBg: '#0A1020',
+                    tooltipTitle: '#B8D7F4',
+                    tooltipBody: '#F8FAFC',
+                    tooltipBorder: 'rgba(125, 211, 252, 0.18)',
+                    floatingBg: '#0A1020',
+                    floatingBorder: 'rgba(125, 211, 252, 0.18)',
+                    floatingText: '#F8FAFC',
+                    markerFill: '#F8FAFC',
+                    shadow: 'rgba(56, 189, 248, 0.28)',
+                    pointHalo: 'rgba(125, 211, 252, 0.15)',
+                    pointSoft: 'rgba(125, 211, 252, 0.09)',
+                    haloRgb: '125, 211, 252',
+                    gradient: [
+                        'rgba(56, 189, 248, 0.20)',
+                        'rgba(56, 189, 248, 0.10)',
+                        'rgba(56, 189, 248, 0.04)',
+                        'rgba(56, 189, 248, 0)'
+                    ]
+                }
+            },
+            arrears: {
+                light: {
+                    current: '#E11D48',
+                    currentHover: '#BE123C',
+                    line: '#E11D48',
+                    past: '#FDA4AF',
+                    pastHover: '#FB7185',
+                    future: '#FFE4E6',
+                    futureHover: '#FECDD3',
+                    grid: 'rgba(148, 163, 184, 0.10)',
+                    tick: '#94A3B8',
+                    tooltipBg: '#0F172A',
+                    tooltipTitle: '#FDA4AF',
+                    tooltipBody: '#FFFFFF',
+                    tooltipBorder: 'rgba(255, 255, 255, 0.06)',
+                    floatingBg: '#0F172A',
+                    floatingBorder: 'rgba(255, 255, 255, 0)',
+                    floatingText: '#FFFFFF',
+                    markerFill: '#FFFFFF',
+                    shadow: 'rgba(225, 29, 72, 0.28)',
+                    pointHalo: 'rgba(225, 29, 72, 0.13)',
+                    pointSoft: 'rgba(225, 29, 72, 0.07)',
+                    haloRgb: '225, 29, 72',
+                    gradient: [
+                        'rgba(225, 29, 72, 0.22)',
+                        'rgba(225, 29, 72, 0.10)',
+                        'rgba(225, 29, 72, 0.035)',
+                        'rgba(225, 29, 72, 0)'
+                    ]
+                },
+                dark: {
+                    current: '#F43F5E',
+                    currentHover: '#FDA4AF',
+                    line: '#FB7185',
+                    past: '#8A4B5A',
+                    pastHover: '#A65D70',
+                    future: '#2A1824',
+                    futureHover: '#3A2130',
+                    grid: 'rgba(148, 163, 184, 0.13)',
+                    tick: '#A5B4C7',
+                    tooltipBg: '#0A1020',
+                    tooltipTitle: '#FDA4AF',
+                    tooltipBody: '#F8FAFC',
+                    tooltipBorder: 'rgba(251, 113, 133, 0.20)',
+                    floatingBg: '#0A1020',
+                    floatingBorder: 'rgba(251, 113, 133, 0.20)',
+                    floatingText: '#F8FAFC',
+                    markerFill: '#F8FAFC',
+                    shadow: 'rgba(244, 63, 94, 0.28)',
+                    pointHalo: 'rgba(251, 113, 133, 0.15)',
+                    pointSoft: 'rgba(251, 113, 133, 0.09)',
+                    haloRgb: '251, 113, 133',
+                    gradient: [
+                        'rgba(244, 63, 94, 0.20)',
+                        'rgba(244, 63, 94, 0.10)',
+                        'rgba(244, 63, 94, 0.04)',
+                        'rgba(244, 63, 94, 0)'
+                    ]
+                }
+            }
+        };
+
+        let currentMode = 'payment';
+        let chartData = chartModes[currentMode].data;
+        let maxValue = Math.max(...chartData, 0);
+        let trendLineData = createTrendLineData();
+
+        const getLanguage = () => document.documentElement.lang === 'en' ? 'en' : 'id';
+        const getCurrentCopy = () => trendCopy[getLanguage()][currentMode];
+        const getChartPalette = (theme = document.documentElement.dataset.theme, mode = currentMode) => {
+            const themeKey = theme === 'dark' ? 'dark' : 'light';
+            return chartPalettes[mode]?.[themeKey] || chartPalettes.payment[themeKey];
+        };
+        const getSuggestedMax = () => maxValue > 0 ? maxValue * 1.22 : 1000000;
+        const updateTrendCopy = () => {
+            const langCopy = trendCopy[getLanguage()];
+            const modeCopy = langCopy[currentMode];
+
+            if (trendTitle) trendTitle.textContent = modeCopy.title;
+            if (trendHelp) trendHelp.textContent = modeCopy.help;
+            if (trendToggleGroup) trendToggleGroup.setAttribute('aria-label', langCopy.toggleAria);
+            if (chartShell) chartShell.setAttribute('aria-label', modeCopy.chartLabel);
+
+            document.querySelectorAll('[data-chart-copy]').forEach((node) => {
+                const key = node.dataset.chartCopy;
+                if (langCopy[key]) node.textContent = langCopy[key];
+            });
+
+            toggleButtons.forEach((button) => {
+                const mode = button.dataset.chartMode;
+                const label = button.querySelector('[data-chart-toggle-label]');
+                if (label && langCopy[mode]) label.textContent = langCopy[mode].toggle;
+                if (langCopy[mode]) button.setAttribute('aria-label', langCopy[mode].toggle);
+            });
+        };
+        const updateToggleState = () => {
+            if (trendToggleGroup) trendToggleGroup.dataset.activeMode = currentMode;
+            toggleButtons.forEach((button) => {
+                const active = button.dataset.chartMode === currentMode;
+                button.classList.toggle('is-active', active);
+                button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
         };
 
         let currentPalette = getChartPalette();
 
         // Trendline data: only up to current month, null for future months (line won't render there)
-        const trendLineData = chartData.map((val, i) => i <= monthNow ? val : null);
+        function createTrendLineData() {
+            return chartData.map((val, i) => i <= monthNow ? val : null);
+        }
 
         // Per-bar colors: current month = vibrant blue, past = soft slate, future = very faint
         const createBarColors = () => chartData.map((val, i) => {
@@ -400,7 +572,7 @@
                         c.save();
                         c.beginPath();
                         c.arc(x, y, 13, 0, Math.PI * 2);
-                        c.fillStyle = `rgba(${document.documentElement.dataset.theme === 'dark' ? '96, 165, 250' : '37, 99, 235'}, 0.09)`;
+                        c.fillStyle = `rgba(${currentPalette.haloRgb}, 0.09)`;
                         c.fill();
                         c.restore();
 
@@ -447,19 +619,20 @@
         };
 
         let cachedGradient = null;
-        let cachedGradientTheme = null;
+        let cachedGradientKey = null;
         const createLineGradient = (chart) => {
             const area = chart.chartArea;
             if (!area) return currentPalette.gradient[2];
             const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-            if (cachedGradient && cachedGradientTheme === theme) return cachedGradient;
+            const gradientKey = `${currentMode}:${theme}`;
+            if (cachedGradient && cachedGradientKey === gradientKey) return cachedGradient;
             const gradient = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
             gradient.addColorStop(0, currentPalette.gradient[0]);
             gradient.addColorStop(0.3, currentPalette.gradient[1]);
             gradient.addColorStop(0.6, currentPalette.gradient[2]);
             gradient.addColorStop(1, currentPalette.gradient[3]);
             cachedGradient = gradient;
-            cachedGradientTheme = theme;
+            cachedGradientKey = gradientKey;
             return gradient;
         };
 
@@ -469,7 +642,7 @@
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Penerimaan SPP',
+                        label: getCurrentCopy().barLabel,
                         data: chartData,
                         backgroundColor: createBarColors(),
                         hoverBackgroundColor: createBarHoverColors(),
@@ -487,7 +660,7 @@
                     },
                     {
                         type: 'line',
-                        label: 'Tren Penerimaan',
+                        label: getCurrentCopy().lineLabel,
                         data: trendLineData,
                         borderColor: currentPalette.line,
                         borderWidth: 2.5,
@@ -548,7 +721,7 @@
                         callbacks: {
                             title: function(items) {
                                 const idx = items[0].dataIndex;
-                                const suffix = idx === monthNow ? ' (Bulan Ini)' : '';
+                                const suffix = idx === monthNow ? trendCopy[getLanguage()].currentSuffix : '';
                                 return items[0].label + suffix;
                             },
                             label: function(context) {
@@ -568,7 +741,7 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        suggestedMax: maxValue > 0 ? maxValue * 1.22 : 1000000,
+                        suggestedMax: getSuggestedMax(),
                         border: {
                             display: false
                         },
@@ -616,6 +789,8 @@
         });
 
         window.sipPaymentChart = paymentChart;
+        updateTrendCopy();
+        updateToggleState();
 
         requestAnimationFrame(() => {
             setTimeout(() => {
@@ -624,13 +799,15 @@
             }, prefersReducedMotion ? 0 : 240);
         });
 
-        const applyChartTheme = (theme) => {
-            currentPalette = getChartPalette(theme);
-            cachedGradient = null;
-            cachedGradientTheme = null;
+        const syncChartState = () => {
+            const modeCopy = getCurrentCopy();
 
+            paymentChart.data.datasets[0].label = modeCopy.barLabel;
+            paymentChart.data.datasets[0].data = chartData;
             paymentChart.data.datasets[0].backgroundColor = createBarColors();
             paymentChart.data.datasets[0].hoverBackgroundColor = createBarHoverColors();
+            paymentChart.data.datasets[1].label = modeCopy.lineLabel;
+            paymentChart.data.datasets[1].data = trendLineData;
             paymentChart.data.datasets[1].borderColor = currentPalette.line;
             paymentChart.data.datasets[1].backgroundColor = (context) => createLineGradient(context.chart);
 
@@ -638,21 +815,70 @@
             paymentChart.options.plugins.tooltip.titleColor = currentPalette.tooltipTitle;
             paymentChart.options.plugins.tooltip.bodyColor = currentPalette.tooltipBody;
             paymentChart.options.plugins.tooltip.borderColor = currentPalette.tooltipBorder;
+            paymentChart.options.scales.y.suggestedMax = getSuggestedMax();
             paymentChart.options.scales.y.grid.color = currentPalette.grid;
             paymentChart.options.scales.y.ticks.color = currentPalette.tick;
             paymentChart.options.scales.x.ticks.color = (context) => context.index === monthNow ? currentPalette.current : currentPalette.tick;
 
+            if (chartPanel) {
+                chartPanel.style.setProperty('--chart-current-color', currentPalette.current);
+                chartPanel.style.setProperty('--chart-past-color', currentPalette.past);
+                chartPanel.style.setProperty('--chart-future-color', currentPalette.future);
+            }
+
+            updateTrendCopy();
+            updateToggleState();
+        };
+
+        const setChartMode = (mode) => {
+            if (!chartModes[mode] || mode === currentMode) return;
+
+            currentMode = mode;
+            chartData = chartModes[currentMode].data;
+            maxValue = Math.max(...chartData, 0);
+            trendLineData = createTrendLineData();
+            currentPalette = getChartPalette();
+            cachedGradient = null;
+            cachedGradientKey = null;
+
+            syncChartState();
+            paymentChart.update(prefersReducedMotion ? 'none' : 'active');
+        };
+
+        const applyChartTheme = (theme) => {
+            currentPalette = getChartPalette(theme);
+            cachedGradient = null;
+            cachedGradientKey = null;
+
+            syncChartState();
             paymentChart.update('none');
         };
 
         const handleThemeChange = (event) => {
             applyChartTheme(event.detail?.theme);
         };
+        const handleLanguageChange = () => {
+            syncChartState();
+            paymentChart.update('none');
+        };
+
+        const chartModeHandlers = [];
+        toggleButtons.forEach((button) => {
+            const handler = () => setChartMode(button.dataset.chartMode);
+            button.addEventListener('click', handler);
+            chartModeHandlers.push([button, handler]);
+        });
 
         window.addEventListener('sip-theme-change', handleThemeChange);
+        window.addEventListener('sip-language-change', handleLanguageChange);
         window.sipPaymentChartCleanup = () => {
             window.removeEventListener('sip-theme-change', handleThemeChange);
+            window.removeEventListener('sip-language-change', handleLanguageChange);
+            chartModeHandlers.forEach(([button, handler]) => {
+                button.removeEventListener('click', handler);
+            });
             if (window.sipPaymentChart === paymentChart) {
+                paymentChart.destroy();
                 window.sipPaymentChart = null;
             }
         };
