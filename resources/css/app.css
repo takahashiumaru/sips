@@ -557,7 +557,7 @@ body.sidebar-is-minimized .sidebar-premium nav a.group:hover {
 }
 
 body.sidebar-is-minimized .sidebar-toggle-icon {
-    transform: rotate(180deg) !important;
+    transform: none !important;
 }
 
 /* Sidebar toggle button base styling */

@@ -49,8 +49,8 @@
 
         <div class="flex items-center gap-3 py-2 px-1">
             <input type="checkbox" name="is_aktif" id="is_aktif" value="1" {{ old('is_aktif', $tahunAjaran->is_aktif) ? 'checked' : '' }}
-                class="w-4.5 h-4.5 text-brand-light border-slate-300 rounded focus:ring-brand-light/30">
-            <label for="is_aktif" class="text-xs font-bold text-slate-700 select-none">Jadikan sebagai Tahun Ajaran Aktif</label>
+                class="w-4.5 h-4.5 text-brand-light border-slate-300 rounded-md focus:ring-brand-light/30 transition-all cursor-pointer">
+            <label for="is_aktif" class="text-xs font-bold text-slate-700 select-none cursor-pointer">Jadikan sebagai Tahun Ajaran Aktif</label>
         </div>
 
         <div class="form-action-bar">

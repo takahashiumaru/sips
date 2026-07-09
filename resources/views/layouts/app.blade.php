@@ -234,8 +234,8 @@
                 @click="toggleSidebar()" 
                 class="sidebar-toggle-btn absolute top-20 -right-3.5 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer z-50 transition-all focus:outline-none focus:ring-4 focus:ring-blue-500/15 hidden md:flex"
                 :title="sidebarMinimized ? 'Besarkan sidebar' : 'Minimize sidebar'">
-            <svg class="sidebar-toggle-icon w-3.5 h-3.5" :class="sidebarMinimized ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+            <svg class="sidebar-toggle-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" :d="sidebarMinimized ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"></path>
             </svg>
         </button>
 
