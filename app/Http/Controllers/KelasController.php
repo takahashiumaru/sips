@@ -8,17 +8,23 @@ use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $tahunAjaran = TahunAjaran::orderByDesc('is_aktif')->orderByDesc('tahun_mulai')->get();
         $tahunAktif = TahunAjaran::aktif()->first();
+        
+        $selectedTahunId = $request->get('tahun_ajaran_id', $tahunAktif->id ?? null);
+        $selectedTahun = $selectedTahunId && $selectedTahunId !== 'all' 
+            ? $tahunAjaran->firstWhere('id', $selectedTahunId) 
+            : null;
+
         $kelas = Kelas::with('tahunAjaran')
-            ->when($tahunAktif, fn($q) => $q->where('tahun_ajaran_id', $tahunAktif->id))
+            ->when($selectedTahunId && $selectedTahunId !== 'all', fn($q) => $q->where('tahun_ajaran_id', $selectedTahunId))
             ->orderBy('tingkat')
             ->orderBy('nama_kelas')
             ->get();
 
-        return view('kelas.index', compact('kelas', 'tahunAjaran', 'tahunAktif'));
+        return view('kelas.index', compact('kelas', 'tahunAjaran', 'tahunAktif', 'selectedTahun', 'selectedTahunId'));
     }
 
     public function create()

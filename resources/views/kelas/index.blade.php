@@ -14,8 +14,23 @@
 
 @section('content')
 <div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden card-premium">
-    <div class="p-6 border-b border-slate-100/80 flex items-center justify-between">
-        <h2 class="text-xs font-extrabold text-slate-800 uppercase tracking-widest">Daftar Kelas (Tahun Ajaran: {{ $tahunAktif->nama ?? '-' }})</h2>
+    <div class="p-6 border-b border-slate-100/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h2 class="text-xs font-extrabold text-slate-800 uppercase tracking-widest">
+            Daftar Kelas (Tahun Ajaran: {{ $selectedTahunId === 'all' ? 'Semua' : ($selectedTahun->nama ?? '-') }})
+        </h2>
+        
+        <form action="{{ route('kelas.index') }}" method="GET" class="flex items-center gap-2">
+            <label for="tahun_ajaran_id" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Tahun Ajaran</label>
+            <select name="tahun_ajaran_id" id="tahun_ajaran_id" onchange="this.form.submit()"
+                class="block w-full sm:w-44 px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/10 focus:border-brand-light focus:bg-white transition-all font-semibold form-input-premium">
+                <option value="all" {{ $selectedTahunId === 'all' ? 'selected' : '' }}>Semua</option>
+                @foreach ($tahunAjaran as $ta)
+                    <option value="{{ $ta->id }}" {{ $selectedTahunId == $ta->id ? 'selected' : '' }}>
+                        {{ $ta->nama }}{{ $ta->is_aktif ? ' (Aktif)' : '' }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
     </div>
 
     <!-- Table Section -->
@@ -66,7 +81,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data kelas ditemukan untuk tahun ajaran aktif.</td>
+                        <td colspan="6" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data kelas ditemukan untuk tahun ajaran yang dipilih.</td>
                     </tr>
                 @endforelse
             </tbody>
