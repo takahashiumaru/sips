@@ -11,6 +11,7 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\KwitansiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\Portal\PortalWaliController;
+use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
 
 /* ── Guest Routes ── */
@@ -44,6 +45,12 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::resource('users', UserController::class)->except(['show']);
         Route::patch('/users/{user}/toggle', [UserController::class, 'toggleStatus'])->name('users.toggle');
+    });
+
+    /* ── Master Data: Tahun Ajaran (Admin) ── */
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('tahun-ajaran', TahunAjaranController::class)->except(['show']);
+        Route::patch('/tahun-ajaran/{tahunAjaran}/toggle', [TahunAjaranController::class, 'toggleStatus'])->name('tahun-ajaran.toggle');
     });
 
     /* ── Master Data: Kelas (Admin) ── */

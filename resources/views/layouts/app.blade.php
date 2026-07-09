@@ -281,6 +281,21 @@
                 </div>
 
                 @if(auth()->user()->isAdmin())
+                    <a href="{{ route('tahun-ajaran.index') }}" 
+                       class="flex items-center transition-all btn-premium group {{ request()->routeIs('tahun-ajaran.*') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} py-2 rounded-xl {{ $isMinimized ? 'justify-center mx-0.5 px-0' : 'mx-1 px-3 gap-2.5' }}"
+                       :class="{ 'justify-center mx-0.5 px-0': sidebarMinimized, 'mx-1 px-3 gap-2.5': !sidebarMinimized }"
+                       title="Tahun Ajaran">
+                        <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-[12px] font-semibold" x-show="!sidebarMinimized" x-transition.opacity data-i18n="nav.tahunAjaran">Tahun Ajaran</span>
+                        <svg class="w-3 h-3 text-slate-300 ml-auto hidden" :class="!sidebarMinimized ? 'md:block' : 'hidden'" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="!sidebarMinimized">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                @endif
+
+                @if(auth()->user()->isAdmin())
                     <a href="{{ route('kelas.index') }}" 
                        class="flex items-center transition-all btn-premium group {{ request()->routeIs('kelas.index') ? 'sidebar-active shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }} py-2 rounded-xl {{ $isMinimized ? 'justify-center mx-0.5 px-0' : 'mx-1 px-3 gap-2.5' }}"
                        :class="{ 'justify-center mx-0.5 px-0': sidebarMinimized, 'mx-1 px-3 gap-2.5': !sidebarMinimized }"
