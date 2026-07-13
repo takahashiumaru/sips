@@ -14,14 +14,14 @@
         <table class="min-w-full divide-y divide-blue-100/40 text-left">
             <thead>
                 <tr class="text-[10px] font-bold text-blue-400/80 uppercase tracking-wider bg-blue-50/20">
-                    <th class="px-6 py-4">Siswa</th>
-                    <th class="px-6 py-4">Kelas</th>
-                    <th class="px-6 py-4">Periode SPP</th>
-                    <th class="px-6 py-4">Jumlah Bayar</th>
-                    <th class="px-6 py-4">Metode Bayar</th>
-                    <th class="px-6 py-4">Tanggal Pembayaran</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4 text-right">Unduh Tanda Bukti</th>
+                    <th class="px-6 py-4" data-i18n="table.student">Siswa</th>
+                    <th class="px-6 py-4" data-i18n="table.class">Kelas</th>
+                    <th class="px-6 py-4" data-i18n="table.sppPeriod">Periode SPP</th>
+                    <th class="px-6 py-4" data-i18n="table.amountPaid">Jumlah Bayar</th>
+                    <th class="px-6 py-4" data-i18n="table.paymentMethod">Metode Bayar</th>
+                    <th class="px-6 py-4" data-i18n="table.paymentDate">Tanggal Pembayaran</th>
+                    <th class="px-6 py-4" data-i18n="table.status">Status</th>
+                    <th class="px-6 py-4 text-right" data-i18n="table.downloadReceipt">Unduh Tanda Bukti</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-blue-50/30 text-slate-700">
@@ -36,7 +36,7 @@
                                 <span class="text-[9px] text-slate-400 font-bold font-mono uppercase tracking-tight">NIS: {{ $p->tagihan->siswa->nis ?? '-' }}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-4 font-semibold text-slate-500">{{ $p->tagihan->siswa->kelas->nama_kelas ?? '-' }}</td>
+                        <td class="px-6 py-4 font-semibold text-slate-550">{{ $p->tagihan->siswa->kelas->nama_kelas ?? '-' }}</td>
                         <td class="px-6 py-4 font-bold text-slate-800">
                             @php
                                 $bulanName = \Carbon\Carbon::create()->month($p->tagihan->bulan)->translatedFormat('F');
@@ -79,7 +79,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-semibold">Belum ada riwayat transaksi pembayaran masuk.</td>
+                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyReceipts">Belum ada riwayat transaksi pembayaran masuk.</td>
                     </tr>
                 @endforelse
             </tbody>

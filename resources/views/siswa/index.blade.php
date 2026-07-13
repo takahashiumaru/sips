@@ -60,13 +60,13 @@
         <table class="table-premium">
             <thead>
                 <tr>
-                    <th>NIS</th>
-                    <th>Nama Lengkap</th>
-                    <th>Kelas</th>
-                    <th>L/P</th>
-                    <th>Wali Murid</th>
-                    <th>Status</th>
-                    <th class="text-right">Aksi</th>
+                    <th data-i18n="table.nis">NIS</th>
+                    <th data-i18n="table.fullName">Nama Lengkap</th>
+                    <th data-i18n="table.class">Kelas</th>
+                    <th data-i18n="table.gender">L/P</th>
+                    <th data-i18n="table.guardian">Wali Murid</th>
+                    <th data-i18n="table.status">Status</th>
+                    <th class="text-right" data-i18n="table.action">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -138,7 +138,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data siswa ditemukan.</td>
+                        <td colspan="7" class="py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyStudents">Tidak ada data siswa ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>

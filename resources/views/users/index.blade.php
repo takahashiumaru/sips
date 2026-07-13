@@ -49,20 +49,20 @@
         <table class="min-w-full divide-y divide-blue-100/40 text-left">
             <thead>
                 <tr class="text-[10px] font-bold text-blue-400/80 uppercase tracking-wider bg-blue-50/20">
-                    <th class="px-6 py-4">Nama Lengkap</th>
-                    <th class="px-6 py-4">Email</th>
-                    <th class="px-6 py-4">Role</th>
-                    <th class="px-6 py-4">No. Telepon</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4">Login Terakhir</th>
-                    <th class="px-6 py-4 text-right">Aksi</th>
+                    <th class="px-6 py-4" data-i18n="table.fullName">Nama Lengkap</th>
+                    <th class="px-6 py-4" data-i18n="table.email">Email</th>
+                    <th class="px-6 py-4" data-i18n="table.role">Role</th>
+                    <th class="px-6 py-4" data-i18n="table.phoneNumber">No. Telepon</th>
+                    <th class="px-6 py-4" data-i18n="table.status">Status</th>
+                    <th class="px-6 py-4" data-i18n="table.lastLogin">Login Terakhir</th>
+                    <th class="px-6 py-4 text-right" data-i18n="table.action">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-blue-50/30 text-slate-700">
                 @forelse ($users as $u)
                     <tr class="text-xs hover:bg-blue-50/20 transition-colors">
                         <td class="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
-                            @if($u->avatar)
+                             @if($u->avatar)
                                 <img src="{{ asset('storage/' . $u->avatar) }}" alt="{{ $u->name }}" class="w-8.5 h-8.5 rounded-xl object-cover border border-slate-100 dark:border-slate-800 shrink-0">
                             @else
                                 <div class="w-8.5 h-8.5 rounded-xl bg-brand-50 text-brand-light font-bold flex items-center justify-center border border-brand-light/10 text-xs shrink-0">
@@ -112,7 +112,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center text-slate-400 font-semibold">Tidak ada data pengguna ditemukan.</td>
+                        <td colspan="7" class="px-6 py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyUsers">Tidak ada data pengguna ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>

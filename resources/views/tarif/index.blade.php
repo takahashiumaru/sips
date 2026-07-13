@@ -25,12 +25,12 @@
         <table class="table-premium min-w-[760px]">
             <thead>
                 <tr>
-                    <th>Tingkat Kelas</th>
-                    <th>Tahun Ajaran</th>
-                    <th>Nominal Bulanan</th>
-                    <th>Keterangan</th>
+                    <th data-i18n="table.classLevel">Tingkat Kelas</th>
+                    <th data-i18n="table.academicYear">Tahun Ajaran</th>
+                    <th data-i18n="table.monthlyAmount">Nominal Bulanan</th>
+                    <th data-i18n="table.description">Keterangan</th>
                     @if(auth()->user()->isAdmin())
-                        <th class="w-24 text-right">Aksi</th>
+                        <th class="w-24 text-right" data-i18n="table.action">Aksi</th>
                     @endif
                 </tr>
             </thead>
@@ -57,7 +57,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ auth()->user()->isAdmin() ? 5 : 4 }}" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data tarif SPP untuk tahun ajaran aktif.</td>
+                        <td colspan="{{ auth()->user()->isAdmin() ? 5 : 4 }}" class="py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyTariffs">Tidak ada data tarif SPP untuk tahun ajaran aktif.</td>
                     </tr>
                 @endforelse
             </tbody>

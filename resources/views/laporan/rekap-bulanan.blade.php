@@ -40,13 +40,13 @@
         <table class="min-w-full divide-y divide-blue-100/40 text-left">
             <thead>
                 <tr class="text-[10px] font-bold text-blue-400/80 uppercase tracking-wider bg-blue-50/20">
-                    <th class="px-6 py-4">Bulan</th>
-                    <th class="px-6 py-4">Target Penagihan</th>
-                    <th class="px-6 py-4">Realisasi Penerimaan</th>
-                    <th class="px-6 py-4">Sisa Tunggakan</th>
-                    <th class="px-6 py-4 text-center">Jumlah Tagihan</th>
-                    <th class="px-6 py-4 text-center">Jumlah Lunas</th>
-                    <th class="px-6 py-4 text-right">Tingkat Kelunasan</th>
+                    <th class="px-6 py-4" data-i18n="table.month">Bulan</th>
+                    <th class="px-6 py-4" data-i18n="table.billingTarget">Target Penagihan</th>
+                    <th class="px-6 py-4" data-i18n="table.receivedAmount">Realisasi Penerimaan</th>
+                    <th class="px-6 py-4" data-i18n="table.remainingArrears">Sisa Tunggakan</th>
+                    <th class="px-6 py-4 text-center" data-i18n="table.billingCount">Jumlah Tagihan</th>
+                    <th class="px-6 py-4 text-center" data-i18n="table.paidCount">Jumlah Lunas</th>
+                    <th class="px-6 py-4 text-right" data-i18n="table.paymentRate">Tingkat Kelunasan</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-blue-50/30 text-slate-700">

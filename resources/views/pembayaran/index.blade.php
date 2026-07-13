@@ -54,14 +54,14 @@
         <table class="min-w-full divide-y divide-blue-50 text-left">
             <thead>
                 <tr class="text-[10px] font-bold text-blue-500/80 uppercase tracking-wider bg-blue-50/40">
-                    <th class="px-6 py-4">Siswa & Kelas</th>
-                    <th class="px-6 py-4">Periode SPP</th>
-                    <th class="px-6 py-4">Jumlah Bayar</th>
-                    <th class="px-6 py-4">Metode</th>
-                    <th class="px-6 py-4">Bukti</th>
-                    <th class="px-6 py-4">Dicatat Oleh</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4 text-right">Aksi</th>
+                    <th class="px-6 py-4" data-i18n="table.studentAndClass">Siswa & Kelas</th>
+                    <th class="px-6 py-4" data-i18n="table.sppPeriod">Periode SPP</th>
+                    <th class="px-6 py-4" data-i18n="table.amountPaid">Jumlah Bayar</th>
+                    <th class="px-6 py-4" data-i18n="table.method">Metode</th>
+                    <th class="px-6 py-4" data-i18n="table.proof">Bukti</th>
+                    <th class="px-6 py-4" data-i18n="table.recordedBy">Dicatat Oleh</th>
+                    <th class="px-6 py-4" data-i18n="table.status">Status</th>
+                    <th class="px-6 py-4 text-right" data-i18n="table.action">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-blue-50/50 text-slate-700">
@@ -99,17 +99,17 @@
                         <td class="px-6 py-4 text-slate-500 font-semibold">{{ $p->dicatatOleh->name ?? '-' }}</td>
                         <td class="px-6 py-4">
                             @if ($p->status_verifikasi === 'terverifikasi')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100/60">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                     Disetujui
                                 </span>
                             @elseif ($p->status_verifikasi === 'pending')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-100 animate-pulse">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-100/60">
                                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                     Pending
                                 </span>
                             @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-100">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-100/60">
                                     <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                                     Ditolak
                                 </span>
@@ -144,7 +144,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-semibold">Tidak ada data transaksi pembayaran ditemukan.</td>
+                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyPayments">Tidak ada data transaksi pembayaran ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>

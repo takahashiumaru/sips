@@ -107,15 +107,15 @@
         <table class="table-premium">
             <thead>
                 <tr>
-                    <th>NIS</th>
-                    <th>Nama Siswa</th>
-                    <th>Kelas</th>
-                    <th>Periode</th>
-                    <th>Jumlah Tagihan</th>
-                    <th>Telah Dibayar</th>
-                    <th>Sisa Tunggakan</th>
-                    <th>Nama Wali</th>
-                    <th class="text-right">Kontak Wali</th>
+                    <th data-i18n="table.nis">NIS</th>
+                    <th data-i18n="table.studentName">Nama Siswa</th>
+                    <th data-i18n="table.class">Kelas</th>
+                    <th data-i18n="table.period">Periode</th>
+                    <th data-i18n="table.billingAmount">Jumlah Tagihan</th>
+                    <th data-i18n="table.amountPaid">Telah Dibayar</th>
+                    <th data-i18n="table.remainingArrears">Sisa Tunggakan</th>
+                    <th data-i18n="table.guardianName">Nama Wali</th>
+                    <th class="text-right" data-i18n="table.guardianContact">Kontak Wali</th>
                 </tr>
             </thead>
             <tbody>
@@ -134,8 +134,8 @@
                             </div>
                         </td>
                         <td class="font-bold text-slate-800">{{ $t->siswa->nama_lengkap ?? '-' }}</td>
-                        <td class="font-bold text-slate-500">{{ $t->siswa->kelas->nama_kelas ?? '-' }}</td>
-                        <td class="font-bold text-slate-800">
+                        <td class="font-semibold text-slate-550">{{ $t->siswa->kelas->nama_kelas ?? '-' }}</td>
+                        <td class="font-bold text-slate-700">
                             @php
                                 $bulanName = \Carbon\Carbon::create()->month($t->bulan)->translatedFormat('F');
                             @endphp
@@ -143,16 +143,24 @@
                         </td>
                         <td class="font-bold text-slate-500 font-mono">Rp {{ number_format($t->jumlah_tagihan, 0, ',', '.') }}</td>
                         <td class="font-bold text-emerald-600 font-mono">Rp {{ number_format($t->total_dibayar, 0, ',', '.') }}</td>
-                        <td class="font-bold text-rose-600 font-mono">Rp {{ number_format($t->sisa_tagihan, 0, ',', '.') }}</td>
+                        <td class="font-bold text-red-600 font-mono">Rp {{ number_format($t->sisa_tagihan, 0, ',', '.') }}</td>
                         <td class="text-slate-500 font-semibold">{{ $t->siswa->waliMurid->name ?? '-' }}</td>
-                        <td>
-                            <div class="flex items-center justify-end">
-                                @if($t->siswa->waliMurid && $t->siswa->waliMurid->phone)
-                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $t->siswa->waliMurid->phone) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100/70 font-bold text-[9px] rounded-xl transition-all border border-emerald-100/60 btn-premium shadow-xs">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        <td class="text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                @if ($t->siswa && $t->siswa->waliMurid && $t->siswa->waliMurid->phone)
+                                    @php
+                                        $cleanPhone = preg_replace('/[^0-9]/', '', $t->siswa->waliMurid->phone);
+                                        if (str_starts_with($cleanPhone, '0')) {
+                                            $cleanPhone = '62' . substr($cleanPhone, 1);
+                                        }
+                                        $waMessage = rawurlencode("Halo Bapak/Ibu " . $t->siswa->waliMurid->name . ", kami dari MI Al-Haq menginformasikan bahwa terdapat tunggakan SPP untuk siswa " . $t->siswa->nama_lengkap . " (Kelas: " . ($t->siswa->kelas->nama_kelas ?? '-') . ") periode " . $bulanName . " " . $t->tahun . " sebesar Rp " . number_format($t->sisa_tagihan, 0, ',', '.') . ". Mohon segera menyelesaikan pembayaran. Terima kasih.");
+                                        $waUrl = "https://wa.me/" . $cleanPhone . "?text=" . $waMessage;
+                                    @endphp
+                                    <a href="{{ $waUrl }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 text-[10px] font-extrabold rounded-lg transition-all btn-premium shadow-xs">
+                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 11.859 0c3.161.001 6.132 1.23 8.37 3.469 2.237 2.239 3.466 5.211 3.466 8.377-.003 6.538-5.328 11.86-11.859 11.86-2.004-.001-3.973-.51-5.729-1.479L0 24zm6.59-4.846c1.62.962 3.21 1.6 5.269 1.602 5.451 0 9.886-4.437 9.888-9.891.002-2.64-1.022-5.123-2.887-6.99-1.865-1.867-4.348-2.892-6.995-2.893-5.454 0-9.89 4.437-9.892 9.893-.001 2.083.547 4.116 1.585 5.897L2.482 21.52l4.165-1.091zM17.86 14c-.33-.164-1.94-.954-2.24-1.064-.3-.11-.52-.164-.74.164-.22.329-.85 1.064-1.04 1.283-.19.22-.38.247-.71.082-1.68-.83-2.9-1.46-3.86-3.11-.25-.436.25-.4.71-1.32.08-.164.04-.31-.02-.438-.06-.128-.52-1.25-.71-1.71-.19-.453-.38-.39-.52-.39-.136 0-.29-.012-.45-.012-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2.01 0 1.185.86 2.33 1.04 2.58.19.24 1.7 2.6 4.11 3.64 1.43.62 2.29.68 3.11.56.92-.14 1.94-.79 2.21-1.52.27-.73.27-1.36.19-1.52-.08-.16-.3-.26-.63-.42z"/>
                                         </svg>
-                                        <span>WhatsApp</span>
+                                        WhatsApp
                                     </a>
                                 @else
                                     <span class="text-slate-400 font-semibold">-</span>
@@ -162,7 +170,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="py-8 text-center text-slate-400 font-semibold">Luar biasa! Tidak ada data siswa menunggak untuk filter ini.</td>
+                        <td colspan="9" class="py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyArrearsReport">Luar biasa! Tidak ada data siswa menunggak untuk filter ini.</td>
                     </tr>
                 @endforelse
             </tbody>

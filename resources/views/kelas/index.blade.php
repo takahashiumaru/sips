@@ -38,12 +38,12 @@
         <table class="table-premium">
             <thead>
                 <tr>
-                    <th>Tingkat</th>
-                    <th>Nama Kelas</th>
-                    <th>Wali Kelas</th>
-                    <th>Tahun Ajaran</th>
-                    <th>Jumlah Siswa</th>
-                    <th class="text-right">Aksi</th>
+                    <th data-i18n="table.level">Tingkat</th>
+                    <th data-i18n="table.className">Nama Kelas</th>
+                    <th data-i18n="table.classTeacher">Wali Kelas</th>
+                    <th data-i18n="table.academicYear">Tahun Ajaran</th>
+                    <th data-i18n="table.studentCount">Jumlah Siswa</th>
+                    <th class="text-right" data-i18n="table.action">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,7 +81,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data kelas ditemukan untuk tahun ajaran yang dipilih.</td>
+                        <td colspan="6" class="py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyClasses">Tidak ada data kelas ditemukan untuk tahun ajaran yang dipilih.</td>
                     </tr>
                 @endforelse
             </tbody>

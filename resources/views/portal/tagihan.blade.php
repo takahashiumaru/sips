@@ -20,15 +20,15 @@
         <table class="min-w-full divide-y divide-blue-100/40 text-left">
             <thead>
                 <tr class="text-[10px] font-bold text-blue-400/80 uppercase tracking-wider bg-blue-50/20">
-                    <th class="px-6 py-4">Siswa</th>
-                    <th class="px-6 py-4">Kelas</th>
-                    <th class="px-6 py-4">Periode Tagihan</th>
-                    <th class="px-6 py-4">Jumlah Tagihan</th>
-                    <th class="px-6 py-4">Telah Dibayar</th>
-                    <th class="px-6 py-4">Sisa Tagihan</th>
-                    <th class="px-6 py-4">Jatuh Tempo</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4 text-right">Aksi</th>
+                    <th class="px-6 py-4" data-i18n="table.student">Siswa</th>
+                    <th class="px-6 py-4" data-i18n="table.class">Kelas</th>
+                    <th class="px-6 py-4" data-i18n="table.billingPeriod">Periode Tagihan</th>
+                    <th class="px-6 py-4" data-i18n="table.billingAmount">Jumlah Tagihan</th>
+                    <th class="px-6 py-4" data-i18n="table.amountPaid">Telah Dibayar</th>
+                    <th class="px-6 py-4" data-i18n="table.remainingBill">Sisa Tagihan</th>
+                    <th class="px-6 py-4" data-i18n="table.dueDate">Jatuh Tempo</th>
+                    <th class="px-6 py-4" data-i18n="table.status">Status</th>
+                    <th class="px-6 py-4 text-right" data-i18n="table.action">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-blue-50/30 text-slate-700">
@@ -99,14 +99,14 @@
                                         </a>
                                     @endif
                                 @else
-                                    <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider px-2.5 py-1 bg-blue-50/30 border border-blue-100/60 rounded-xl">Diproses</span>
+                                    <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider px-2.5 py-1 bg-blue-50/30 border border-blue-100/60 rounded-xl" data-i18n="table.processing">Diproses</span>
                                 @endif
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="px-6 py-8 text-center text-slate-400 font-semibold">Tidak ada data tagihan SPP untuk putra / putri Anda.</td>
+                        <td colspan="9" class="px-6 py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyPortalBills">Tidak ada data tagihan SPP untuk putra / putri Anda.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -35,11 +35,11 @@
         <table class="table-premium">
             <thead>
                 <tr>
-                    <th>Nama Tahun Ajaran</th>
-                    <th>Tahun Mulai</th>
-                    <th>Tahun Akhir</th>
-                    <th>Status</th>
-                    <th class="text-right">Aksi</th>
+                    <th data-i18n="table.academicYearName">Nama Tahun Ajaran</th>
+                    <th data-i18n="table.startYear">Tahun Mulai</th>
+                    <th data-i18n="table.endYear">Tahun Akhir</th>
+                    <th data-i18n="table.status">Status</th>
+                    <th class="text-right" data-i18n="table.action">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -86,7 +86,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data tahun ajaran ditemukan.</td>
+                        <td colspan="5" class="py-8 text-center text-slate-400 font-semibold" data-i18n="table.emptyAcademicYears">Tidak ada data tahun ajaran ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>

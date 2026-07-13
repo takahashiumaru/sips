@@ -146,12 +146,12 @@
                     <table class="min-w-full divide-y divide-blue-50 text-left">
                         <thead>
                             <tr class="text-[10px] font-bold text-blue-500/80 uppercase tracking-wider bg-blue-50/40">
-                                <th class="py-3.5 px-4">Bulan & Tahun</th>
-                                <th class="py-3.5 px-4">Jumlah Tagihan</th>
-                                <th class="py-3.5 px-4">Telah Dibayar</th>
-                                <th class="py-3.5 px-4">Sisa Tagihan</th>
-                                <th class="py-3.5 px-4">Status</th>
-                                <th class="py-3.5 px-4 text-right">Aksi</th>
+                                <th class="py-3.5 px-4" data-i18n="table.monthAndYear">Bulan & Tahun</th>
+                                <th class="py-3.5 px-4" data-i18n="table.billingAmount">Jumlah Tagihan</th>
+                                <th class="py-3.5 px-4" data-i18n="table.amountPaid">Telah Dibayar</th>
+                                <th class="py-3.5 px-4" data-i18n="table.remainingBill">Sisa Tagihan</th>
+                                <th class="py-3.5 px-4" data-i18n="table.status">Status</th>
+                                <th class="py-3.5 px-4 text-right" data-i18n="table.action">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-blue-50/50 text-slate-700">
@@ -225,7 +225,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-8 px-4 text-center text-slate-400 font-semibold">Siswa ini belum memiliki data tagihan SPP.</td>
+                                    <td colspan="6" class="py-8 px-4 text-center text-slate-400 font-semibold" data-i18n="table.emptyStudentBillingHistory">Siswa ini belum memiliki data tagihan SPP.</td>
                                 </tr>
                             @endforelse
                         </tbody>
