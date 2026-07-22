@@ -72,7 +72,6 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::post('/tarif-spp', [TarifSppController::class, 'store'])->name('tarif.store');
         Route::get('/tarif-spp/{tarifSpp}/edit', [TarifSppController::class, 'edit'])->name('tarif.edit');
         Route::put('/tarif-spp/{tarifSpp}', [TarifSppController::class, 'update'])->name('tarif.update');
-        Route::delete('/tarif-spp/{tarifSpp}', [TarifSppController::class, 'destroy'])->name('tarif.destroy');
     });
 
     /* ── Data Siswa ── */
