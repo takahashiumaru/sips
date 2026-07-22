@@ -157,65 +157,84 @@
             {{ $pembayaran->links() }}
         </div>
     @endif
+</div>
 
-    <!-- Verifikasi Modal (Alpine.js) -->
-    <div x-show="showVerifyModal" 
-         class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs"
-         style="display: none;"
-         x-transition:enter="modal-backdrop-enter"
-         x-transition:enter-start="modal-backdrop-enter-start"
-         x-transition:enter-end="modal-backdrop-enter-end"
-         x-transition:leave="modal-backdrop-leave"
-         x-transition:leave-start="modal-backdrop-leave-start"
-         x-transition:leave-end="modal-backdrop-leave-end">
-         <div class="modal-premium-panel bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-blue-100/50 flex flex-col max-h-[90vh]" @click.away="showVerifyModal = false">
-            <div class="flex items-center justify-between border-b border-blue-50 pb-3.5 mb-5 shrink-0">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Verifikasi Bukti Pembayaran</h3>
-                <button @click="showVerifyModal = false" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
+<!-- Verifikasi Modal (Alpine.js) -->
+<div x-show="showVerifyModal" 
+     class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs"
+     style="display: none;"
+     x-transition:enter="modal-backdrop-enter"
+     x-transition:enter-start="modal-backdrop-enter-start"
+     x-transition:enter-end="modal-backdrop-enter-end"
+     x-transition:leave="modal-backdrop-leave"
+     x-transition:leave-start="modal-backdrop-leave-start"
+     x-transition:leave-end="modal-backdrop-leave-end">
+     <!-- Outer Shell (Double Bezel) -->
+     <div class="modal-premium-panel p-2 bg-blue-50/20 dark:bg-slate-900/20 border border-blue-100/30 dark:border-slate-800/40 rounded-[2rem] max-w-lg w-full shadow-2xl flex flex-col max-h-[90vh]" @click.away="showVerifyModal = false">
+         <!-- Inner Core -->
+         <div class="bg-white dark:bg-slate-950 p-6 rounded-[calc(2rem-0.5rem)] border border-blue-50/50 dark:border-slate-900/50 shadow-inner flex flex-col flex-1 overflow-hidden min-h-0 gap-5">
+             <!-- Header -->
+             <div class="flex items-start justify-between shrink-0">
+                 <div>
+                     <div class="flex items-center gap-1.5 mb-1.5">
+                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-100/40 uppercase tracking-widest leading-none">
+                             <span class="w-1 h-1 rounded-full bg-amber-500 animate-pulse"></span>
+                             Verifikasi Pembayaran
+                         </span>
+                     </div>
+                     <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">Verifikasi Bukti Pembayaran</h3>
+                     <p class="text-[10px] text-slate-400 font-bold mt-0.5 leading-none">Periksa detail transfer dan lakukan verifikasi status</p>
+                 </div>
+                 <button @click="showVerifyModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 dark:hover:bg-slate-900/50 rounded-xl transition-all btn-premium cursor-pointer">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                     </svg>
+                 </button>
+             </div>
 
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="p-3.5 bg-blue-50/20 border border-blue-100/50 rounded-2xl space-y-2 text-xs">
-                    <div class="flex justify-between">
-                        <span class="text-blue-500/80 font-bold uppercase text-[9px] tracking-wider">Nama Siswa</span>
-                        <span class="text-slate-800 font-bold" x-text="verifyStudentName"></span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-blue-500/80 font-bold uppercase text-[9px] tracking-wider">Nominal Transfer</span>
-                        <span class="text-slate-800 font-bold font-mono" x-text="verifyAmount"></span>
-                    </div>
-                </div>
+             <div class="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0">
+                 <div class="p-3.5 bg-blue-50/20 border border-blue-100/50 rounded-2xl space-y-2 text-xs">
+                     <div class="flex justify-between">
+                         <span class="text-blue-500/80 font-bold uppercase text-[9px] tracking-wider">Nama Siswa</span>
+                         <span class="text-slate-800 font-bold" x-text="verifyStudentName"></span>
+                     </div>
+                     <div class="flex justify-between">
+                         <span class="text-blue-500/80 font-bold uppercase text-[9px] tracking-wider">Nominal Transfer</span>
+                         <span class="text-slate-800 font-bold font-mono" x-text="verifyAmount"></span>
+                     </div>
+                 </div>
 
-                <div x-show="verifyImage">
-                    <span class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Lampiran Bukti Transfer</span>
-                    <div class="border border-blue-100/50 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center p-2">
-                        <img :src="verifyImage" alt="Bukti Transfer" class="max-h-60 max-w-full object-contain rounded-xl">
-                    </div>
-                </div>
-            </div>
+                 <div x-show="verifyImage">
+                     <span class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Lampiran Bukti Transfer</span>
+                     <div class="border border-blue-100/50 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-2">
+                         <img :src="verifyImage" alt="Bukti Transfer" class="max-h-60 max-w-full object-contain rounded-xl shadow-sm">
+                     </div>
+                 </div>
+             </div>
 
-            <form :action="verifyActionUrl" method="POST" class="pt-4 border-t border-blue-50 shrink-0 space-y-4">
-                @csrf
-                @method('PATCH')
+             <form :action="verifyActionUrl" method="POST" class="pt-4 border-t border-blue-50/50 shrink-0 space-y-4">
+                 @csrf
+                 @method('PATCH')
 
-                <div>
-                    <label for="catatan_verifikasi" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Catatan Verifikasi (Opsional)</label>
-                    <textarea name="catatan_verifikasi" id="catatan_verifikasi" rows="2"
-                        class="block w-full px-4 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
-                        placeholder="Tambahkan alasan jika menolak, atau catatan persetujuan"></textarea>
-                </div>
+                 <div>
+                     <label for="catatan_verifikasi" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Catatan Verifikasi (Opsional)</label>
+                     <textarea name="catatan_verifikasi" id="catatan_verifikasi" rows="2"
+                         class="block w-full px-4 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold form-input-premium"
+                         placeholder="Tambahkan alasan jika menolak, atau catatan persetujuan"></textarea>
+                 </div>
 
-                <div class="flex justify-end gap-3">
-                    <button type="button" @click="showVerifyModal = false" class="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 text-xs font-bold rounded-xl transition-colors btn-premium">Batal</button>
-                    <button type="submit" name="status" value="ditolak" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-red-100 btn-premium">Tolak</button>
-                    <button type="submit" name="status" value="terverifikasi" class="px-4 py-2 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-brand-light/10 btn-premium">Setujui & Verifikasi</button>
-                </div>
-            </form>
+                 <div class="flex justify-end gap-3 border-t border-blue-50/40 pt-3">
+                     <button type="button" @click="showVerifyModal = false" class="px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-500 text-xs font-bold rounded-xl transition-all btn-premium cursor-pointer">Batal</button>
+                     <button type="submit" name="status" value="ditolak" class="px-4 py-2.5 bg-red-50 hover:bg-red-100/80 text-red-600 text-xs font-bold rounded-xl transition-all btn-premium cursor-pointer">Tolak</button>
+                     <button type="submit" name="status" value="terverifikasi" class="inline-flex items-center gap-1.5 px-4.5 py-2.5 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-brand-light/10 btn-premium cursor-pointer font-black">
+                         <span>Setujui & Verifikasi</span>
+                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                     </button>
+                 </div>
+             </form>
          </div>
-    </div>
+     </div>
 </div>
 @endsection

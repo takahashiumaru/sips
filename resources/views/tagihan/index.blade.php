@@ -192,66 +192,115 @@
             {{ $tagihan->links() }}
         </div>
     @endif
+</div>
 
-    @if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
-        <!-- Modal Generate Massal -->
-        <div x-data="{ open: false }" 
-             @open-modal-generate.window="open = true" 
-             @close-modal-generate.window="open = false"
-             x-show="open" 
-             class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs"
-             style="display: none;"
-             x-transition:enter="modal-backdrop-enter"
-             x-transition:enter-start="modal-backdrop-enter-start"
-             x-transition:enter-end="modal-backdrop-enter-end"
-             x-transition:leave="modal-backdrop-leave"
-             x-transition:leave-start="modal-backdrop-leave-start"
-             x-transition:leave-end="modal-backdrop-leave-end">
-            <div class="modal-premium-panel bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-blue-100/50" @click.away="open = false">
-                <div class="flex items-center justify-between border-b border-blue-50 pb-3.5 mb-5">
-                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Generate Tagihan Bulanan</h3>
-                    <button @click="open = false" class="text-slate-400 hover:text-slate-600 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+@if(auth()->user()->isAdmin() || auth()->user()->isKepalaSekolah())
+    <!-- Modal Generate Massal -->
+    <div x-data="{ open: false }" 
+         @open-modal-generate.window="open = true" 
+         @close-modal-generate.window="open = false"
+         x-show="open" 
+         class="modal-premium-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/30 backdrop-blur-xs"
+         style="display: none;"
+         x-transition:enter="modal-backdrop-enter"
+         x-transition:enter-start="modal-backdrop-enter-start"
+         x-transition:enter-end="modal-backdrop-enter-end"
+         x-transition:leave="modal-backdrop-leave"
+         x-transition:leave-start="modal-backdrop-leave-start"
+         x-transition:leave-end="modal-backdrop-leave-end">
+        <!-- Outer Shell (Double Bezel) -->
+        <div class="modal-premium-panel p-2 bg-blue-50/20 dark:bg-slate-900/20 border border-blue-100/30 dark:border-slate-800/40 rounded-[2rem] max-w-md w-full shadow-2xl" @click.away="open = false">
+            <!-- Inner Core -->
+            <div class="bg-white dark:bg-slate-950 p-6 rounded-[calc(2rem-0.5rem)] border border-blue-50/50 dark:border-slate-900/50 shadow-inner flex flex-col gap-5">
+                <!-- Header -->
+                <div class="flex items-start justify-between">
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-1.5">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-blue-50 text-blue-600 border border-blue-100/40 uppercase tracking-widest leading-none">
+                                <span class="w-1 h-1 rounded-full bg-blue-500 animate-pulse"></span>
+                                Generator Massal
+                            </span>
+                        </div>
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">Generate Tagihan</h3>
+                        <p class="text-[10px] text-slate-400 font-bold mt-0.5 leading-none">Buat tagihan biaya pendidikan periode terpilih</p>
+                    </div>
+                    <button @click="open = false" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 dark:hover:bg-slate-900/50 rounded-xl transition-all btn-premium cursor-pointer">
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
 
-                <form action="{{ route('tagihan.generate') }}" method="POST" class="space-y-4">
+                <form action="{{ route('tagihan.generate') }}" method="POST" class="space-y-5">
                     @csrf
-                    <div>
-                        <label for="gen_bulan" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Bulan Periode</label>
-                        <select name="bulan" id="gen_bulan" required
-                            class="block w-full px-3 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold">
-                            @for ($m = 1; $m <= 12; $m++)
-                                <option value="{{ $m }}" {{ date('m') == $m ? 'selected' : '' }}>
-                                    {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
-                                </option>
-                            @endfor
-                        </select>
+                    <!-- 2 Column Grid for Inputs -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-1.5">
+                            <label for="gen_bulan" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest">Bulan Periode</label>
+                            <div class="relative">
+                                <select name="bulan" id="gen_bulan" required
+                                    class="block w-full pl-3.5 pr-8 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold appearance-none">
+                                    @for ($m = 1; $m <= 12; $m++)
+                                        <option value="{{ $m }}" {{ date('m') == $m ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                        </option>
+                                    @endfor
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label for="gen_tahun" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest">Tahun Periode</label>
+                            <div class="relative">
+                                <select name="tahun" id="gen_tahun" required
+                                    class="block w-full pl-3.5 pr-8 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold appearance-none">
+                                    @for ($y = date('Y') - 1; $y <= date('Y') + 1; $y++)
+                                        <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                    @endfor
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="gen_tahun" class="block text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mb-2">Tahun Periode</label>
-                        <select name="tahun" id="gen_tahun" required
-                            class="block w-full px-3 py-2.5 bg-blue-50/30 border border-blue-100/60 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light focus:bg-white transition-all text-xs font-semibold">
-                            @for ($y = date('Y') - 1; $y <= date('Y') + 1; $y++)
-                                <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
-                            @endfor
-                        </select>
+                    <!-- Info Box with subtle design -->
+                    <div class="p-4 bg-brand-50/30 dark:bg-blue-950/20 border border-brand-100/20 dark:border-blue-900/30 text-[10px] text-blue-600/90 dark:text-blue-300 rounded-2xl leading-relaxed font-bold flex gap-3">
+                        <div class="shrink-0 text-brand-light dark:text-blue-400">
+                            <svg class="w-4.5 h-4.5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            Sistem akan otomatis membuat tagihan SPP untuk seluruh siswa berstatus <span class="text-blue-700 dark:text-blue-200 underline decoration-blue-300 dark:decoration-blue-700">Aktif</span> sesuai tingkat kelas dan tarif SPP aktif pada bulan yang dipilih. Siswa yang sudah memiliki tagihan pada periode tersebut akan <span class="text-blue-700 dark:text-blue-200">dilewati secara otomatis</span>.
+                        </div>
                     </div>
 
-                    <div class="p-4 bg-blue-50 border border-blue-100/50 text-[10px] text-blue-700 rounded-2xl leading-relaxed font-bold">
-                        Sistem akan otomatis membuat tagihan SPP untuk seluruh siswa berstatus "Aktif" sesuai tingkat kelas dan tarif SPP aktif pada bulan yang dipilih. Siswa yang sudah memiliki tagihan pada periode tersebut akan dilewati.
-                    </div>
-
-                    <div class="pt-3 flex justify-end gap-3">
-                        <button type="button" @click="open = false" class="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 text-xs font-bold rounded-xl transition-colors btn-premium">Batal</button>
-                        <button type="submit" class="px-4 py-2 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-brand-light/10 btn-premium">Generate Tagihan</button>
+                    <!-- Footer Actions -->
+                    <div class="pt-2 flex justify-end gap-3 border-t border-blue-50/40">
+                        <button type="button" @click="open = false" 
+                            class="px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-500 text-xs font-bold rounded-xl transition-all btn-premium cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                            class="inline-flex items-center gap-1.5 px-4.5 py-2.5 bg-brand-light hover:bg-brand-hover text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-brand-light/10 btn-premium cursor-pointer font-black">
+                            <span>Generate Tagihan</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-    @endif
-</div>
+    </div>
+@endif
 @endsection

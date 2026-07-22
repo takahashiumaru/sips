@@ -80,4 +80,21 @@ class TarifSppController extends Controller
 
         return redirect()->route('tarif.index')->with('success', 'Tarif SPP berhasil diperbarui.');
     }
+
+    public function destroy(TarifSpp $tarifSpp)
+    {
+        $hasTagihan = \App\Models\TagihanSpp::where('tahun_ajaran_id', $tarifSpp->tahun_ajaran_id)
+            ->whereHas('siswa.kelas', function ($query) use ($tarifSpp) {
+                $query->where('tingkat', $tarifSpp->tingkat);
+            })
+            ->exists();
+
+        if ($hasTagihan) {
+            return back()->with('error', 'Tarif SPP ini tidak dapat dihapus karena sudah digunakan dalam pembuatan tagihan SPP.');
+        }
+
+        $tarifSpp->delete();
+
+        return back()->with('success', 'Tarif SPP berhasil dihapus.');
+    }
 }
